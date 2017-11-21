@@ -83,7 +83,7 @@ npm install -g bower
 Install the Polymer CLI: 
 
 ```bash
-npm install -g polymer-cli
+npm install -g polymer-cli@1.1.0
 ```
 
 We also need to have a sample Node API running. Clone the [NodeJS JWT Authentication sample repo](https://github.com/auth0-blog/nodejs-jwt-authentication-sample) and follow the instructions in the README to get it up and running on [http://localhost:3001](http://localhost:3001).
@@ -93,7 +93,7 @@ We also need to have a sample Node API running. Clone the [NodeJS JWT Authentica
 Create a new directory and navigate to it in the terminal or command prompt. Use the following command to initialize the Polymer starter kit in your new folder:
 
 ```bash
-polymer init starter-kit
+polymer init polymer-1-starter-kit
 ```
 
 This command installs the starter kit app and necessary Bower components. Once the command completes, we can view the app in the browser by running:
@@ -228,7 +228,7 @@ The "Log In" link would be best located in the header. Find the [header layout](
 ```html
 ...
 <app-toolbar>
-	<paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
+	<paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
 	<div main-title>Chuck Norris</div>
 	<a name="register-login" href="/register-login">Log In</a>
 </app-toolbar>
