@@ -75,7 +75,7 @@ A lot of people will still go ahead and use `localStorage` assuming they’ll ne
 
 That’s ok, but it’s only responsible for us to teach you the **most secure way**.
 
-Until recently, we believed that with simple and common steps to secure your frontend applications and SPAs, it was safe to store tokens in `localStorage` and it made our guides very simple to follow. The reality is that the only way to build secure apps is to do absolutely **everything** you can to secure them, because attackers are always one step ahead.
+Until recently, we believed that with simple and common steps to secure your frontend applications and SPAs, it was okay to store tokens in `localStorage`, and it made our guides very simple to follow. The reality is that the only way to build secure apps is to do absolutely **everything** you can to secure them, because ***attackers are always one step ahead***.
 
 It's not just us though, [more](https://www.rdegges.com/2018/please-stop-using-local-storage/) and [more](https://www.owasp.org/index.php/JSON_Web_Token_(JWT)_Cheat_Sheet_for_Java#Token_storage_on_client_side) developers and groups are putting up red flags on token storage.
 
