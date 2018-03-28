@@ -83,7 +83,7 @@ It's not just Auth0 though, [more](https://www.rdegges.com/2018/please-stop-usin
 
 So we’ve discussed the risk of storing tokens in local storage and how you might mitigate the risk. But as I said, that’s not enough for us. We need to show you the right way an SPA can authenticate a returning user without that token appearing from local storage.
 
-The Auth0js `checkSession()` method allows you to acquire a new token from Auth0 for a user who is already authenticated against Auth0 for your domain. The method accepts any valid OAuth2 parameters that would normally be sent to `authorize`.
+The [Auth0.js](https://auth0.com/docs/libraries/auth0js) `checkSession()` method allows you to acquire a new token from Auth0 for a user who is already authenticated against Auth0 for your domain. The method accepts any valid OAuth2 parameters that would normally be sent to `authorize`.
 
 Our guides would normally include an authentication utility class to handle the Auth0 webauth object and provide some much needed functions.
 
@@ -370,4 +370,4 @@ Unnecessary risks with access tokens such as storing them in `localStorage` and 
 
 That is why we're recommending that access tokens aren't stored in `localStorage` and if they're stored in a Cookie then you should apply `HttpOnly` and `SameSite` directives.
 
-Instead, the [Auth0.js](https://auth0.com/docs/libraries/auth0js/v9) library has a method of retrieving a token from our authentication servers using a web session. You can call this method on page load, so an authenticated user can be logged back in.
+Instead, the [Auth0.js](https://auth0.com/docs/libraries/auth0js) library has a method of retrieving a token from our authentication servers using a web session. You can call this method on page load, so an authenticated user can be logged back in.
