@@ -302,7 +302,7 @@ export class AuthService {
 
 If we use this service, as it is, in a single page application you'll remain logged in until we re-request the application from the server. So, something like a page refresh will log you out.
 
-The main difference is here in our `_setSession` method. We no longer place anything sensitive inside `localStorage`. Because of that there is no need for a constructor to try and retrieve anything out of localStorage.
+The main difference is here in our `_setSession` method. We no longer place anything sensitive inside `localStorage`. And, because of that there is no need for a constructor to try and retrieve anything out of `localStorage`, either.
 
 ```js
 // src/app/auth/auth.service.ts
