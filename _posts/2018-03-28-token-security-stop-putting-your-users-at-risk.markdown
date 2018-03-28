@@ -319,7 +319,7 @@ The main difference is here in our `_setSession` method. We no longer place anyt
 
 But what if we want to keep users logged in to our site?
 
-First of all we'll need a function that invokes Auth0's `checkSession()` method to check their service to see if our users is already authenticated.
+First of all we'll need a function that invokes Auth0's `checkSession()` method, to check their service to see if our users is already authenticated.
 
 ```diff
  // src/app/auth/auth.service.ts
