@@ -27,7 +27,7 @@ related:
 - 2018-03-22-cambridge-analytica-and-facebook
 ---
 
-**TL;DR:** We explore keeping your tokens and you users data safe. `localStorage` has been used as an example of how to store access tokens, especially in SPAs. Auth0 has an alternative to storing a token for a persistent user session, so your returning users can stay logged in without putting your users at unnecessary risk.
+**TL;DR:** We explore keeping your tokens and you users data safe. `localStorage` has been used as an example of how to store access tokens, especially in SPAs. Auth0 has an alternative to storing a token for a persistent user session, so your returning users can stay logged in without putting them at unnecessary risk.
 
 ## Storing tokens on the frontend—don’t do it
 
