@@ -1041,30 +1041,30 @@ function isTokenExpired(token) {
 }
 ```
 
-In the code above, we are using [Auth0's Centralized Login Page](https://auth0.com/docs/hosted-pages/login) in the `login` method and passed in our credentials.
+In the code above, we are using [Auth0's Universal Login Page](https://auth0.com/docs/hosted-pages/login) in the `login` method and passed in our credentials.
 
 The auth0 package calls the Auth0's `authorize` endpoint. With all the details we passed to the method, our client app will be validated and authorized to perform authentication. You can learn more about the specific values that can be passed to the authorize method [here](https://auth0.com/docs/libraries/auth0js).
 
-The parameters that you do not have yet are the `{AUTH0_CLIENT_ID}` and the `{YOUR_CALLBACK_URL}`. When you created your API, Auth0 also created a test client which you can use. Additionally, you can use any existing SPA Auth0 client found in Clients section of your [management dashboard](https://manage.auth0.com/#/clients).
+The parameters that you do not have yet are the `{AUTH0_CLIENT_ID}` and the `{YOUR_CALLBACK_URL}`. When you created your API, Auth0 also created a test application which you can use. Additionally, you can use any existing SPA Auth0 application found in Applications section of your [management dashboard](https://manage.auth0.com/#/applications).
 
-Check the `Test` panel of your API from the dashboard. You'll see the test client like so:
+Check the `Test` panel of your API from the dashboard. You'll see the test application like so:
 
-![Chuck Norris World Client](https://cdn2.auth0.com/blog/app/chucknorrisclient.png)
-_Chuck Norris World API Client_
+![Chuck Norris World Application](https://cdn2.auth0.com/blog/app/chucknorrisclient.png)
+_Chuck Norris World API Application_
 
-Now, go to the clients area and check for the test client. You should see it in your list of clients like so:
+Now, go to the applications area and check for the test application. You should see it in your list of applications like so:
 
-![Chuck Norris World Test Client](https://cdn2.auth0.com/blog/chucknorris/testclient.png)
+![Chuck Norris World Test Application](https://cdn2.auth0.com/blog/chucknorris/testclient.png)
 
-Open the client and change the **Client Type** to *Single Page Application*.
+Open the application and change the **Application Type** to *Single Page Application*.
 
-> Non interactive clients are meant to be used in machine to machine interactions. We are using an SPA to interact with the API so the client should be an SPA client. Check out [Implicit Grant](https://auth0.com/docs/api-auth/grant/implicit) and [client credentials exchange](https://auth0.com/docs/api-auth/grant/client-credentials) for more information.
+> Non interactive applications are meant to be used in machine to machine interactions. We are using an SPA to interact with the API so the application should be an SPA application. Check out [Implicit Grant](https://auth0.com/docs/api-auth/grant/implicit) and [application credentials exchange](https://auth0.com/docs/api-auth/grant/client-credentials) for more information.
 
-Let's quickly go ahead to change the title of the client to `Chuck Norris World` like so:
+Let's quickly go ahead to change the title of the application to `Chuck Norris World` like so:
 
 ![Client Name Change](https://cdn2.auth0.com/blog/chucknorris/clientnamechange.png)
 
-> Changing the Client name is totally optional.
+> Changing the application name is totally optional.
 
 Copy the **CLIENT ID** and replace it with the value of `AUTH0_CLIENT_ID` in the variable `CLIENT_ID`. Replace your callback url with `http://localhost:3000/callback`. Don't forget to add that to the **Allowed Callback URLs** and `http://localhost:3000` to the **Allowed Origins (CORS)**.
 
@@ -1286,15 +1286,15 @@ ReactDOM.render(<Root />, document.getElementById('root'));
 
 Now, try to log in.
 
-![Centralized Login Page](https://cdn2.auth0.com/blog/chucknorris/loginbox.png)
-_Centralized Login Page_
+![Universal Login Page](https://cdn2.auth0.com/blog/chucknorris/loginbox.png)
+_Universal Login Page_
 
 For the first time, the user will be shown a user consent dialog that will show the scope available. Once a user authorizes, it goes ahead to login the user and give them access based on the scopes.
 
 ![User consent dialog](https://cdn2.auth0.com/blog/chucknorris/clientconsent.png)
 _User presented with an option to authorize_
 
-**Note:** Since we are using `localhost` for our domain, once a user logs in the first time, subsequent logins will not need a user consent authorization dialog. This consent dialog will not be displayed if you are using a non-localhost domain, and the client is a first-party client.
+**Note:** Since we are using `localhost` for our domain, once a user logs in the first time, subsequent logins will not need a user consent authorization dialog. This consent dialog will not be displayed if you are using a non-localhost domain, and the application is a first-party application.
 
 ![Logged In and Unauthorized to see the celebrity content](https://cdn2.auth0.com/blog/chucknorris/unauthorized.png)
 _Logged In, but unauthorized to see the celebrity content_
