@@ -81,9 +81,10 @@ npm install yarn -g
 Create our new project directory to get started
 
 ```bash
-mkdir ~/Projects/auth0-react-material 
-cd ~/Projects/auth0-react-material
+mkdir ~/Projects/auth0-react-material/ && cd "$_"
 ```
+
+> **Note:** Here's a nifty bash technique, `"$_"` contains the last argument of the previous command, so you can `mkdir ~/Projects/auth0-react-material/` and `cd ~/Projects/auth0-react-material/` all in one command.
 
 Initialize a yarn project in our new directory.
 
@@ -151,22 +152,22 @@ You can also alias it in your `package.json` so you can customize it later.
 
 ```diff
 // package.json
- {
-   "name": "auth0-react-material",
-   "version": "1.0.0",
-   "main": "index.js",
-   "license": "MIT",
-   "dependencies": {
-     "express": "^4.16.3"
-   },
-   "devDependencies": {
-     "nodemon": "^1.17.3"
--  }
-+  },
-+  "scripts": {
-+    "dev": "nodemon index.js"
-+  }
- }
+  {
+    "name": "auth0-react-material",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "dependencies": {
+      "express": "^4.16.3"
+    },
+    "devDependencies": {
+      "nodemon": "^1.17.3"
+-   }
++   },
++   "scripts": {
++     "dev": "nodemon index.js"
++   }
+  }
 ```
 
 So now we can run
@@ -307,6 +308,7 @@ module.exports = router;
 and edit `index.js` to look like this, much tidier.
 
 ```js
+// index.js
 const express = require('express');
 const app = express();
 
@@ -319,7 +321,265 @@ app.listen(port, () => console.log(`Listening on port ${port}`));
 
 ## create react app (create-react-app)
 
+Now we're going to create our react app to consume our backend express app.
+
+```bash
+create-react-app www-client
+```
+
+![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-18 at 10.23.34.png)
+
+and test that everything is working
+
+```bash
+cd www-client
+yarn start
+```
+
+From here on out we'll be using the `www-client` directory as our current Working Directory. We'll move back to the express application directory when we need to.
+
+![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-18 at 10.49.02.png)
+
+Now just to tidy up a bit and remove some boilerplate.
+
+Create a components directory, where our componenets will live
+
+```bash
+mkdir src/components
+```
+
+and remove some files we're not going to need for a little bit
+
+```bash
+rm src/App.css src/App.test.js src/index.css src/logo.svg
+```
+
+move our `App.js` componenet into our components directory
+
+```bash
+mv src/App.js src/components/
+```
+
+and our directories will look something like this, which is a little tidier
+
+![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-18 at 11.04.52.png)
+
+But our app won't run now. Let's fix it.
+
+Edit our `src/index.js` file so it looks like below
+
+```diff
+// src/index.js
+  import React from 'react';
+  import ReactDOM from 'react-dom';
+- import './index.css';
+- import App from './App';
++ import App from './components/App';
+  import registerServiceWorker from './registerServiceWorker';
+...
+```
+
+and edit our `src/components/App.js` like this
+
+```diff
+// src/components/App.js
+  import React, { Component } from 'react';
+- import logo from './logo.svg';
+- import './App.css';
+
+  class App extends Component {
+    render() {
+      return (
+        <div className="App">
+          <header className="App-header">
+-           <img src={logo} className="App-logo" alt="logo" />
+            <h1 className="App-title">Welcome to React</h1>
+          </header>
+          <p className="App-intro">
+            To get started, edit <code>src/App.js</code> and save to reload.
+          </p>
+        </div>
+      );
+    }
+  }
+```
+
+Now everything should still work, if not a bit uglier. A good base for whats next.
+
+![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-18 at 11.13.31.png)
+
 ### setup routes with react router 4
+
+```bash
+yarn add react-router-dom
+```
+
+![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-18 at 11.15.57.png)
+
+edit `src/index.js` to use react router. it should now look something like this
+
+```js
+// src/index.js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
+import App from './components/App';
+import registerServiceWorker from './registerServiceWorker';
+
+ReactDOM.render((
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
+), document.getElementById('root'));
+registerServiceWorker();
+```
+
+Create some new empty components `Main.js`, `Header.js` and `Home.js`. 
+
+`Main` is going to be the home of our react routing, where to choose which components to pick based on our route. `Header` is where we'll show our links where we'll interact with react router. `Home` will be where we put the initial content we want to load.
+
+```bash
+touch src/components/{Main.js,Header.js,Home.js}
+```
+
+> **Note:** *Another* nifty bash technique is the ability to run commands multiple times by providing it an array of arguments. This is called [Brace Expansion](http://wiki.bash-hackers.org/syntax/expansion/brace). It is the equivalent of `touch src/components/Main.js`, `touch src/components/Header.js` and `touch src/components/Home.js` all in one command.
+
+For the moment just set them up as basic components by editing `src/components/Main.js`, `src/components/Header.js` and `src/components/Home.js` as shown below.
+
+```js
+// src/components/Header.js
+import React from 'react';
+
+const Header = () => (
+  <header>
+    <h1>Welcome to React</h1>
+  </header>
+);
+
+export default Header;
+```
+
+```js
+// src/components/Home.js
+import React from 'react';
+
+const Home = () => (
+  <p>
+    Hello, react world!
+  </p>
+);
+
+export default Home;
+```
+
+```js
+// src/components/Main.js
+import React from 'react';
+import Home from './Home';
+
+const Main = () => (
+  <div>
+    <Home/>
+  </div>
+);
+
+export default Main;
+```
+
+and now edit `src/components/App.js` to use our new components. it should look like the following code
+
+```js
+// src/components/App.js
+import React from 'react';
+import Header from './Header';
+import Main from './Main';
+
+const App = () => (
+  <div>
+    <Header />
+    <Main />
+  </div>
+);
+
+export default App;
+```
+
+nice and neat so far! let's see if it's working.
+
+![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-18 at 12.12.55.png)
+
+now we're going to create another page, something for us to route to
+
+```bash
+touch src/components/Videos.js
+```
+
+and give it the following contents
+
+```js
+// src/components/Videos.js
+import React from 'react';
+
+const Videos = () => (
+  <p>
+    Some video content here. Or something.
+  </p>
+);
+
+export default Videos;
+```
+
+and now we can setup some routing to allow us to switch between `Home` and `Videos`, edit `src/components/Main.js` to look like the following
+
+```js
+// src/components/Main.js
+import React from 'react';
+import { Switch, Route } from 'react-router-dom';
+import Home from './Home';
+import Videos from './Videos';
+
+const Main = () => (
+  <div>
+    <Switch>
+      <Route exact path='/' component={Home}/>
+      <Route path='/videos' component={Videos}/>
+    </Switch>
+  </div>
+);
+
+export default Main;
+```
+
+another quick check, make sure we haven't broken anything
+
+![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-18 at 12.27.37.png)
+
+But we don't have any links yet! so lets create a quick nav menu in our `Header` component. So edit `src/components/Header.js` with the code shown here
+
+```js
+// src/components/Header.js
+import React from 'react';
+import { Link } from 'react-router-dom';
+
+const Header = () => (
+  <header>
+    <h1>Welcome to React</h1>
+    <nav>
+      <ul>
+        <li><Link to='/'>Home</Link></li>
+        <li><Link to='/videos'>Videos</Link></li>
+      </ul>
+    </nav>
+  </header>
+);
+
+export default Header;
+```
+
+and check that our nav menu works with our router
+
+![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-18 at 12.50.45.gif)
+
 ### layout using material ui
 ### fetch content from express app
 
