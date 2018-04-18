@@ -581,6 +581,264 @@ and check that our nav menu works with our router
 ![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-18 at 12.50.45.gif)
 
 ### layout using material ui
+
+`material-ui` needs the `Roboto` font, for which we'll need the `webfontloader` library. Let's install those and set them up.
+
+```bash
+yarn add material-ui webfontloader
+```
+
+and now use it to load `Roboto` by editing `src/index.js` and adding the following code
+
+```js
+// src/index.js
+...
+import WebFont from 'webfontloader';
+
+WebFont.load({
+  google: {
+    families: ['Roboto:300,400,500', 'sans-serif']
+  }
+});
+
+...
+```
+
+While we're here, we can add Material UI's default theme provider component to our app. So our `src/index.js` will end up looking like this.
+
+```js
+// src/index.js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
+import App from './components/App';
+import registerServiceWorker from './registerServiceWorker';
+import WebFont from 'webfontloader';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
+WebFont.load({
+  google: {
+    families: ['Roboto:300,400,500', 'sans-serif']
+  }
+});
+
+ReactDOM.render((
+  <MuiThemeProvider>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </MuiThemeProvider>
+), document.getElementById('root'));
+registerServiceWorker();
+``` 
+
+Despite these changes, you'll see nothing has changed.
+
+![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-18 at 13.30.35.png)
+
+We'll start off simple, we'll make our content look a bit prettier but putting it inside a [Material UI `Paper` component](http://www.material-ui.com/#/components/paper). So edit `src/components/Home.js`, import the `Paper` component and place our text inside a `Paper` tag, like so;
+
+```js
+import React from 'react';
+import Paper from 'material-ui/Paper';
+
+const Home = () => (
+  <Paper
+    style={{
+      padding: '1em'
+    }}>
+    Hello, react world!
+  </Paper>
+);
+
+export default Home;
+```
+
+We can check that Material UI is working just fine. Notice how the styles from the base component are applied to Material UI's components, only.
+
+![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-18 at 14.34.48.png)
+
+Now to tackle our `Header` component, we'll make use of the [Material UI `AppBar` component](http://www.material-ui.com/#/components/app-bar).
+
+Edit `src/components/Header.js` and follow the changes below.
+
+Firstly, we'll change our `Header` component from a stateless [Functional Component to a Class Component](https://reactjs.org/docs/components-and-props.html). This is because our component now needs a state and some functions of it's own.
+
+```diff
+- import React from 'react';
++ import React, { Component } from 'react';
+  import { Link } from 'react-router-dom';
+  
+- const Header = () => (
++ class Header extends Component {
++   render() {
++     return (
+        <header>
+          <h1>Welcome to React</h1>
+          <nav>
+            <ul>
+              <li><Link to='/'>Home</Link></li>
+              <li><Link to='/videos'>Videos</Link></li>
+            </ul>
+          </nav>
+        </header>
+      );
++   }
++ }
+  
+  export default Header;
+```
+
+Next we'll replace our `<h1>` with an `AppBar` component.
+
+```diff
+...
++ import AppBar from 'material-ui/AppBar';
+
+...
+-         <h1>Welcome to React</h1>
++         <AppBar
++           title="Welcome to React"
++         />
+...
+```
+
+It should be looking something like this now.
+
+![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-18 at 19.59.34.png)
+
+how cool would it be to move that nav into a `Drawer` component that slides in from the side, we can do this with the [Material UI `Drawer` component](http://www.material-ui.com/#/components/drawer).
+
+This time we're going to add a constructor to set our initial state and two functions to handle toggling and closing our `Drawer`.
+
+```diff
+...
++ import Drawer from 'material-ui/Drawer';
++ import MenuItem from 'material-ui/MenuItem';
+
+...
+  class Header extends Component {
++   constructor(props) {
++     super(props);
++     this.state = {open: false};
++   }
++
++   handleToggle = () => this.setState({open: !this.state.open});
++
++   handleClose = () => this.setState({open: false});
++
+    render() {
+...
+-         <nav>
+-           <ul>
+-             <li><Link to='/'>Home</Link></li>
+-             <li><Link to='/videos'>Videos</Link></li>
+-           </ul>
+-         </nav>
++         <Drawer
++           docked={false}
++           open={this.state.open}
++           onRequestChange={(open) => this.setState({open})}
++         >
++           <MenuItem
++             linkButton
++             containerElement={<Link to='/' />}
++             primaryText="Home"
++             onClick={this.handleClose}
++           />
++           <MenuItem
++             linkButton
++             containerElement={<Link to='/videos' />}
++             primaryText="Videos"
++             onClick={this.handleClose}
++           />
++         </Drawer>
+...
+    }
+...
+```
+
+So now our links have disappeared, we can't click them and we can't see the menu. We just need to tell our `AppBar` to open the `Drawer` when we click on the menu button.
+
+To do this, we need to tell the left most icon on the `AppBar` that it's a button with a function!
+
+```diff
+...
++ import IconButton from 'material-ui/IconButton';
++ import MenuIcon from 'material-ui/svg-icons/navigation/menu';
+
+...
+          <AppBar
+            title="Welcome to React"
++           iconElementLeft={<IconButton
++             label="Open Menu"
++             onClick={this.handleToggle}
++           ><MenuIcon /></IconButton>}
+          />
+...
+```
+
+Once done the file should end up looking like this
+
+```js
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import AppBar from 'material-ui/AppBar';
+import Drawer from 'material-ui/Drawer';
+import MenuItem from 'material-ui/MenuItem';
+import IconButton from 'material-ui/IconButton';
+import MenuIcon from 'material-ui/svg-icons/navigation/menu';
+
+class Header extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {open: false};
+  }
+
+  handleToggle = () => this.setState({open: !this.state.open});
+
+  handleClose = () => this.setState({open: false});
+
+  render() {
+    return (
+      <header>
+        <AppBar
+          title="Welcome to React"
+          iconElementLeft={<IconButton
+            label="Open Drawer"
+            onClick={this.handleToggle}
+          ><MenuIcon /></IconButton>}
+        />
+        <Drawer
+          docked={false}
+          open={this.state.open}
+          onRequestChange={(open) => this.setState({open})}
+        >
+          <MenuItem
+            linkButton
+            containerElement={<Link to='/' />}
+            primaryText="Home"
+            onClick={this.handleClose}
+          />
+          <MenuItem
+            linkButton
+            containerElement={<Link to='/videos' />}
+            primaryText="Videos"
+            onClick={this.handleClose}
+          />
+        </Drawer>
+      </header>
+    );
+  }
+}
+
+export default Header;
+```
+
+And if we run it, we should be able to navigate like this!
+
+![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-18 at 20.26.05.gif)
+
 ### fetch content from express app
 
 ## auth in react with auth0.js based on new guidelines
