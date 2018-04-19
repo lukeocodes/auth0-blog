@@ -81,10 +81,10 @@ npm install yarn -g
 Create our new project directory to get started
 
 ```bash
-mkdir ~/Projects/auth0-react-material/ && cd "$_"
+mkdir auth0-react-material/ && cd "$_"
 ```
 
-> **Note:** Here's a nifty bash technique, `"$_"` contains the last argument of the previous command, so you can `mkdir ~/Projects/auth0-react-material/` and `cd ~/Projects/auth0-react-material/` all in one command.
+> **Note:** Here's a nifty bash technique, `"$_"` contains the last argument of the previous command, so you can `mkdir auth0-react-material/` and `cd auth0-react-material/` all in one command.
 
 Initialize a yarn project in our new directory.
 
