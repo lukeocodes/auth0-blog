@@ -662,7 +662,7 @@ Now to tackle our `Header` component, we'll make use of the [Material UI `AppBar
 
 Edit `src/components/Header.js` and follow the changes below.
 
-Firstly, we'll change our `Header` component from a stateless [Functional Component to a Class Component](https://reactjs.org/docs/components-and-props.html). This is because our component now needs a state and some functions of it's own.
+We'll change our `Header` component from a stateless [Functional Component to a Class Component](https://reactjs.org/docs/components-and-props.html). This is because our component now needs a state and some functions of it's own.
 
 ```diff
 - import React from 'react';
@@ -741,13 +741,11 @@ This time we're going to add a constructor to set our initial state and two func
 +           onRequestChange={(open) => this.setState({open})}
 +         >
 +           <MenuItem
-+             linkButton
 +             containerElement={<Link to='/' />}
 +             primaryText="Home"
 +             onClick={this.handleClose}
 +           />
 +           <MenuItem
-+             linkButton
 +             containerElement={<Link to='/videos' />}
 +             primaryText="Videos"
 +             onClick={this.handleClose}
@@ -815,13 +813,11 @@ class Header extends Component {
           onRequestChange={(open) => this.setState({open})}
         >
           <MenuItem
-            linkButton
             containerElement={<Link to='/' />}
             primaryText="Home"
             onClick={this.handleClose}
           />
           <MenuItem
-            linkButton
             containerElement={<Link to='/videos' />}
             primaryText="Videos"
             onClick={this.handleClose}
@@ -841,7 +837,153 @@ And if we run it, we should be able to navigate like this!
 
 ### fetch content from express app
 
+first thing is first, we need to enable CORS for our express app.
+
+Back in our express apps root directory, let's install `cors`.
+
+```bash
+cd ..
+yarn add cors
+```
+
+To configure it, edit our `index.js` and to look like the following
+
+```js
+const express = require('express');
+const cors = require('cors');
+const app = express();
+
+const corsOptions = {
+  origin: process.env.CORS_ORIGIN || '*',
+}
+
+app.use(cors(corsOptions));
+
+const videos = require('./controllers/videos');
+app.use('/', videos);
+
+const port = process.env.PORT || 3001;
+app.listen(port, () => console.log(`Listening on port ${port}`));
+```
+
+notice origin is set to '*' if the environment variable isn't set `origin: process.env.CORS_ORIGIN || '*'` so that it's not restricted during the development process. It will be insecure if you deploy to production without your origin set
+
+back to our client react application
+
+```bash
+cd www-client
+```
+
+now we'll need to add a library for embedding youtube videos
+
+```bash
+yarn add react-youtube
+```
+
+create a new component for our video
+
+```bash
+touch src/components/Video.js
+```
+
+give it the following code 
+
+```js
+import React from 'react';
+import YouTube from 'react-youtube';
+import {Card, CardMedia} from 'material-ui/Card';
+
+const Video = ({video}) => (
+  <Card
+    style={{
+      width: '400px',
+      padding: '10px',
+      marginRight: '1em',
+      marginBottom: '1em',
+      textAlign: 'center',
+      display: 'inline-block',
+    }}>
+    <CardMedia
+    >
+      <YouTube
+        opts={{
+          width: '380',
+          height: '220',
+        }}
+        videoId={(video.id.split(":").pop())}
+      />
+    </CardMedia>
+  </Card>
+);
+
+export default Video;
+```
+
+lets use this component to display our videos, edit `src/components/Videos.js` to look like this
+
+```js
+import React, { Component } from 'react';
+import Video from './Video';
+
+const API = 'http://localhost:3001/videos';
+
+class Videos extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      videos: [],
+    };
+  }
+
+  componentDidMount() {
+    fetch(API)
+      .then(response => response.json())
+      .then(data => this.setState({ videos: data.items }));
+  }
+
+  render() {
+    const { videos } = this.state;
+
+    return (
+      <div>
+        {videos.map(video =>
+          <Video
+            key={video.id}
+            video={video}
+          />
+        )}
+      </div>
+    );
+  }
+}
+
+export default Videos;
+```
+
+you'll see this is another component that has changed from a [Functional Component to a Class Component](https://reactjs.org/docs/components-and-props.html) so that we can manage it's state
+
+breaking down this component you'll see that we are using `constructor` to set a default state and `componentDidMount` which is a lifecycle method that is invoked immediately after a component is mounted.
+
+here we make an request to our API. response is returned as an asychronous `Promise`. here we'll update the state of the component (when `videos` are returned from the API, we update the component to know about them). when a components state changes, `render` is called again. This means that we can put a pretty loader on our component and it will update once our data is returned. Remember, our data is being cached in memory as well.
+
+one quick change to `src/components/Main.js` to widen the margin between the headers `AppBar` and the main content.
+
+```diff
+-   <div>
++   <div style={{
++     marginTop: '1em'
++   }}>
+```
+
+Our app should look something like this
+
+![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-19 at 14.43.26.png)
+
 ## auth in react with auth0.js based on new guidelines
+
+
+
 
 ## user functionality endpoints in express
 ### 'mark as read', comment
@@ -851,6 +993,8 @@ And if we run it, we should be able to navigate like this!
 ##### models
 
 ## deploys
+### environment variables
+### deploying both apps
 
 ## conclusion
 
