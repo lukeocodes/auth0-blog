@@ -965,7 +965,7 @@ lets use this component to display our videos, edit `src/components/Videos.js` t
 import React, { Component } from 'react';
 import Video from './Video';
 
-const API = 'http://localhost:3001/videos';
+const API = 'http://localhost:3001';
 
 class Videos extends Component {
   constructor(props) {
@@ -977,9 +977,11 @@ class Videos extends Component {
   }
 
   componentDidMount() {
-    fetch(API)
+    const config = { headers: {} };
+
+    fetch(`${API}/videos`, config)
       .then(response => response.json())
-      .then(data => this.setState({ videos: data.items }));
+      .then(data => this.setState({ videos: data }));
   }
 
   render() {
@@ -1072,8 +1074,7 @@ export default class Auth {
     domain: AUTH0_DOMAIN,
     clientID: AUTH0_CLIENT_ID,
     redirectUri: 'http://localhost:3000/callback',
-    audience: 'https://blog-posts.eu.auth0.com/userinfo',
-    audience: `https://${AUTH0_DOMAIN}/userinfo`,
+    audience: `https://${AUTH0_DOMAIN}/api/v2/`,
     responseType: 'token id_token',
     scope: 'openid profile email'
   });
@@ -1459,7 +1460,6 @@ import Avatar from 'material-ui/Avatar';
 // ...
 
   render() {
-
     // ...
 
     let avatar = '';
@@ -1471,25 +1471,134 @@ import Avatar from 'material-ui/Avatar';
     // ...
 
     return (
-
       // ...
 
       <FlatButton label="Log out" onClick={this.handleLogout.bind(this)} icon={avatar} />
 
       // ...
-
     );
   }
 }
 
-export default Header;
+// ...
 ```
 
 And test!
 
 ![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-24 at 16.03.37.png)
 
-## verify auth token in express
+## Verifying an access token in Express
+
+So one of the things we want to do is verify our user on our Express application, without having to re-authenticate them. In our React application, we have our access token stored in memory. We can pass that through with our requests to express and verify them there.
+
+If we're authenticated on our React application, we want to pass through our authToken to Express. So edit `src/components/Videos.js` where we make our request to Express and add this code.
+
+```js
+// src/components/Videos.js
+// ...
+
+class Videos extends Component {
+  // ...
+
+  componentDidMount() {
+    // ...
+
+    if (this.props.auth.isAuthenticated()) {
+      config.headers.Authorization = `Bearer ${this.props.auth.accessToken}`;
+    }
+
+    // ...
+  }
+
+  // ...
+}
+
+// ...
+```
+
+Simply, if `isAuthenticated()` is `true`, we add our token to the headers of our `fetch`.
+
+Now we need to verify that in our Express application. For that we're going to need the `express-jwt` and `jwks-rsa` packages. 
+
+- `express-jwt` is an Express middleware that validates Json Web Tokens and once verified sets `req.user` on the [Express `req` object](https://expressjs.com/en/api.html#req).
+- `jwks-rsa` is Auth0's very own library to retrieve RSA signing keys from a [JWKS (JSON Web Key Set)](https://auth0.com/docs/jwks) endpoint.
+
+Combined, these two packages will allow us to verify our token on our backend even if it was for our frontend application.
+
+Change to our backend application's directory.
+
+```bash
+cd ..
+```
+
+Install `express-jwt` and `jwks-rsa`.
+
+```bash
+yarn add express-jwt jwks-rsa
+```
+
+Now while we're here, we need to create our own middleware to verify our token. So create a new file `utils/auth.js` and add the following to the file.
+
+```js
+// utils/auth.js
+const jwt = require('express-jwt');
+const jwksRsa = require('jwks-rsa');
+const issuer = `https://blog-posts.eu.auth0.com/`;
+const config = {
+  secret: jwksRsa.expressJwtSecret({ jwksUri: `${issuer}.well-known/jwks.json` }),
+  audience: `${issuer}api/v2/`,
+  issuer: issuer,
+  algorithms: [ 'RS256' ]
+};
+
+const auth = {
+  required: (req, res, next) => {
+    return jwt(config)(req, res, next);
+  },
+  optional: (req, res, next) => {
+    return jwt({...config, credentialsRequired: false})(req, res, next);
+  }
+};
+
+module.exports = auth;
+```
+
+Now we have a means to protect our endpoints with auth that is both required or optional. Applying authentication to an endpoint is as easy as this;
+
+```js
+const auth = require('utils/auth.js');
+
+app.get('/protected_endpoint', auth.required, (req, res) => {
+  res.json(req.data);
+});
+```
+
+But if you want an endpoint to be available whether they're authenticated or not, you can do this;
+
+```js
+const auth = require('utils/auth.js');
+
+app.get('/protected_endpoint', auth.optional, (req, res) => {
+  res.json(req.data);
+});
+```
+
+A couple of steps ago, we applied a condition to our client app's `Videos` component when `componentDidMount` fires, that if a user is authenticated it will apply the `accessToken` to any requests it makes. So lets edit our `/videos` endpoint so it knows to verify our `accessToken`.
+
+Edit `controllers/videos.js` with this code, whicvh allows `/videos` to be accessed with optional authentication.
+
+```js
+// ...
+const auth = require('../utils/auth');
+
+router.get('/videos', auth.optional, videos, (req, res) => {
+  // ...
+});
+
+// ...
+```
+
+Now our `/videos` route (and our `videos` middleware) are both aware when our user is authenticated, as the validated user is stored in `req.user`.
 
 ## user functionality endpoints in express
 ### 'mark as read', comment
