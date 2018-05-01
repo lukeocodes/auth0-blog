@@ -188,7 +188,6 @@ edit `index.js` and add a new route, `/videos`.
 
 ```js
 // index.js
-
 // ...
 
 app.get('/videos', (req, res) => {
@@ -207,13 +206,15 @@ yarn add rss-parser
 
 ```js
 // index.js
-
 // ...
 
 const parser = new (require('rss-parser'))();
 
+// The public video feed for Auth0's YouTube channel
+const URL = 'https://www.youtube.com/feeds/videos.xml?channel_id=UCUlQ5VoIzE_kFbYjzUwHTKA';
+
 const asyncVideosMiddleware = async (req, res, next) => {
-  req.data = await parser.parseURL('https://www.youtube.com/feeds/videos.xml?channel_id=UCUlQ5VoIzE_kFbYjzUwHTKA');
+  req.data = await parser.parseURL(URL);
   next();
 };
 
@@ -235,9 +236,7 @@ yarn add memory-cache
 
 ```js
 // index.js
-
 // ...
-
 const cache = require('memory-cache');
 
 // ...
@@ -246,8 +245,9 @@ const asyncVideosMiddleware = async (req, res, next) => {
   let videos = cache.get('videos');
 
   if (videos === null) {
-    videos = await parser.parseURL('https://www.youtube.com/feeds/videos.xml?channel_id=UCUlQ5VoIzE_kFbYjzUwHTKA');
-    cache.put('videos', videos, 1000 * 60 * 60); // 1 hour
+    const response = await parser.parseURL(URL);
+    videos = response.items;
+    cache.put('videos', videos, 1000 * 60 * 60);
   }
 
   req.data = videos;
@@ -278,22 +278,23 @@ touch controllers/videos.js utils/videos.js
 
 ![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-17 at 13.01.25.png)
 
-Now edit `utils/videos.js` where we'll move our async function for getting videos to.
+Now edit `utils/videos.js` where we'll move our async function for getting videos there.
 
 ```js
 // utils/videos.js
 const parser = new (require('rss-parser'))();
 const cache = require('memory-cache');
 
-const FEED_URL = 'https://www.youtube.com/feeds/videos.xml?channel_id=UCUlQ5VoIzE_kFbYjzUwHTKA';
-const ONE_HOUR = 1000 * 60 * 60;
+// The public video feed for Auth0's YouTube channel
+const URL = 'https://www.youtube.com/feeds/videos.xml?channel_id=UCUlQ5VoIzE_kFbYjzUwHTKA';
 
 const videos = async (req, res, next) => {
   let videos = cache.get('videos');
 
   if (videos === null) {
-    videos = await parser.parseURL(FEED_URL);
-    cache.put('videos', videos, ONE_HOUR);
+    const response = await parser.parseURL(URL);
+    videos = response.items;
+    cache.put('videos', videos, 1000 * 60 * 60);
   }
 
   req.data = videos;
@@ -301,6 +302,7 @@ const videos = async (req, res, next) => {
 };
 
 module.exports = videos;
+
 ```
 
 Edit `controllers/videos.js`
@@ -931,7 +933,7 @@ give it the following code
 ```js
 import React from 'react';
 import YouTube from 'react-youtube';
-import {Card, CardMedia} from 'material-ui/Card';
+import { Card, CardMedia } from 'material-ui/Card';
 
 const Video = ({video}) => (
   <Card
@@ -1543,7 +1545,9 @@ Now while we're here, we need to create our own middleware to verify our token. 
 // utils/auth.js
 const jwt = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
-const issuer = `https://blog-posts.eu.auth0.com/`;
+
+const AUTH0_DOMAIN = '<your-domain>.auth0.com';
+const issuer = `https://${AUTH0_DOMAIN}`;
 const config = {
   secret: jwksRsa.expressJwtSecret({ jwksUri: `${issuer}.well-known/jwks.json` }),
   audience: `${issuer}api/v2/`,
@@ -1600,9 +1604,9 @@ router.get('/videos', auth.optional, videos, (req, res) => {
 
 Now our `/videos` route (and our `videos` middleware) are both aware when our user is authenticated, as the validated user is stored in `req.user`.
 
-## Save our favorite videos
+## Save our favourite videos
 
-Now we're logged in, we might want to favorite the videos we see, so we can find them easier later. To do this, we're going to need to store our favorites in a database.
+Now we're logged in, we might want to favourite the videos we see, so we can find them easier later. To do this, we're going to need to store our favourites in a database.
 
 The database we're going to use is [MongoDB](https://www.mongodb.com/), and [Mongoose](http://mongoosejs.com/) is a great object modeling tool designed to work in an asynchronous environment.
 
@@ -1666,7 +1670,21 @@ After logging in, you'll be taken to your [home screen](https://mlab.com/home).
 
   ![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-30 at 16.05.41.png)
 
-You now have the URL of a database you can use for development along with a username and password to access it. It should be something along the lines of `mongodb://<dbuser>:<dbpassword>@<userdomain>.mlab.com:<port>/<dbname>`.
+* You'll be returned to the home screen.
+
+  * Click on the **Collections** tab.
+
+  * Click the Add collection button.
+  
+  ![screenshot](/Users/olaf/Desktop/Screen Shot 2018-05-01 at 13.56.57.png)
+
+* This opens an Add new collection form.
+
+  * Complete form and click **Create**.
+  
+  ![screenshot](/Users/olaf/Desktop/Screen Shot 2018-05-01 at 13.57.14.png)
+
+You now have the URL of a database you can use for development along with a username and password to access it, and a collection to store your favourite videos in. The URL should be something along the lines of `mongodb://<db-user>:<db-password>@<user-domain>.mlab.com:<port>/<db-name>`.
 
 ### Connect to our database
 
@@ -1682,7 +1700,7 @@ Now edit `index.js` and add the following code.
 // ...
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://<dbuser>:<dbpassword>@<userdomain>.mlab.com:<port>/<dbname>');
+mongoose.connect('mongodb://<db-user>:<db-password>@<user-domain>.mlab.com:<port>/<db-name>');
 mongoose.Promise = global.Promise;
 mongoose.connection.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
@@ -1705,6 +1723,110 @@ So create a new directory from root called `schemas` and in it create a new file
 mkdir schemas
 touch schemas/video.js
 ```
+
+In our new file, add this code.
+
+```js
+// schemas/video.js
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const VideoSchema = new Schema({
+  title: String,
+  link: String,
+  pubDate: Date,
+  author: String,
+  id: String,
+  user: String,
+  favourite: Boolean
+}, { collection : 'videos' });
+
+module.exports = mongoose.model( 'VideoModel', VideoSchema );
+```
+
+This file defines our data structure for our video model, which provides us well formed objects as well as validation further down the line.
+
+### Creating a collection
+
+
+
+### Favouriting a video
+
+To control our favourite videos, we're going to need two new endpoints. These endpoints will receive a HTTP `POST` request with a JSON payload of the video we're going to favourite. This means we need to parse the body, for which we'll need `body-parser`, a npm package that will parse the JSON and apply it to `req.body` as an object for us.
+
+So let's install `body-parser`.
+
+```bash
+yarn add body-parser
+```
+
+Now we can add our new endpoints. Edit `controllers/videos.js` and add this code.
+
+```js
+// controllers/videos.js
+// ...
+const bodyParser = require('body-parser');
+
+// ...
+
+const toggleFavourite = async (req, favourite) => {
+  const VideoModel = require('../schemas/video');
+  let video = await VideoModel.findOne({ id: req.body.id, user: req.user.sub }).then(obj => { return obj });
+
+  if (!video) {
+    video = new VideoModel(req.body);
+  }
+
+  video.favourite = favourite;
+  video.save(err => {if (err) console.log(err)});
+
+  return video;
+};
+
+router.post('/videos/favourite', auth.required, bodyParser.json(), async (req, res) => {
+  const body = await toggleFavourite(req, true);
+
+  res.json(body);
+});
+
+router.post('/videos/unfavourite', auth.required, bodyParser.json(), async (req, res) => {
+  const body = await toggleFavourite(req, false);
+
+  res.json(body);
+});
+
+// ...
+```
+
+Here we're adding the `/favourite` and `/unfavourite` endpoints, and both do VERY similar things. They receive the `video` to favourite and set the `favourite` flag on the object appropriately before saving it to our MongoDB database. So we've abstracted this into a function expression that can do what we want for both endpoints.
+
+### Getting our favourites
+
+Our API is now ready to add and remove our favourites, but we need to be able to return them. Edit `utils/videos.js` and add this code.
+
+```js
+// utils/videos.js
+// ...
+
+const videos = async (req, res, next) => {
+  // ...
+
+  if (req.user !== undefined) {
+    const VideoModel = require('../schemas/video');
+    const favouriteVideos = await VideoModel.find({ favourite: true, user: req.user.sub }).then(data => { return data; });
+
+    videos = videos.map((video) => {
+      return favouriteVideos.find(obj => video.id === obj.id) || video;
+    });
+  }
+
+  // ...
+};
+
+// ...
+```
+
+This code is going to try and find any videos stored in our database. Any videos it finds it's going to store 
 
 ## conclusion
 
