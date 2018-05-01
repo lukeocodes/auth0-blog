@@ -895,7 +895,7 @@ const app = express();
 
 const corsOptions = {
   origin: process.env.CORS_ORIGIN || '*',
-}
+};
 
 app.use(cors(corsOptions));
 
@@ -1600,12 +1600,111 @@ router.get('/videos', auth.optional, videos, (req, res) => {
 
 Now our `/videos` route (and our `videos` middleware) are both aware when our user is authenticated, as the validated user is stored in `req.user`.
 
-## user functionality endpoints in express
-### 'mark as read', comment
-#### mongoose for storage in mlab
-#### sensible file layout
-##### schemas
-##### models
+## Save our favorite videos
+
+Now we're logged in, we might want to favorite the videos we see, so we can find them easier later. To do this, we're going to need to store our favorites in a database.
+
+The database we're going to use is [MongoDB](https://www.mongodb.com/), and [Mongoose](http://mongoosejs.com/) is a great object modeling tool designed to work in an asynchronous environment.
+
+### Setting up a MongoDB database
+
+We're going to use mLab's free cloud-hosted "sandbox" database. This database is not considered suitable for production websites because it lacks redundancy and its support, availability, and size are limited; however, this database is great for development and prototyping.
+
+[Create a free account](https://mlab.com/signup/) with mLab. The bonus over a free AWS or Google Cloud instance is that you can get up and running without providing any payment details.
+
+![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-30 at 16.00.54.png)
+
+After logging in, you'll be taken to your [home screen](https://mlab.com/home).
+
+* Click **Create New** in the MongoDB Deployments section of the home screen.
+
+  ![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-30 at 16.02.04.png)
+
+* This opens the Cloud Provider Selection screen.
+
+  ![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-30 at 16.02.31.png)
+
+  * Select any provider from the Cloud Provider section. Their availability regions differ.
+
+  * Select the 'SANDBOX' plan from the Plan Type section, it's free.
+
+  * Now click **Continue**.
+
+* This opens the Select Region screen.
+
+  ![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-30 at 16.02.40.png)
+
+  * Select the region closest to you and click **Continue**.
+
+* This opens the Final Details screen.
+
+  ![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-30 at 16.03.18.png)
+
+  * Enter the name of your new database and click **Continue**.
+
+* This opens the Order Confirmation screen.
+
+  ![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-30 at 16.03.25.png)
+
+  * Confirm the details and click **Submit Order**.
+
+* You'll be returned to the home screen.
+
+  * Open the database you just created. Note the URL shown (or where to find it), as you'll need it later.
+
+  ![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-30 at 16.04.30.png)
+
+  * Click on the **Users** tab.
+
+  * Click the Add database user button.
+
+  ![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-30 at 16.04.39.png)
+
+* This opens an Add new database user form.
+
+  * Complete form and click **Create**.
+
+  ![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-30 at 16.05.41.png)
+
+You now have the URL of a database you can use for development along with a username and password to access it. It should be something along the lines of `mongodb://<dbuser>:<dbpassword>@<userdomain>.mlab.com:<port>/<dbname>`.
+
+### Connect to our database
+
+Now we have our database setup and a URL to connect to, we need to connect from our app. To do this, we need to edit our `index.js` for the first time in a while! But first we need to install `mongoose`.
+
+```bash
+yarn add mongoose
+```
+
+Now edit `index.js` and add the following code.
+
+```js
+// ...
+
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://<dbuser>:<dbpassword>@<userdomain>.mlab.com:<port>/<dbname>');
+mongoose.Promise = global.Promise;
+mongoose.connection.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
+const corsOptions = {
+  // ...
+};
+
+// ...
+```
+
+As long as we get no errors when we try our app now, it would appear we have successfully connected to a MongoDB database instance.
+
+### Define a `video`
+
+We're going to be storing the metadata for a video, along with a `favourite` tag and the `user`, so we need to define the schema and model.
+
+So create a new directory from root called `schemas` and in it create a new file `schemas/video.js`.
+
+```bash
+mkdir schemas
+touch schemas/video.js
+```
 
 ## conclusion
 
