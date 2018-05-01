@@ -995,6 +995,7 @@ class Videos extends Component {
           <Video
             key={video.id}
             video={video}
+            {...this.props}
           />
         )}
       </div>
@@ -1283,7 +1284,12 @@ import Auth from '../auth/Auth';
 class App extends Component {
   authorized(authenticated) {
     this.setState({ authenticated });
-    this.props.history.push('/');
+
+    if (localStorage.getItem('redirectTo')) {
+      this.props.history.push(localStorage.getItem('redirectTo'));
+    } else {
+      this.props.history.push('/');
+    }
   }
 
   deauthorized() {
@@ -1322,7 +1328,12 @@ You'll see we've now got a `constructor()` that creates our `new Auth()` instanc
 ```js
   authorized(authenticated) {
     this.setState({ authenticated });
-    this.props.history.push('/');
+
+    if (localStorage.getItem('redirectTo')) {
+      this.props.history.push(localStorage.getItem('redirectTo'));
+    } else {
+      this.props.history.push('/');
+    }
   }
 
   deauthorized() {
@@ -1330,7 +1341,7 @@ You'll see we've now got a `constructor()` that creates our `new Auth()` instanc
   }
 ```
 
-The `authorized` callback function updates the `App` component state. So we've given our `Auth` class the ability to nudge our `React` app once authentication has taken place. Both `authorized` and `deauthorized` are then responsible for pushing us back to the `Home` route once done.
+The `authorized` callback function updates the `App` component state. So we've given our `Auth` class the ability to nudge our `React` app once authentication has taken place. The `authorized` function will also look to see if we have a localStorage item for a `redirectTo` path, so after we've authorized we can push the user to a predetermined route, like the page they were on when they tried to login. The `deauthorized` function is response for pushing us back to the `Home` route once we've logged out.
 
 The last little change is adding the `withRouter` [higher-order component](https://reactjs.org/docs/higher-order-components.html). Concretely, a higher-order component is a function that takes a component and returns a new component. Whereas a component transforms props into UI, a higher-order component transforms a component into another component.
 
@@ -1397,9 +1408,15 @@ class Header extends Component {
 
   handleClose = () => this.setState({open: false});
 
-  handleLogin = () => this.props.auth.login();
+  handleLogin = () => {
+    localStorage.setItem('redirectTo', window.location.pathname);
 
-  handleLogout = () => this.props.auth.logout();
+    this.props.auth.login();
+  };
+
+  handleLogout = () => {
+    this.props.auth.logout();
+  };
 
   render() {
     const { isAuthenticated } = this.props.auth;
@@ -1744,11 +1761,7 @@ const VideoSchema = new Schema({
 module.exports = mongoose.model( 'VideoModel', VideoSchema );
 ```
 
-This file defines our data structure for our video model, which provides us well formed objects as well as validation further down the line.
-
-### Creating a collection
-
-
+This file defines our data structure for our video model, which provides us well formed objects as well as validation further down the line. Notice how it's also defining our collection name, here: `{ collection : 'videos' }`. If you've named your collection anything but `videos` on mLab, this will need to reflect that.
 
 ### Favouriting a video
 
@@ -1798,7 +1811,7 @@ router.post('/videos/unfavourite', auth.required, bodyParser.json(), async (req,
 // ...
 ```
 
-Here we're adding the `/favourite` and `/unfavourite` endpoints, and both do VERY similar things. They receive the `video` to favourite and set the `favourite` flag on the object appropriately before saving it to our MongoDB database. So we've abstracted this into a function expression that can do what we want for both endpoints.
+Here we're adding the `/favourite` and `/unfavourite` endpoints, and both do ***VERY*** similar things. They receive the `video` to action and set the appropriate `favourite` flag on the object before saving it to our MongoDB database. So we've abstracted this into a function expression that can do what we want for both endpoints and it returns the modified video.
 
 ### Getting our favourites
 
@@ -1826,7 +1839,118 @@ const videos = async (req, res, next) => {
 // ...
 ```
 
-This code is going to try and find any videos stored in our database. Any videos it finds it's going to store 
+This is going to try and find any favourited videos stored in the database for our user. Any videos in our list that we find in the database are going to be updated with the details from the database. This is a neat little way to preserve the work we've already build, while adding our new functionality.
+
+### The favourite button
+
+To let our users toggle a favourite video (and to highlight our favourites) we're going to add a button to our `Video` component.
+
+Change back to our React app.
+
+```bash
+cd www-client
+```
+
+Edit `src/components/Video.js` and replace it's contents with the following code.
+
+```js
+import React, { Component } from 'react';
+import YouTube from 'react-youtube';
+import { Card, CardMedia, CardActions } from 'material-ui/Card';
+import FlatButton from 'material-ui/FlatButton';
+import ActionGrade from 'material-ui/svg-icons/action/grade';
+
+const API = 'http://localhost:3001';
+
+class Video extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      video: this.props.video,
+    };
+  }
+
+  handleFavourite = (video) => {
+    const { auth } = this.props;
+    if (this.props.auth.isAuthenticated()) {
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${auth.accessToken}`,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: 'post',
+        body: JSON.stringify({...video, user: auth.userProfile.sub})
+      };
+
+      let route = `${API}/videos/favourite`;
+
+      if (video.favourite) {
+        route = `${API}/videos/unfavourite`;
+      }
+
+      fetch(route, config)
+        .then(response => {
+          if (!response.ok) {
+            throw Error(response.statusText);
+          }
+
+          return response.json();
+        })
+        .then(data => this.setState({ video: data}));
+    }
+  };
+
+  render() {
+    const { video } = this.state;
+    const { isAuthenticated } = this.props.auth;
+    const actions = isAuthenticated() ? (
+      <CardActions>
+        <FlatButton
+          label='Favourite'
+          onClick={this.handleFavourite.bind(this, video)}
+          fullWidth={true}
+          secondary={video.favourite}
+          labelPosition='before'
+          icon={<ActionGrade />}
+        />
+      </CardActions>
+    ) : ( '' );
+
+    return (
+      <Card
+        style={{
+          width: '400px',
+          padding: '10px',
+          marginRight: '1em',
+          marginBottom: '1em',
+          textAlign: 'center',
+          display: 'inline-block',
+        }}>
+        <CardMedia
+        >
+          <YouTube
+            opts={{
+              width: '380',
+              height: '220',
+            }}
+            videoId={(video.id.split(":").pop())}
+          />
+        </CardMedia>
+        {actions}
+      </Card>
+    );
+  }
+}
+
+export default Video;
+```
+
+One of the first things you'll notice is that we've also changed this component from a stateless [Functional Component to a Class Component](https://reactjs.org/docs/components-and-props.html) and made `video` part of the component's `state`. When the component's `state` is change, `render()` is called again. This means we can `React` to state changes, like the callback to an action–leading onto our next change.
+
+We've created a function expression `handleFavourite` that receives a `video` and subsequently makes a `favourite` or `unfavourite` request to our API based on the context of what was given to it.  
+
 
 ## conclusion
 
