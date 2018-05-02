@@ -185,7 +185,7 @@ yarn init
 
 Yarn prompts for some input. In my case I just accepted all the defaults, but you might want to do it differently. However, to follow this guide, I would leave `entry point` as `index.js`. Otherwise we'll all get confused!
 
-![Initialize a project with Yarn](/Users/olaf/Desktop/upload react--yarn-init.png)
+![Initialize a project with Yarn](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/yarn-init.png)
 
 Now we can add `express` to our project.
 
@@ -193,7 +193,7 @@ Now we can add `express` to our project.
 yarn add express
 ```
 
-![Add Express to a project](/Users/olaf/Desktop/upload react--add-express.png)
+![Add Express to a project](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/add-express.png)
 
 Next, create our `entry point` file.
 
@@ -201,7 +201,7 @@ Next, create our `entry point` file.
 touch index.js
 ```
 
-![Create a project entry point file](/Users/olaf/Desktop/upload react--create-entry-point.png)
+![Create a project entry point file](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/create-entry-point.png)
 
 Now edit `index.js` and add the following *hello world* code.
 
@@ -237,7 +237,7 @@ So all we need to do to run our dev server now is tell yarn to run nodemon.
 yarn run nodemon
 ```
 
-![Run Nodemon with Yarn](/Users/olaf/Desktop/upload react--yarn-run-nodemon.png)
+![Run Nodemon with Yarn](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/yarn-run-nodemon.png)
 
 You can also alias it in your `package.json` so you can customize it later without changing the command you run.
 
@@ -267,9 +267,9 @@ So now we can run it like this.
 yarn run dev
 ```
 
-Go and make sure everything is running okay
+Go and make sure everything is running okay.
 
-![screenshot](/Users/olaf/Desktop/upload react--yarn-run-dev-everything-seems-okay.png)
+![Yarn run dev: everything seems okay](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/yarn-run-dev-everything-seems-okay.png)
 
 Looks good!
 
@@ -323,7 +323,7 @@ app.get('/videos', asyncVideosMiddleware, (req, res) => {
 
 Essentially we're applying our `videos` data, fetched from our channel feed, to `req.data` and returning that as JSON. The `asyncVideosMiddleware` is exactly as it says, asynchronous middleware designed to run before we process the rest of our HTTP request.
 
-![RSS feed videos parsed and returned as JSON](/Users/olaf/Desktop/upload react--rss-feed-videos-parsed-and-returned-as-json.png)
+![RSS feed videos parsed and returned as JSON](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/rss-feed-videos-parsed-and-returned-as-json.png)
 
 #### Cache the remote content
 
@@ -374,7 +374,7 @@ mkdir controllers utils
 
 `controllers` is where we're going to keep our routes, and `utils` is where we're going to keep any middleware.
 
-![The structure of Express directories](/Users/olaf/Desktop/upload react--structure-of-express-directories.png)
+![The structure of Express directories](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/structure-of-express-directories.png)
 
 Now create two new files;
 
@@ -385,7 +385,7 @@ Now create two new files;
 touch controllers/videos.js utils/videos.js
 ```
 
-![Express router and middleware files](/Users/olaf/Desktop/upload react--structure-of-express-files.png)
+![Express router and middleware files](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/structure-of-express-files.png)
 
 Edit `utils/videos.js` where we'll move our async function for getting videos there.
 
@@ -460,7 +460,7 @@ yarn start
 
 From here on out we'll be using the `www-client` directory as our current Working Directory. We'll move back to the express application directory when we need to.
 
-![Test the new React application](/Users/olaf/Desktop/upload react--create-react-app-first-run.png)
+![Test the new React application](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/create-react-app-first-run.png)
 
 Now just to tidy up a bit and remove some boilerplate.
 
@@ -523,7 +523,7 @@ Edit our `src/components/App.js` to remove the `css` and `svg` use.
 
 Now everything should still work, if not a bit uglier. But it's a good foundation for whats coming.
 
-![Uglier basic React application](/Users/olaf/Desktop/upload react--uglier-basic-react-application.png)
+![Uglier basic React application](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/uglier-basic-react-application.png)
 
 ### Setup routing with React Router 4
 
@@ -623,7 +623,7 @@ export default App;
 
 Nice and neat so far! Let's see if it's working.
 
-![App, Main and Header React components](/Users/olaf/Desktop/upload react--app-main-header-components-working.png)
+![App, Main and Header React components](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/app-main-header-components-working.png)
 
 Now we're going to create another page, something for us to route to.
 
@@ -669,7 +669,7 @@ export default Main;
 
 Now check we can load our `video` route.
 
-![React Router 4 loading the Video component](/Users/olaf/Desktop/upload react--react-router-loading-video-component.png)
+![React Router 4 loading the Video component](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/react-router-loading-video-component.png)
 
 But we don't have any links yet! so lets create a quick navigation menu in our `Header` component. So edit `src/components/Header.js` with the code shown here
 
@@ -695,7 +695,7 @@ export default Header;
 
 Check that our nav menu works with our router by being able to navigate between our `Home` and `Video` pages.
 
-![React Router navigating between the Home and Video routes](/Users/olaf/Desktop/upload react--react-router-navigating-between-home-and-video-routes.gif)
+![React Router navigating between the Home and Video routes](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/react-router-navigating-between-home-and-video-routes.gif)
 
 ### Layout with Material UI
 
@@ -708,6 +708,7 @@ yarn add material-ui webfontloader
 Now use `webfontloader` it to load `Roboto` by editing `src/index.js` and adding the following code.
 
 ```js
+// src/index.js
 // src/index.js
 
 // ...
@@ -753,11 +754,12 @@ registerServiceWorker();
 
 Despite these changes, you'll see nothing has changed.
 
-![Material UI and Roboto setup but nothing has changed](/Users/olaf/Desktop/upload react--material-ui-and-roboto-but-nothing-has-changed.png)
+![Material UI and Roboto setup but nothing has changed](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/material-ui-and-roboto-but-nothing-has-changed.png)
 
 We'll start off simple, we'll make our content look a bit prettier but putting it inside a [Material UI `Paper` component](http://www.material-ui.com/#/components/paper). So edit `src/components/Home.js`, import the `Paper` component and place our text inside a `Paper` tag, like so;
 
 ```js
+// src/components/Home.js
 import React from 'react';
 import Paper from 'material-ui/Paper';
 
@@ -775,7 +777,7 @@ export default Home;
 
 We can check that Material UI is working just fine. Notice how the styles from the base component are applied to Material UI's components, only.
 
-![screenshot](/Users/olaf/Desktop/upload react--content-inside-paper-component.png)
+![Display content inside a Paper component](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/content-inside-paper-component.png)
 
 To tackle our `Header` component, we'll make use of the [Material UI `AppBar` component](http://www.material-ui.com/#/components/app-bar).
 
@@ -784,6 +786,7 @@ Edit `src/components/Header.js` and follow the changes below.
 We'll change our `Header` component from a stateless [Functional Component to a Class Component](https://reactjs.org/docs/components-and-props.html). This is because our component now needs a state and some functions of it's own.
 
 ```diff
+// src/components/Header.js
 - import React from 'react';
 + import React, { Component } from 'react';
   import { Link } from 'react-router-dom';
@@ -811,41 +814,33 @@ We'll change our `Header` component from a stateless [Functional Component to a 
 Next we'll replace our `<h1>` with an `AppBar` component.
 
 ```diff
-
-// ...
-
+// src/components/Header.js
+  // ...
 + import AppBar from 'material-ui/AppBar';
 
-
-// ...
-
+  // ...
 -         <h1>Welcome to React</h1>
 +         <AppBar
 +           title="Welcome to React"
 +         />
-
-// ...
-
+  // ...
 ```
 
 It should be looking something like this now.
 
-![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-04-18 at 19.59.34.png)
+![Material UI's AppBar applied to our application](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/material-app-bar-applied.png)
 
-how cool would it be to move that nav into a `Drawer` component that slides in from the side, we can do this with the [Material UI `Drawer` component](http://www.material-ui.com/#/components/drawer).
+Now, how cool would it be to move that nav into a `Drawer` component that slides in from the side? We can do this with the [Material UI `Drawer` component](http://www.material-ui.com/#/components/drawer).
 
 This time we're going to add a constructor to set our initial state and two functions to handle toggling and closing our `Drawer`.
 
 ```diff
-
-// ...
-
+// src/components/Header.js
+  // ...
 + import Drawer from 'material-ui/Drawer';
 + import MenuItem from 'material-ui/MenuItem';
 
-
-// ...
-
+  // ...
   class Header extends Component {
 +   constructor(props) {
 +     super(props);
@@ -857,9 +852,7 @@ This time we're going to add a constructor to set our initial state and two func
 +   handleClose = () => this.setState({open: false});
 +
     render() {
-
-// ...
-
+      // ...
 -         <nav>
 -           <ul>
 -             <li><Link to='/'>Home</Link></li>
@@ -882,13 +875,10 @@ This time we're going to add a constructor to set our initial state and two func
 +             onClick={this.handleClose}
 +           />
 +         </Drawer>
-
-// ...
-
+      // ...
     }
-
-// ...
-
+  }
+  // ...
 ```
 
 So now our links have disappeared, we can't click them and we can't see the menu. We just need to tell our `AppBar` to open the `Drawer` when we click on the menu button.
@@ -896,15 +886,12 @@ So now our links have disappeared, we can't click them and we can't see the menu
 To do this, we need to tell the left most icon on the `AppBar` that it's a button with a function!
 
 ```diff
-
-// ...
-
+// src/components/Header.js
+  // ...
 + import IconButton from 'material-ui/IconButton';
 + import MenuIcon from 'material-ui/svg-icons/navigation/menu';
 
-
-// ...
-
+        // ...
           <AppBar
             title="Welcome to React"
 +           iconElementLeft={<IconButton
@@ -912,14 +899,13 @@ To do this, we need to tell the left most icon on the `AppBar` that it's a butto
 +             onClick={this.handleToggle}
 +           ><MenuIcon /></IconButton>}
           />
-
-// ...
-
+        // ...
 ```
 
-Once done the file should end up looking like this
+Once done the `src/components/Header.js` should end up looking like this.
 
 ```js
+// src/components/Header.js
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import AppBar from 'material-ui/AppBar';
@@ -974,11 +960,11 @@ export default Header;
 
 And if we run it, we should be able to navigate like this!
 
-![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-04-18 at 20.26.05.gif)
+![Navigation with Material UI's Drawer component](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/material-ui-drawer-navigation.gif)
 
-### fetch content from express app
+### Fetch content from our Express API
 
-first thing is first, we need to enable CORS for our express app.
+First thing is first, we need to enable CORS for our Express app.
 
 Back in our express apps root directory, let's install `cors`.
 
@@ -987,9 +973,10 @@ cd ..
 yarn add cors
 ```
 
-To configure it, edit our `index.js` and to look like the following
+To configure it, edit our `index.js` to look like the following.
 
 ```js
+// index.js
 const express = require('express');
 const cors = require('cors');
 const app = express();
@@ -1007,29 +994,30 @@ const port = process.env.PORT || 3001;
 app.listen(port, () => console.log(`Listening on port ${port}`));
 ```
 
-notice origin is set to '*' if the environment variable isn't set `origin: process.env.CORS_ORIGIN || '*'` so that it's not restricted during the development process. It will be insecure if you deploy to production without your origin set
+Notice origin is set to '*' if the environment variable isn't set `origin: process.env.CORS_ORIGIN || '*'` so that it's not restricted during the development process. It will be insecure if you deploy to production without setting your CORS origin.
 
-back to our client react application
+Now change back to our React application.
 
 ```bash
 cd www-client
 ```
 
-now we'll need to add a library for embedding youtube videos
+We'll need to add a library for embedding youtube videos.
 
 ```bash
 yarn add react-youtube
 ```
 
-create a new component for our video
+Create a new component for our video to live in.
 
 ```bash
 touch src/components/Video.js
 ```
 
-give it the following code 
+And give it the following code.
 
 ```js
+// src/components/Video.js
 import React from 'react';
 import YouTube from 'react-youtube';
 import { Card, CardMedia } from 'material-ui/Card';
@@ -1060,9 +1048,10 @@ const Video = ({video}) => (
 export default Video;
 ```
 
-lets use this component to display our videos, edit `src/components/Videos.js` to look like this
+Use this component to display our videos, edit `src/components/Videos.js` to look like this.
 
 ```js
+// src/components/Videos.js
 import React, { Component } from 'react';
 import Video from './Video';
 
@@ -1105,26 +1094,27 @@ class Videos extends Component {
 export default Videos;
 ```
 
-you'll see this is another component that has changed from a [Functional Component to a Class Component](https://reactjs.org/docs/components-and-props.html) so that we can manage it's state
+This is another component that has changed from a [Functional Component to a Class Component](https://reactjs.org/docs/components-and-props.html) so that we can manage it's state.
 
-breaking down this component you'll see that we are using `constructor` to set a default state and `componentDidMount` which is a lifecycle method that is invoked immediately after a component is mounted.
+Breaking down this component you'll see that we are using `constructor` to set a default state, and `componentDidMount` which is a lifecycle method that is invoked immediately after a component is mounted.
 
-here we make an request to our API. response is returned as an asychronous `Promise`. here we'll update the state of the component (when `videos` are returned from the API, we update the component to know about them). when a components state changes, `render` is called again. This means that we can put a pretty loader on our component and it will update once our data is returned. Remember, our data is being cached in memory as well.
+Here we make an request to our API. Our response from our `fetch` is returned as an asychronous `Promise` that we'll update the state of the component with. When `videos` are returned from the API, we update the component to know about them. Updating the state of a component will cause `render` to be called called again, displaying our videos.
 
-one quick change to `src/components/Main.js` to widen the margin between the headers `AppBar` and the main content.
+One quick change to `src/components/Main.js` is to to widen the margin between the header's `AppBar` and the main content.
 
 ```diff
+// src/components/Main.js
 -   <div>
 +   <div style={{
 +     marginTop: '1em'
 +   }}>
 ```
 
-Our app should look something like this
+Our React application should look something like this.
 
-![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-04-24 at 12.36.50.png)
+![React application now shows embedded Auth0 videos](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/react-application-showing-embedded-auth0-videos.png)
 
-## auth in react with auth0.js based on new guidelines
+## Auth in React with auth0.js
 
 We're going to use [Auth0](https://auth0.com) to identify our users.
 
@@ -1189,7 +1179,7 @@ export default class Auth {
 
 Edit `src/auth/Auth.js` and replace `<your-domain>` and `<your-client-id>` with your Auth0 domain prefix and your client ID, found on your [application dashboard](https://manage.auth0.com/#/applications).
 
-![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-04-24 at 12.49.05.png)
+![Create a new Auth0 application](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/create-a-new-auth0-application.png)
 
 #### Test our Auth class
 
@@ -1197,7 +1187,6 @@ Quickly, we'll test that our new Auth class is configured properly. To quickly d
 
 ```js
 // src/components/App.js
-
 // ...
 
 import Auth from '../auth/Auth';
@@ -1213,7 +1202,7 @@ const App = () => (
 
 When you visit [localhost:3000](http://localhost:3000/) now, we'll be redirected to our login page.
 
-![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-04-24 at 12.33.42.png)
+![Auth0 login page](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/auth0-login-page.png)
 
 If we get our login box, we know our library is configured correctly. **Logging in won't work,** we haven't built our callback yet.
 
@@ -1223,7 +1212,6 @@ We need a few more methods in the `Auth` class to help us manage authentication 
 
 ```js
 // src/auth/Auth.js
-  
 // ...
 
 export default class Auth {
@@ -1295,7 +1283,6 @@ Create a new file `src/components/Callback.js` and add this code.
 
 ```js
 // src/components/Callback.js
-
 import React, { Component } from 'react';
 import Paper from 'material-ui/Paper';
 import CircularProgress from 'material-ui/CircularProgress';
@@ -1323,7 +1310,7 @@ class Callback extends Component {
 export default Callback;
 ```
 
-Besides the pretty spinning `CircularProgress`, the function of this class will be to identify an incoming accessToken supplied in `window.location.hash` and handle the authentication.
+Besides the pretty spinning `CircularProgress`, the function of this class will be to identify an incoming `accessToken` supplied in the `window.location.hash`, and verify token.
 
 We quickly setup some routing to it by editing `src/components/Main.js` and adding a route for `Callback`
 
@@ -1349,9 +1336,9 @@ import Callback from './Callback';
 
 When we visit it directly without a hash, you can see it doesn't do very much else!
 
-![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-04-24 at 13.01.15.png)
+![What our Auth callback looks like on its own](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/what-the-callback-looks-like-on-its-own.png)
 
-Now for the magic bit, edit the `src/components/Callback.js` and add the `componentDidMount` method to the component class like this.
+Now for the magic bit, edit the `src/components/Callback.js` and add the `componentDidMount` method to the component class like this, that looks for a token in our hash and calls our `handleAuthentication` method if it finds one.
 
 ```js
 // src/components/Callback.js
@@ -1370,7 +1357,7 @@ class Callback extends Component {
 // ...
 ```
 
-Edit `src/components/App.js` for our big change. We'll remove our test code and change the component from a stateless to a stateful component, so it's aware of our authentiation situation.
+Edit `src/components/App.js` for our big change. We'll remove our test code and change the component from a stateless functon component to a stateful class component, so it's aware of our authentication situation.
 
 ```js
 // src/components/App.js
@@ -1422,9 +1409,10 @@ class App extends Component {
 export default withRouter(App);
 ```
 
-You'll see we've now got a `constructor()` that creates our `new Auth()` instance like our test code did. Then we apply two callback functions to the class so our app knows what to do after login/logout.
+You'll see we've now got a `constructor()` that creates our `new Auth()` instance, a bit like our test code did it. Then we apply two callback functions to the class so we call tell our Auth class what to do with our application, after login or logout are called.
 
 ```js
+  // ...
   authorized(authenticated) {
     this.setState({ authenticated });
 
@@ -1438,15 +1426,15 @@ You'll see we've now got a `constructor()` that creates our `new Auth()` instanc
   deauthorized() {
     this.props.history.push('/');
   }
+  // ...
 ```
 
 The `authorized` callback function updates the `App` component state. So we've given our `Auth` class the ability to nudge our `React` app once authentication has taken place. The `authorized` function will also look to see if we have a localStorage item for a `redirectTo` path, so after we've authorized we can push the user to a predetermined route, like the page they were on when they tried to login. The `deauthorized` function is response for pushing us back to the `Home` route once we've logged out.
 
-The last little change is adding the `withRouter` [higher-order component](https://reactjs.org/docs/higher-order-components.html). Concretely, a higher-order component is a function that takes a component and returns a new component. Whereas a component transforms props into UI, a higher-order component transforms a component into another component.
+The last little change is adding the `withRouter` [higher-order component](https://reactjs.org/docs/higher-order-components.html). Basically, a higher-order component is a function that takes a component and returns a new component, allowing us to augment it with additional features.
 
 ```js
 // src/components/App.js
-
 // ...
 
 export default withRouter(App);
@@ -1480,7 +1468,7 @@ const Main = ({auth}) => {
 export default Main;
 ```
 
-You might notice that we've changed from `Route component={}` to [`Route render={}`](https://reacttraining.com/react-router/web/api/Route/render-func) props. This allows us to use an inline function to pass props through to our routed components.
+You might notice that we've changed from using the Route's `component={}` prop to a [`render={}`](https://reacttraining.com/react-router/web/api/Route/render-func) prop. This allows us to use an inline function to pass props through with our routed components.
 
 Now our application is aware of our authentication state, we can modify our `Header` to show our log in/log out button.
 
@@ -1560,15 +1548,17 @@ class Header extends Component {
 export default Header;
 ```
 
-The big changes are are we're adding the `iconElementRight` prop, which contains a button, to the `AppBar`. The state of the button is determined by the authentication state.
+The big changes are the handleLogin, handleLogout and button components that we're defining. This are added using the `iconElementRight` prop to the `AppBar`. The state of the button is determined by the authentication state.
 
 If the user is logged in, you'll see `Log out` and visa versa.
 
 Now we can test it!
 
-![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-04-24 at 15.00.37.gif)
+![Log in and Log out using our NavBar button](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/login-logout-with-a-button.gif)
 
-The last thing to do is add our avatar to our `Log out` button. Because why not! Edit `src/components/Header.js`. This is assuming they'll always have a `picture` in their OpenID profile, otherwise you could use the [Material UI `Avatar` component](http://www.material-ui.com/#/components/avatar) to do letters or icons.
+The last thing to do is add our avatar to our `Log out` button. Because why not! Edit `src/components/Header.js`. 
+
+> ***Note:*** This code assumes they'll always have a `picture` in their OpenID profile, otherwise you could use the [Material UI `Avatar` component](http://www.material-ui.com/#/components/avatar) to show letters or icons.
 
 ```js
 // src/components/Header.js
@@ -1603,7 +1593,7 @@ import Avatar from 'material-ui/Avatar';
 
 And test!
 
-![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-04-24 at 16.03.37.png)
+![Adding an avatar to our log out button](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/adding-an-avatar-to-our-logout-button.png)
 
 ## Verifying an access token in Express
 
@@ -1634,7 +1624,7 @@ class Videos extends Component {
 // ...
 ```
 
-Simply, if `isAuthenticated()` is `true`, we add our token to the headers of our `fetch`.
+Simply, if `isAuthenticated()` is `true`, we add our `accessToken` to the headers of our `fetch`.
 
 Now we need to verify that in our Express application. For that we're going to need the `express-jwt` and `jwks-rsa` packages. 
 
@@ -1671,7 +1661,7 @@ const config = {
   algorithms: [ 'RS256' ]
 };
 
-const auth = {
+module.exports = {
   required: (req, res, next) => {
     return jwt(config)(req, res, next);
   },
@@ -1679,8 +1669,6 @@ const auth = {
     return jwt({...config, credentialsRequired: false})(req, res, next);
   }
 };
-
-module.exports = auth;
 ```
 
 Now we have a means to protect our endpoints with auth that is both required or optional. Applying authentication to an endpoint is as easy as this;
@@ -1718,7 +1706,7 @@ router.get('/videos', auth.optional, videos, (req, res) => {
 // ...
 ```
 
-Now our `/videos` route (and our `videos` middleware) are both aware when our user is authenticated, as the validated user is stored in `req.user`.
+Our `/videos` route (and our `videos` middleware) are both aware when our user is authenticated, as the validated user is stored in `req.user`.
 
 ## Save our favourite videos
 
@@ -1732,17 +1720,17 @@ We're going to use mLab's free cloud-hosted "sandbox" database. This database is
 
 [Create a free account](https://mlab.com/signup/) with mLab. The bonus over a free AWS or Google Cloud instance is that you can get up and running without providing any payment details.
 
-![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-04-30 at 16.00.54.png)
+![Create an mLab account](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/mlab-signup-created-an-mlab-account.png)
 
 After logging in, you'll be taken to your [home screen](https://mlab.com/home).
 
 * Click **Create New** in the MongoDB Deployments section of the home screen.
 
-  ![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-04-30 at 16.02.04.png)
+  ![Click Create New in the MongoDB Deployments section](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/mlab-signup-home-screen-click-create-new-deployment.png)
 
 * This opens the Cloud Provider Selection screen.
 
-  ![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-04-30 at 16.02.31.png)
+  ![Select any provider and a free SANDBOX plan](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/mlab-signup-select-any-provider-and-free-sandbox-plan.png)
 
   * Select any provider from the Cloud Provider section. Their availability regions differ.
 
@@ -1752,19 +1740,19 @@ After logging in, you'll be taken to your [home screen](https://mlab.com/home).
 
 * This opens the Select Region screen.
 
-  ![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-04-30 at 16.02.40.png)
+  ![Select a suitable region thats close to you](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/mlab-signup-select-a-suitable-region-close-to-you.png)
 
   * Select the region closest to you and click **Continue**.
 
 * This opens the Final Details screen.
 
-  ![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-04-30 at 16.03.18.png)
+  ![Name your database and click continue](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/mlab-signup-name-your-database-click-continue.png)
 
   * Enter the name of your new database and click **Continue**.
 
 * This opens the Order Confirmation screen.
 
-  ![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-04-30 at 16.03.25.png)
+  ![Confirm your details and submit order](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/mlab-signup-continue-your-details-submit-order.png)
 
   * Confirm the details and click **Submit Order**.
 
@@ -1772,19 +1760,19 @@ After logging in, you'll be taken to your [home screen](https://mlab.com/home).
 
   * Open the database you just created. Note the URL shown (or where to find it), as you'll need it later.
 
-  ![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-04-30 at 16.04.30.png)
+  ![Open your new database and note the URL](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/open-the-database-and-note-the-url.png)
 
   * Click on the **Users** tab.
 
   * Click the Add database user button.
 
-  ![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-04-30 at 16.04.39.png)
+  ![Click to add a new database user](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/click-to-add-a-new-database-user.png)
 
 * This opens an Add new database user form.
 
   * Complete form and click **Create**.
 
-  ![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-04-30 at 16.05.41.png)
+  ![Complete the user details and click create](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/complete-user-details-click-create.png)
 
 * You'll be returned to the home screen.
 
@@ -1792,19 +1780,19 @@ After logging in, you'll be taken to your [home screen](https://mlab.com/home).
 
   * Click the Add collection button.
   
-  ![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-05-01 at 13.56.57.png)
+  ![Click to add a new database collection](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/click-to-add-a-new-database-collection.png)
 
 * This opens an Add new collection form.
 
   * Complete form and click **Create**.
   
-  ![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-05-01 at 13.57.14.png)
+  ![Complete the collection details and click create](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/complete-collection-details-click-create.png)
 
 You now have the URL of a database you can use for development along with a username and password to access it, and a collection to store your favourite videos in. The URL should be something along the lines of `mongodb://<db-user>:<db-password>@<user-domain>.mlab.com:<port>/<db-name>`.
 
 ### Connect to our database
 
-Now we have our database setup and a URL to connect to, we need to connect from our app. To do this, we need to edit our `index.js` for the first time in a while! But first we need to install `mongoose`.
+Now we have our database setup and a URL to connect to, we need to connect from our application. To do this, we need to edit our `index.js` for the first time in a while! But first we need to install `mongoose`.
 
 ```bash
 yarn add mongoose
@@ -2052,7 +2040,7 @@ We've created a function expression `handleFavourite` that receives a `video` an
 
 The state is used to decide whether the `FlatButton` component is highlighted or not, indicating our video has been favourited. Clicking this button will call the `handleFavourite` function, therefore acting as a toggle. Having a click about, we should end up with something similar to the screenshot below.
 
-![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-05-01 at 15.23.02.png)
+![The Final Product: Favourited Auth0 videos on React](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/the-final-product-favourited-auth0-videos.png)
 
 ## Conclusion
 
