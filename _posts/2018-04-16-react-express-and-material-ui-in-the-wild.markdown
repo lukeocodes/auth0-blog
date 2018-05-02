@@ -49,7 +49,7 @@ Newcomers can learn more about React, and how it works [here](https://reactforbe
 
 #### React Router 4
 
-React Router 4 is a complete ground up re-imagining of React Router, introducing breaking changes. But that's not all bad. We have a [practical run down of React Router 4](https://auth0.com/blog/react-router-4-practical-tutorial/) to cover all the bases, but I for one love the new direction React Router has taken on their path to 5.0.
+React Router 4 is a complete ground-up re-imagining of React Router, introducing breaking changes. But that's not all bad. We have a [practical guide to React Router 4](https://auth0.com/blog/react-router-4-practical-tutorial/) that covers all the bases, and I love the new direction React Router has taken on their path to 5.0.
 
 React Router is a set of navigational components that offers declarative routing in your React application. That means you can control your application through the URL. It has powerful features such as lazy code loading, dynamic route matching, and location transition handling built in.
 
@@ -93,7 +93,7 @@ You can learn more about getting started, and [bootstrapping a React project](ht
 
 [Material UI](http://www.material-ui.com/#/) is a library of React components that provide you a simple to use implementation of Google's [Material Design guidelines](https://material.io/guidelines/), that can be configured to represent your own brand.
 
-Google's [Material Design guidelines](https://material.io/guidelines/) seeks to set out the language needed to describe classic principles of good design, with the innovation and possibilities of modern technology. Design guidelines have been core to what print-based media businesses have done for years, setting out typography, grids, space, scale, color, and use of imagery so that creativity can evolve within margins that do not allow designers to stray too from the brand.
+Google's [Material Design guidelines](https://material.io/guidelines/) seek to set out the language needed to describe classic principles of good design, with the innovation and possibilities of modern technology. Design guidelines have been core to what print-based media businesses have done for years, setting out typography, grids, space, scale, color, and use of imagery so that creativity can evolve within margins that do not allow designers to stray too from the brand.
 
 Material UI's current version is not quite a frontend framework as it lacks certain components a lot of developers look for. The core team had a vision to enable developers to utilize Material Design guidelines without being opinionated about layouts, for which there are other libraries available. But Material UI provides a strong foundation to produce brand design guidelines for frontend developers to work from.
 
@@ -101,9 +101,9 @@ In the [next version of Material UI](https://material-ui-next.com/), we'll see a
 
 ### Node, NPM and Yarn
 
-[Node](https://nodejs.org/en/) (or Node.js) is a free, open source server environment designed to work on pretty much any platform which uses JavaScript server-side. The speed and power of Node comes from how it detatches the request and response. In a traditional web-server the request is received, waits to read the code, renders a response and returns it to the client. Node does it slightly differently in that the request is received and then it goes back to listening for the next request. Once the response is ready it returns it to the client. This non-blocking asynchronous prcoessing of requests makes it very memory efficient.
+[Node](https://nodejs.org/en/) (or Node.js) is a free, open-source server environment designed to work on pretty much any platform which uses JavaScript server-side. The speed and power of Node comes from how it detaches the request and response. In a traditional web-server, the request is received, waits to read the code, renders a response and returns it to the client. Node does it slightly differently in that the request is received and then it goes back to listening for the next request. Once the response is ready it returns it to the client. This non-blocking asynchronous processing of requests makes it very memory efficient.
 
-[NPM](https://www.npmjs.com/) is the worlds largest software registry, with around 3 billion downloads per week and 600,000 packages registered. Most of these packages can be used on the frontend (on your browser) AND the backend (on your node server), enabling JavaScript developers, previously banished to the frontend, to build software on the backend. NPM can be used in your project for dependency management, creating a lock file that can deploy with your application, so no nasty version suprises occur on deployment.
+[NPM](https://www.npmjs.com/) is the worlds largest software registry, with around 3 billion downloads per week and 600,000 packages registered. Most of these packages can be used on the frontend (on your browser) AND the backend (on your node server), enabling JavaScript developers, previously banished to the frontend, to build software on the backend. NPM can be used in your project for dependency management, creating a lock file that can deploy with your application, so no nasty version surprises occur on deployment.
 
 [Yarn](https://yarnpkg.com/en/) is dependency management solution, also developed by Facebook. This project uses `yarn` but the demo app ships with a lock file for both yarn and NPM. 
 
@@ -111,7 +111,7 @@ In the [next version of Material UI](https://material-ui-next.com/), we'll see a
 
 [Express](https://expressjs.com/) (or Express.js) is a super lightweight and flexible web application framework that provides a robust set of features for web and mobile applications.
 
-We're using Express to build an API and Express comes with a whole bunch of HTTP utility methods and middleware, making creation of a robust API quick and easy.
+We're using Express to build an API and Express comes with a whole bunch of HTTP utility methods and middleware, making the creation of a robust API quick and easy.
 
 ### MongoDB
 
@@ -121,7 +121,7 @@ MongoDB is supremely fast at writes (or inserts/updates) because it handles writ
 
 #### mLab
 
-[mLab](https://mlab.com) is a cloud database service featuring automated provisioning and scaling of MongoDB databases with a handy web interface, backups and recovery. mLab's Database-as-a-Service platform is available on AWS, Azure, and Google. One of the features that I find most appealing is the ability to setup a sandbox database in a suitable region for free on any of the three platforms mentioned. It also comes with the advantage that you can signup and get a free sandbox database without the need for credit card information, which cam be very appealing for those seeking to prototype applications quickly.
+[mLab](https://mlab.com) is a cloud database service featuring automated provisioning and scaling of MongoDB databases with a handy web interface, backups, and recovery. mLab's Database-as-a-Service platform is available on AWS, Azure, and Google. One of the features that I find most appealing is the ability to set up a sandbox database in a suitable region for free on any of the three platforms mentioned. It also comes with the advantage that you can sign up and get a free sandbox database without the need for credit card information, which can be very enticing for those seeking to prototype applications quickly.
 
 We talk through signing up and creating a MongoDB database with mLab in this article.
 
@@ -171,7 +171,7 @@ npm install create-react-app -g
 
 ## Our basic Express API
 
-First we need to create our new project directory. Remember where we put it!
+First, we need to create our new project directory. Remember where we put it!
 
 ```bash
 mkdir auth0-react-material/ && cd "$_"
@@ -185,7 +185,7 @@ Initialize a yarn project in our new directory.
 yarn init
 ```
 
-Yarn prompts for some input. In my case I just accepted all the defaults, but you might want to do it differently. However, to follow this guide, I would leave `entry point` as `index.js`. Otherwise we'll all get confused!
+Yarn prompts for some input. In my case, I just accepted all the defaults, but you might want to do it differently. However, to follow this guide, I would leave `entry point` as `index.js`. Otherwise we'll all get confused!
 
 ![Initialize a project with Yarn](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/yarn-init.png)
 
@@ -233,7 +233,7 @@ yarn add nodemon --dev
 
 Make sure we add `--dev` as *Nodemon* should only be used for development.
 
-When we install *Nodemon* it will create a binary file in `./node_modules/nodemon/bin/nodemon.js`. This is helpful, because `yarn` can detect and run binaries.
+When we install *Nodemon* it will create a binary file in `./node_modules/nodemon/bin/nodemon.js`. This is helpful because `yarn` can detect and run binaries.
 
 So all we need to do to run our dev server now is tell yarn to run nodemon.
 
@@ -279,7 +279,7 @@ Looks good!
 
 ### Create the API video endpoint
 
-Now edit `index.js` and add a new route, `/videos`. This route is going to evolve throughout the article, but in essense it always receive a HTTP `GET` request and return JSON with a HTTP `200 OK` response.
+Now edit `index.js` and add a new route, `/videos`. This route is going to evolve throughout the article, but in essence it always receives an HTTP `GET` request and return JSON with an HTTP `200 OK` response.
 
 {% highlight js %}
 {% raw %}
@@ -329,7 +329,7 @@ app.get('/videos', asyncVideosMiddleware, (req, res) => {
 {% endraw %}
 {% endhighlight %}
 
-Essentially we're applying our `videos` data, fetched from our channel feed, to `req.data` and returning that as JSON. The `asyncVideosMiddleware` is exactly as it says, asynchronous middleware designed to run before we process the rest of our HTTP request.
+Essentially we're applying our `videos` data that fetched from our channel feed to `req.data` and then returning that as JSON. The `asyncVideosMiddleware` is exactly as it says, asynchronous middleware designed to run before we process the rest of our HTTP request.
 
 ![RSS feed videos parsed and returned as JSON](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/rss-feed-videos-parsed-and-returned-as-json.png)
 
@@ -372,7 +372,7 @@ const asyncVideosMiddleware = async (req, res, next) => {
 
 > `1000 * 60 * 60` - or an hour in English!
 
-Check it's still working. This time it comes from cache instead of making the request to the RSS feed and parsing the result.
+Check it's still working. This time it comes from the cache instead of making the request to the RSS feed and parsing the result.
 
 #### Sensible code structure
 
@@ -579,7 +579,7 @@ touch src/components/{Main.js,Header.js,Home.js}
 
 > **Note:** *Another* nifty bash technique is the ability to run commands multiple times by providing it an array of arguments. This is called [Brace Expansion](http://wiki.bash-hackers.org/syntax/expansion/brace). It is the equivalent of `touch src/components/Main.js`, `touch src/components/Header.js` and `touch src/components/Home.js` all in one command.
 
-For the moment just set them up as basic components by editing `src/components/Main.js`, `src/components/Header.js` and `src/components/Home.js` as shown below.
+For the moment just set them up as basic components by editing `src/components/Main.js`, `src/components/Header.js`, and `src/components/Home.js` as shown below.
 
 {% highlight js %}
 {% raw %}
@@ -649,7 +649,7 @@ export default App;
 
 Nice and neat so far! Let's see if it's working.
 
-![App, Main and Header React components](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/app-main-header-components-working.png)
+![App, Main, and Header React components](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/app-main-header-components-working.png)
 
 Now we're going to create another page, something for us to route to.
 
@@ -701,7 +701,7 @@ Now check we can load our `video` route.
 
 ![React Router 4 loading the Video component](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/react-router-loading-video-component.png)
 
-But we don't have any links yet! so lets create a quick navigation menu in our `Header` component. So edit `src/components/Header.js` with the code shown here
+But we don't have any links yet! So let's create a quick navigation menu in our `Header` component. So edit `src/components/Header.js` with the code shown here
 
 {% highlight js %}
 {% raw %}
@@ -821,7 +821,7 @@ To tackle our `Header` component, we'll make use of the [Material UI `AppBar` co
 
 Edit `src/components/Header.js` and follow the changes below.
 
-We'll change our `Header` component from a stateless [Functional Component to a Class Component](https://reactjs.org/docs/components-and-props.html). This is because our component now needs a state and some functions of it's own.
+We'll change our `Header` component from a stateless [Functional Component to a Class Component](https://reactjs.org/docs/components-and-props.html). This is because our component now needs a state and some functions of its own.
 
 ```diff
 // src/components/Header.js
@@ -1140,13 +1140,13 @@ export default Videos;
 {% endraw %}
 {% endhighlight %}
 
-This is another component that has changed from a [Functional Component to a Class Component](https://reactjs.org/docs/components-and-props.html) so that we can manage it's state.
+This is another component that has changed from a [Functional Component to a Class Component](https://reactjs.org/docs/components-and-props.html) so that we can manage its state.
 
-Breaking down this component you'll see that we are using `constructor` to set a default state, and `componentDidMount` which is a lifecycle method that is invoked immediately after a component is mounted.
+Breaking down this component you'll see that we are using a `constructor` to set a default state, and `componentDidMount` which is a lifecycle method that is invoked immediately after a component is mounted.
 
-Here we make an request to our API. Our response from our `fetch` is returned as an asychronous `Promise` that we'll update the state of the component with. When `videos` are returned from the API, we update the component to know about them. Updating the state of a component will cause `render` to be called called again, displaying our videos.
+Here we make a request to our API. Our response from our `fetch` is returned as an asynchronous `Promise` that we'll update the state of the component with. When `videos` are returned from the API, we update the component to know about them. Updating the state of a component will cause `render` to be called called again, displaying our videos.
 
-One quick change to `src/components/Main.js` is to to widen the margin between the header's `AppBar` and the main content.
+One quick change to `src/components/Main.js` is to widen the margin between the header's `AppBar` and the main content.
 
 {% highlight js %}
 {% raw %}
@@ -1419,7 +1419,7 @@ class Callback extends Component {
 {% endraw %}
 {% endhighlight %}
 
-Edit `src/components/App.js` for our big change. We'll remove our test code and change the component from a stateless functon component to a stateful class component, so it's aware of our authentication situation.
+Edit `src/components/App.js` for our big change. We'll remove our test code and change the component from a stateless function component to a stateful class component, so it's aware of our authentication situation.
 
 {% highlight js %}
 {% raw %}
@@ -1473,7 +1473,7 @@ export default withRouter(App);
 {% endraw %}
 {% endhighlight %}
 
-You'll see we've now got a `constructor()` that creates our `new Auth()` instance, a bit like our test code did it. Then we apply two callback functions to the class so we call tell our Auth class what to do with our application, after login or logout are called.
+You'll see we've now got a `constructor()` that creates our `new Auth()` instance, a bit like our test code did it. Then we apply two callback functions to the class so we call tell our Auth class what to do with our application, after log in or log out are called.
 
 {% highlight js %}
 {% raw %}
@@ -1495,7 +1495,7 @@ You'll see we've now got a `constructor()` that creates our `new Auth()` instanc
 {% endraw %}
 {% endhighlight %}
 
-The `authorized` callback function updates the `App` component state. So we've given our `Auth` class the ability to nudge our `React` app once authentication has taken place. The `authorized` function will also look to see if we have a localStorage item for a `redirectTo` path, so after we've authorized we can push the user to a predetermined route, like the page they were on when they tried to login. The `deauthorized` function is response for pushing us back to the `Home` route once we've logged out.
+The `authorized` callback function updates the `App` component state. So we've given our `Auth` class the ability to nudge our `React` app once authentication has taken place. The `authorized` function will also look to see if we have a localStorage item for a `redirectTo` path, so after we've authorized we can push the user to a predetermined route, like the page they were on when they tried to log in. The `deauthorized` function is responsible for pushing us back to the `Home` route once we've logged out.
 
 The last little change is adding the `withRouter` [higher-order component](https://reactjs.org/docs/higher-order-components.html). Basically, a higher-order component is a function that takes a component and returns a new component, allowing us to augment it with additional features.
 
@@ -1508,7 +1508,7 @@ export default withRouter(App);
 {% endraw %}
 {% endhighlight %}
 
-Edit our `Main` component with our final routing changes, which shares the Auth class instance with our main components. Edit `src/components/Main.js` and replace it's contents with the following code.
+Edit our `Main` component with our final routing changes, which shares the Auth class instance with our main components. Edit `src/components/Main.js` and replace its contents with the following code.
 
 {% highlight js %}
 {% raw %}
@@ -1620,9 +1620,9 @@ export default Header;
 {% endraw %}
 {% endhighlight %}
 
-The big changes are the handleLogin, handleLogout and button components that we're defining. This are added using the `iconElementRight` prop to the `AppBar`. The state of the button is determined by the authentication state.
+The big changes are the handleLogin, handleLogout and button components that we're defining. This is added using the `iconElementRight` prop to the `AppBar`. The state of the button is determined by the authentication state.
 
-If the user is logged in, you'll see `Log out` and visa versa.
+If the user is logged in, you'll see `Log out` and vice-versa.
 
 Now we can test it!
 
@@ -1702,7 +1702,7 @@ class Videos extends Component {
 
 Simply, if `isAuthenticated()` is `true`, we add our `accessToken` to the headers of our `fetch`.
 
-Now we need to verify that in our Express application. For that we're going to need the `express-jwt` and `jwks-rsa` packages. 
+Now we need to verify that in our Express application. For that, we're going to need the `express-jwt` and `jwks-rsa` packages. 
 
 - `express-jwt` is an Express middleware that validates Json Web Tokens and once verified sets `req.user` on the [Express `req` object](https://expressjs.com/en/api.html#req).
 - `jwks-rsa` is Auth0's very own library to retrieve RSA signing keys from a [JWKS (JSON Web Key Set)](https://auth0.com/docs/jwks) endpoint.
@@ -1773,9 +1773,9 @@ app.get('/protected_endpoint', auth.optional, (req, res) => {
 {% endraw %}
 {% endhighlight %}
 
-A couple of steps ago, we applied a condition to our client app's `Videos` component when `componentDidMount` fires, that if a user is authenticated it will apply the `accessToken` to any requests it makes. So lets edit our `/videos` endpoint so it knows to verify our `accessToken`.
+A couple of steps ago, we applied a condition to our client app's `Videos` component when `componentDidMount` fires, that if a user is authenticated it will apply the `accessToken` to any requests it makes. So let's edit our `/videos` endpoint so it knows to verify our `accessToken`.
 
-Edit `controllers/videos.js` with this code, whicvh allows `/videos` to be accessed with optional authentication.
+Edit `controllers/videos.js` with this code, which allows `/videos` to be accessed with optional authentication.
 
 {% highlight js %}
 {% raw %}
@@ -1824,7 +1824,7 @@ After logging in, you'll be taken to your [home screen](https://mlab.com/home).
 
 * This opens the Select Region screen.
 
-  ![Select a suitable region thats close to you](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/mlab-signup-select-a-suitable-region-close-to-you.png)
+  ![Select a suitable region that's close to you](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/mlab-signup-select-a-suitable-region-close-to-you.png)
 
   * Select the region closest to you and click **Continue**.
 
@@ -1842,7 +1842,7 @@ After logging in, you'll be taken to your [home screen](https://mlab.com/home).
 
 * You'll be returned to the home screen.
 
-  * Open the database you just created. Note the URL shown (or where to find it), as you'll need it later.
+  * Open the database you just created. Note the URL shown here (or where to go find it), as you'll need it later.
 
   ![Open your new database and note the URL](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/open-the-database-and-note-the-url.png)
 
@@ -1876,7 +1876,7 @@ You now have the URL of a database you can use for development along with a user
 
 ### Connect to our database
 
-Now we have our database setup and a URL to connect to, we need to connect from our application. To do this, we need to edit our `index.js` for the first time in a while! But first we need to install `mongoose`.
+Now we have our database setup and a URL to connect to, we need to connect from our application. To do this, we need to edit our `index.js` for the first time in a while! But first, we need to install `mongoose`.
 
 ```bash
 yarn add mongoose
@@ -1936,11 +1936,11 @@ module.exports = mongoose.model( 'VideoModel', VideoSchema );
 {% endraw %}
 {% endhighlight %}
 
-This file defines our data structure for our video model, which provides us well formed objects as well as validation further down the line. Notice how it's also defining our collection name, here: `{ collection : 'videos' }`. If you've named your collection anything but `videos` on mLab, this will need to reflect that.
+This file defines our data structure for our video model, which provides us well-formed objects as well as validation further down the line. Notice how it's also defining our collection name, here: `{ collection : 'videos' }`. If you've named your collection anything but `videos` on mLab, this will need to reflect that.
 
 ### Favouriting a video
 
-To control our favourite videos, we're going to need two new endpoints. These endpoints will receive a HTTP `POST` request with a JSON payload of the video we're going to favourite. This means we need to parse the body, for which we'll need `body-parser`, a npm package that will parse the JSON and apply it to `req.body` as an object for us.
+To control our favourite videos, we're going to need two new endpoints. These endpoints will receive an HTTP `POST` request with a JSON payload of the video we're going to favourite. This means we need to parse the body, for which we'll need `body-parser`, a npm package that will parse the JSON and apply it to `req.body` as an object for us.
 
 So let's install `body-parser`.
 
@@ -2018,7 +2018,7 @@ const videos = async (req, res, next) => {
 {% endraw %}
 {% endhighlight %}
 
-This is going to try and find any favourited videos stored in the database for our user. Any videos in our list that we find in the database are going to be updated with the details from the database. This is a neat little way to preserve the work we've already build, while adding our new functionality.
+This is going to try and find any favourited videos stored in the database for our user. Any videos in our list that we find in the database are going to be updated with the details from the database. This is a neat little way to preserve the work we've already built, while adding our new functionality.
 
 ### The favourite button
 
@@ -2030,7 +2030,7 @@ Change back to our React app.
 cd www-client
 ```
 
-Edit `src/components/Video.js` and replace it's contents with the following code.
+Edit `src/components/Video.js` and replace its contents with the following code.
 
 {% highlight js %}
 {% raw %}
@@ -2128,7 +2128,7 @@ export default Video;
 {% endraw %}
 {% endhighlight %}
 
-One of the first things you'll notice is that we've also changed this component from a stateless [Functional Component to a Class Component](https://reactjs.org/docs/components-and-props.html) and made `video` part of the component's `state`. When the component's `state` is change, `render()` is called again. This means we can `React` to state changes, like the callback to an action–leading onto our next change.
+One of the first things you'll notice is that we've also changed this component from a stateless [Functional Component to a Class Component](https://reactjs.org/docs/components-and-props.html) and made `video` part of the component's `state`. When the component's `state` is changed, `render()` is called again. This means we can `React` to state changes, like the callback to an action.
 
 We've created a function expression `handleFavourite` that receives a `video` and subsequently makes a `favourite` or `unfavourite` request to our API based on the context of what was given to it. I.e. it will favourite a video and unfavourite a favourite video. This function will also update the `state` of the `Video` component with the response from the API.
 
@@ -2142,10 +2142,10 @@ Using Auth0, we've built robust authentication into our [React](https://reactjs.
 
 While concentrating on security, [Material UI](http://www.material-ui.com/) and [React Router 4](https://reacttraining.com/react-router/) have allowed us to deliver a neat user experience and nicely structured code.
 
-[Express](https://expressjs.com/) has given us the opportunity to produce a tidy API with a minimal footprint and it's [middleware](https://expressjs.com/en/guide/using-middleware.html) has allowed us to nicely separate concerns.
+[Express](https://expressjs.com/) has given us the opportunity to produce a tidy API with a minimal footprint and its [middleware](https://expressjs.com/en/guide/using-middleware.html) has allowed us to nicely separate concerns.
 
 In an attempt to keep the complexity of our React application small, I've avoided Redux or complicating the build process too much. In the real world, Flux implementations like [Redux can be a rabbit hole of complexity](https://hackernoon.com/avoiding-accidental-complexity-when-structuring-your-app-state-6e6d22ad5e2a), but supremely powerful.
 
-[Material UI](http://www.material-ui.com/) isn't a finished product yet. Initially they wanted to keep it as a 'component' library, to provide React components, as an implementation of the Material Design guidelines. This mean't they avoided some more basic desires of a UI framework, like Grids and layouts. However, it seems that [Material UI v1 is coming](https://material-ui-next.com/) and it appears it's a mature, fully fledged framework complete will all bells and whistles. I am very much looking forward to V1's full release and an opportunity to reproduce our React client application in the new version.
+[Material UI](http://www.material-ui.com/) isn't a finished product yet. Initially ,they wanted to keep it as a 'component' library, to provide React components, as an implementation of the Material Design guidelines. This meant they avoided some more basic desires of a UI framework, like Grids and layouts. However, it seems that [Material UI v1 is coming](https://material-ui-next.com/) and it appears it's a mature, fully-fledged framework complete will all bells and whistles. I am very much looking forward to V1's full release and an opportunity to reproduce our React client application in the new version.
 
 In our next article, we'll be producing a React Native application, extending our API's functionality right on to our handsets. 
