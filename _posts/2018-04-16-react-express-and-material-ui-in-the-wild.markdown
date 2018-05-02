@@ -2146,6 +2146,6 @@ While concentrating on security, [Material UI](http://www.material-ui.com/) and 
 
 In an attempt to keep the complexity of our React application small, I've avoided Redux or complicating the build process too much. In the real world, Flux implementations like [Redux can be a rabbit hole of complexity](https://hackernoon.com/avoiding-accidental-complexity-when-structuring-your-app-state-6e6d22ad5e2a), but supremely powerful.
 
-[Material UI](http://www.material-ui.com/) isn't a finished product yet. Initially ,they wanted to keep it as a 'component' library, to provide React components, as an implementation of the Material Design guidelines. This meant they avoided some more basic desires of a UI framework, like Grids and layouts. However, it seems that [Material UI v1 is coming](https://material-ui-next.com/) and it appears it's a mature, fully-fledged framework complete will all bells and whistles. I am very much looking forward to V1's full release and an opportunity to reproduce our React client application in the new version.
+[Material UI](http://www.material-ui.com/) isn't a finished product yet. However, it seems that [Material UI v1 is coming](https://material-ui-next.com/) and it looks like a mature, fully-fledged frontend framework complete will all bells and whistles. I am very much looking forward to V1's full release and an opportunity to reproduce our React client application with it.
 
 In our next article, we'll be producing a React Native application, extending our API's functionality right on to our handsets. 
