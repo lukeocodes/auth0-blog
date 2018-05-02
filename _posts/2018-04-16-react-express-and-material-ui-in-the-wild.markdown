@@ -31,8 +31,6 @@ related:
 
 **TL;DR:** In this guide we'll learn how to build a React application using React Router 4 and Material UI. Building a robust backend API with Express, a functional frontend application with React and Material. We attempt to build a real-world example using Material to keep our user experience in-check, without sacrificing on security. You can download the complete working [application here](http://www.github.com/auth0/auth0-react-material).
 
----
-
 ## What we're going to build
 
 In this article, we're going to be building two individual applications. Firstly, there will be an API, built on [Express](https://expressjs.com/) that is responsible for serving us our data. Secondly, our React application which will access our API. Our Express application is going to be built to verify tokens originally issued to our React application and our React application is going to be built to keep those tokens safe in memory, not persisting them to local storage. This is intended to demonstrate how a SPA application can be used for authentication, securely.
@@ -135,9 +133,9 @@ We're going to connect our Express application to mLab MongoDB database using Mo
 
 ## Security First
 
-There has been [plenty said](https://www.rdegges.com/2018/please-stop-using-local-storage/) about Single Page Applications and [security](https://www.owasp.org/index.php/HTML5_Security_Cheat_Sheet#Local_Storage) recently and it's forced a lot of very good developers to ask whether they're doing the responsible thing in teaching people to use local storage for access tokens.
+There has been [plenty said](https://www.rdegges.com/2018/please-stop-using-local-storage/) about Single Page Applications and [security](https://www.owasp.org/index.php/HTML5_Security_Cheat_Sheet#Local_Storage) recently and it's forced a lot of difficult questions about the use local storage for access tokens.
 
-So in this article we'll be ensuring we only store non-sensitive information in local storage, because local storage still has a place and it's extremely useful.
+So until that is all straightened out, this article will only store non-sensitive information in local storage, because local storage still has a place and it's extremely useful.
 
 ## Pre-requisites
 
