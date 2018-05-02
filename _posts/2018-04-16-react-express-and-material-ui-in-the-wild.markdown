@@ -29,7 +29,7 @@ related:
 - 2018-03-27-react-router-4-practical-tutorial
 ---
 
-**TL;DR:** A brief synopsis that includes link to a [github repo](http://www.github.com/).
+**TL;DR:** In this guide we'll learn how to build a React application using React Router 4 and Material UI. Building a robust backend API with Express, a functional frontend application with React and Material. We attempt to build a real-world example using Material to keep our user experience in-check, without sacrificing on security. You can download the complete working [application here](http://www.github.com/auth0/auth0-react-material).
 
 ---
 
