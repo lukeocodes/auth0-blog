@@ -35,11 +35,57 @@ related:
 
 ## What we're going to build
 
-In this article, we're going to build a React app that makes use of React Router 4.
+In this article, we're going to be building two individual applications. Firstly, there will be an API, built on [Express](https://expressjs.com/) that is responsible for serving us our data. Secondly, our React application which will access our API. Our Express application is going to be built to verify tokens originally issued to our React application and our React application is going to be built to keep those tokens safe in memory, not persisting them to local storage. This is intended to demonstrate how a SPA application can be used for authentication, securely.
 
 ### React
+
+For a while now, [React](https://reactjs.org) has been a developer favourite. Working with the DOM can be frustrating, but by offering developers a small set of tools to learn, React makes interacting with the browser DOM accessible to a large set of developers familiar with JavaScript but unfamiliar with the DOM API. 
+
+React gives us an ideal, or “virtual”, representation of our application, in our virtual DOM, with that simple set of tools to refine and manipulate it. Then, through a process of “[reconciliation](https://reactjs.org/docs/reconciliation.html)”, it syncs with the real DOM.
+
+The simplified virtual DOM API that React provides us allows us to tell React what we want the application to look like and React makes sure the DOM matches. This abstracts out the attribute manipulation, event handling, and manual DOM updating that you would otherwise have to build yourself.
+
+In the world of React, virtual DOM shouldn't be confused with Shadow DOM. Virtual DOM effectively describes React elements, whereby the Shadow DOM is a browser technology designed primarily for scoping variables and CSS in web components.
+
+Newcomers can learn more about React, and how it works [here](https://reactforbeginners.com/).
+
 #### React Router 4
+
+React Router 4 is a complete ground up re-imagining of React Router, introducing breaking changes. But that's not all bad. We have a [practical run down of React Router 4](https://auth0.com/blog/react-router-4-practical-tutorial/) to cover all the bases, but I for one love the new direction React Router has taken on their path to 5.0.
+
+React Router is a set of navigational components that offers declarative routing in your React application. That means you can control your application through the URL. It has powerful features such as lazy code loading, dynamic route matching, and location transition handling built in.
+
+You can learn more about [React Router on reacttraining.com](https://reacttraining.com/react-router/)
+
 #### React Components
+
+React is one of the nicest implementations to enable componentization that I've seen in a UI library. [React components](https://reactjs.org/docs/components-and-props.html) allow you to split your code into independent, reusable pieces, and think about each piece in isolation. 
+
+Components are like JavaScript functions that return React elements, describing what should appear on the screen. They accept arbitrary properties (`props`) and can have their own "state". When a Component's state or properties change, React re-renders the React elements, keeping the UI in sync.
+
+A simple React component can be defined in basic JavaScript.
+
+```js
+function Auth0(props) {
+  return <p>Auth0 welcomes {props.name} to React.</p>;
+}
+
+const Auth0 = (props) => <p>Auth0 welcomes {props.name} to React.</p>;
+```
+
+You can also use a JavaScript class, new with ECMAScript 2015 (ES6), to define a component.
+
+```js
+import React, { Component } from 'react';
+
+class Auth0 extends Component {
+  render() {
+    return <p>Auth0 welcomes {props.name} to React.</p>;
+  }
+}
+```
+
+You can learn more about getting started, and [bootstrapping a React project](https://auth0.com/blog/bootstrapping-a-react-project/) here.
 
 ### Material UI
 
@@ -94,7 +140,7 @@ yarn init
 
 Yarn prompts for some input. In my case I just accepted all the defaults, but you might want to do it differently. To follow this guide, I would leave `entry point` as `index.js`.
 
-![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-17 at 09.24.14.png)
+![Yarn Init](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--yarn-init.png)
 
 Add `express` to our project
 
@@ -102,7 +148,7 @@ Add `express` to our project
 yarn add express
 ```
 
-![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-17 at 09.26.06.png)
+![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--add-express.png)
 
 and create our `entry point` file.
 
@@ -110,7 +156,7 @@ and create our `entry point` file.
 touch index.js
 ```
 
-![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-17 at 09.26.52.png)
+![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-17 at 09.26.52.png)
 
 now edit `index.js` and add the following *hello world* code.
 
@@ -146,7 +192,7 @@ So all we need to do to run our dev server now is tell yarn to run nodemon.
 yarn run nodemon
 ```
 
-![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-17 at 09.45.17.png)
+![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-17 at 09.45.17.png)
 
 You can also alias it in your `package.json` so you can customize it later.
 
@@ -178,7 +224,7 @@ yarn run dev
 
 Go and make sure everything is running okay
 
-![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-17 at 10.07.23.png)
+![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-17 at 10.07.23.png)
 
 Looks good!
 
@@ -226,7 +272,7 @@ app.get('/videos', asyncVideosMiddleware, (req, res) => {
 
 ```
 
-![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-17 at 11.06.26.png)
+![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-17 at 11.06.26.png)
 
 #### cache content with memory-cache
 
@@ -260,7 +306,7 @@ const asyncVideosMiddleware = async (req, res, next) => {
 
 Check it's still working. This time it comes from cache instead of making the request to the RSS feed and parsing the result.
 
-![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-17 at 11.06.26.png)
+![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-17 at 11.06.26.png)
 
 #### sensible file layout
 
@@ -270,13 +316,13 @@ mkdir controllers utils
 
 `controllers` is where we're going to keep our routes and `utils` is where we're going to keep any utility logic, like contacting a 3rd party.
 
-![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-17 at 13.00.40.png)
+![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-17 at 13.00.40.png)
 
 ```bash
 touch controllers/videos.js utils/videos.js
 ```
 
-![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-17 at 13.01.25.png)
+![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-17 at 13.01.25.png)
 
 Now edit `utils/videos.js` where we'll move our async function for getting videos there.
 
@@ -341,7 +387,7 @@ Now we're going to create our react app to consume our backend express app.
 create-react-app www-client
 ```
 
-![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-18 at 10.23.34.png)
+![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-18 at 10.23.34.png)
 
 and test that everything is working
 
@@ -352,7 +398,7 @@ yarn start
 
 From here on out we'll be using the `www-client` directory as our current Working Directory. We'll move back to the express application directory when we need to.
 
-![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-18 at 10.49.02.png)
+![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-18 at 10.49.02.png)
 
 Now just to tidy up a bit and remove some boilerplate.
 
@@ -376,7 +422,7 @@ mv src/App.js src/components/
 
 and our directories will look something like this, which is a little tidier
 
-![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-18 at 11.04.52.png)
+![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-18 at 11.04.52.png)
 
 But our app won't run now. Let's fix it.
 
@@ -422,7 +468,7 @@ and edit our `src/components/App.js` like this
 
 Now everything should still work, if not a bit uglier. A good base for whats next.
 
-![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-18 at 11.13.31.png)
+![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-18 at 11.13.31.png)
 
 ### setup routes with react router 4
 
@@ -430,7 +476,7 @@ Now everything should still work, if not a bit uglier. A good base for whats nex
 yarn add react-router-dom
 ```
 
-![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-18 at 11.15.57.png)
+![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-18 at 11.15.57.png)
 
 edit `src/index.js` to use react router. it should now look something like this
 
@@ -522,7 +568,7 @@ export default App;
 
 nice and neat so far! let's see if it's working.
 
-![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-18 at 12.12.55.png)
+![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-18 at 12.12.55.png)
 
 now we're going to create another page, something for us to route to
 
@@ -568,7 +614,7 @@ export default Main;
 
 another quick check, make sure we haven't broken anything
 
-![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-18 at 12.27.37.png)
+![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-18 at 12.27.37.png)
 
 But we don't have any links yet! so lets create a quick nav menu in our `Header` component. So edit `src/components/Header.js` with the code shown here
 
@@ -594,7 +640,7 @@ export default Header;
 
 and check that our nav menu works with our router
 
-![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-18 at 12.50.45.gif)
+![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-18 at 12.50.45.gif)
 
 ### layout using material ui
 
@@ -654,7 +700,7 @@ registerServiceWorker();
 
 Despite these changes, you'll see nothing has changed.
 
-![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-18 at 13.30.35.png)
+![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-18 at 13.30.35.png)
 
 We'll start off simple, we'll make our content look a bit prettier but putting it inside a [Material UI `Paper` component](http://www.material-ui.com/#/components/paper). So edit `src/components/Home.js`, import the `Paper` component and place our text inside a `Paper` tag, like so;
 
@@ -676,7 +722,7 @@ export default Home;
 
 We can check that Material UI is working just fine. Notice how the styles from the base component are applied to Material UI's components, only.
 
-![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-18 at 14.34.48.png)
+![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-18 at 14.34.48.png)
 
 Now to tackle our `Header` component, we'll make use of the [Material UI `AppBar` component](http://www.material-ui.com/#/components/app-bar).
 
@@ -731,7 +777,7 @@ Next we'll replace our `<h1>` with an `AppBar` component.
 
 It should be looking something like this now.
 
-![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-18 at 19.59.34.png)
+![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-18 at 19.59.34.png)
 
 how cool would it be to move that nav into a `Drawer` component that slides in from the side, we can do this with the [Material UI `Drawer` component](http://www.material-ui.com/#/components/drawer).
 
@@ -875,7 +921,7 @@ export default Header;
 
 And if we run it, we should be able to navigate like this!
 
-![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-18 at 20.26.05.gif)
+![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-18 at 20.26.05.gif)
 
 ### fetch content from express app
 
@@ -1023,7 +1069,7 @@ one quick change to `src/components/Main.js` to widen the margin between the hea
 
 Our app should look something like this
 
-![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-24 at 12.36.50.png)
+![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-24 at 12.36.50.png)
 
 ## auth in react with auth0.js based on new guidelines
 
@@ -1090,7 +1136,7 @@ export default class Auth {
 
 Edit `src/auth/Auth.js` and replace `<your-domain>` and `<your-client-id>` with your Auth0 domain prefix and your client ID, found on your [application dashboard](https://manage.auth0.com/#/applications).
 
-![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-24 at 12.49.05.png)
+![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-24 at 12.49.05.png)
 
 #### Test our Auth class
 
@@ -1114,7 +1160,7 @@ const App = () => (
 
 When you visit [localhost:3000](http://localhost:3000/) now, we'll be redirected to our login page.
 
-![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-24 at 12.33.42.png)
+![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-24 at 12.33.42.png)
 
 If we get our login box, we know our library is configured correctly. **Logging in won't work,** we haven't built our callback yet.
 
@@ -1250,7 +1296,7 @@ import Callback from './Callback';
 
 When we visit it directly without a hash, you can see it doesn't do very much else!
 
-![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-24 at 13.01.15.png)
+![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-24 at 13.01.15.png)
 
 Now for the magic bit, edit the `src/components/Callback.js` and add the `componentDidMount` method to the component class like this.
 
@@ -1372,7 +1418,7 @@ const Main = ({auth}) => {
       <Switch>
         <Route exact path='/' render={(props) => <Home auth={auth} {...props} />}/>
         <Route path='/videos' render={(props) => <Videos auth={auth} {...props} />}/>
-        <Route path="/callback" render={(props) => <Callback auth={auth} {...props} />}/>
+        <Route path='/callback' render={(props) => <Callback auth={auth} {...props} />}/>
       </Switch>
     </div>
   );
@@ -1467,7 +1513,7 @@ If the user is logged in, you'll see `Log out` and visa versa.
 
 Now we can test it!
 
-![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-24 at 15.00.37.gif)
+![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-24 at 15.00.37.gif)
 
 The last thing to do is add our avatar to our `Log out` button. Because why not! Edit `src/components/Header.js`. This is assuming they'll always have a `picture` in their OpenID profile, otherwise you could use the [Material UI `Avatar` component](http://www.material-ui.com/#/components/avatar) to do letters or icons.
 
@@ -1504,7 +1550,7 @@ import Avatar from 'material-ui/Avatar';
 
 And test!
 
-![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-24 at 16.03.37.png)
+![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-24 at 16.03.37.png)
 
 ## Verifying an access token in Express
 
@@ -1633,17 +1679,17 @@ We're going to use mLab's free cloud-hosted "sandbox" database. This database is
 
 [Create a free account](https://mlab.com/signup/) with mLab. The bonus over a free AWS or Google Cloud instance is that you can get up and running without providing any payment details.
 
-![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-30 at 16.00.54.png)
+![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-30 at 16.00.54.png)
 
 After logging in, you'll be taken to your [home screen](https://mlab.com/home).
 
 * Click **Create New** in the MongoDB Deployments section of the home screen.
 
-  ![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-30 at 16.02.04.png)
+  ![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-30 at 16.02.04.png)
 
 * This opens the Cloud Provider Selection screen.
 
-  ![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-30 at 16.02.31.png)
+  ![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-30 at 16.02.31.png)
 
   * Select any provider from the Cloud Provider section. Their availability regions differ.
 
@@ -1653,19 +1699,19 @@ After logging in, you'll be taken to your [home screen](https://mlab.com/home).
 
 * This opens the Select Region screen.
 
-  ![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-30 at 16.02.40.png)
+  ![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-30 at 16.02.40.png)
 
   * Select the region closest to you and click **Continue**.
 
 * This opens the Final Details screen.
 
-  ![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-30 at 16.03.18.png)
+  ![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-30 at 16.03.18.png)
 
   * Enter the name of your new database and click **Continue**.
 
 * This opens the Order Confirmation screen.
 
-  ![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-30 at 16.03.25.png)
+  ![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-30 at 16.03.25.png)
 
   * Confirm the details and click **Submit Order**.
 
@@ -1673,19 +1719,19 @@ After logging in, you'll be taken to your [home screen](https://mlab.com/home).
 
   * Open the database you just created. Note the URL shown (or where to find it), as you'll need it later.
 
-  ![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-30 at 16.04.30.png)
+  ![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-30 at 16.04.30.png)
 
   * Click on the **Users** tab.
 
   * Click the Add database user button.
 
-  ![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-30 at 16.04.39.png)
+  ![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-30 at 16.04.39.png)
 
 * This opens an Add new database user form.
 
   * Complete form and click **Create**.
 
-  ![screenshot](/Users/olaf/Desktop/Screen Shot 2018-04-30 at 16.05.41.png)
+  ![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-04-30 at 16.05.41.png)
 
 * You'll be returned to the home screen.
 
@@ -1693,13 +1739,13 @@ After logging in, you'll be taken to your [home screen](https://mlab.com/home).
 
   * Click the Add collection button.
   
-  ![screenshot](/Users/olaf/Desktop/Screen Shot 2018-05-01 at 13.56.57.png)
+  ![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-05-01 at 13.56.57.png)
 
 * This opens an Add new collection form.
 
   * Complete form and click **Create**.
   
-  ![screenshot](/Users/olaf/Desktop/Screen Shot 2018-05-01 at 13.57.14.png)
+  ![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-05-01 at 13.57.14.png)
 
 You now have the URL of a database you can use for development along with a username and password to access it, and a collection to store your favourite videos in. The URL should be something along the lines of `mongodb://<db-user>:<db-password>@<user-domain>.mlab.com:<port>/<db-name>`.
 
@@ -1949,9 +1995,22 @@ export default Video;
 
 One of the first things you'll notice is that we've also changed this component from a stateless [Functional Component to a Class Component](https://reactjs.org/docs/components-and-props.html) and made `video` part of the component's `state`. When the component's `state` is change, `render()` is called again. This means we can `React` to state changes, like the callback to an action–leading onto our next change.
 
-We've created a function expression `handleFavourite` that receives a `video` and subsequently makes a `favourite` or `unfavourite` request to our API based on the context of what was given to it.  
+We've created a function expression `handleFavourite` that receives a `video` and subsequently makes a `favourite` or `unfavourite` request to our API based on the context of what was given to it. I.e. it will favourite a video and unfavourite a favourite video. This function will also update the `state` of the `Video` component with the response from the API.
 
+The state is used to decide whether the `FlatButton` component is highlighted or not, indicating our video has been favourited. Clicking this button will call the `handleFavourite` function, therefore acting as a toggle. Having a click about, we should end up with something similar to the screenshot below.
 
-## conclusion
+![screenshot](/Users/olaf/Desktop/react-express-and-material-ui-in-the-wild--Screen Shot 2018-05-01 at 15.23.02.png)
 
-## next steps (a react native guide)
+## Conclusion
+
+Using Auth0, we've built robust authentication into our [React](https://reactjs.org/) application, verifying our users access in the backend so our API remains secure. 
+
+While concentrating on security, [Material UI](http://www.material-ui.com/) and [React Router 4](https://reacttraining.com/react-router/) have allowed us to deliver a neat user experience and nicely structured code.
+
+[Express](https://expressjs.com/) has given us the opportunity to produce a tidy API with a minimal footprint and it's [middleware](https://expressjs.com/en/guide/using-middleware.html) has allowed us to nicely separate concerns.
+
+In an attempt to keep the complexity of our React application small, I've avoided Redux or complicating the build process too much. In the real world, Flux implementations like [Redux can be a rabbit hole of complexity](https://hackernoon.com/avoiding-accidental-complexity-when-structuring-your-app-state-6e6d22ad5e2a), but supremely powerful.
+
+[Material UI](http://www.material-ui.com/) isn't a finished product yet. Initially they wanted to keep it as a 'component' library, to provide React components, as an implementation of the Material Design guidelines. This mean't they avoided some more basic desires of a UI framework, like Grids and layouts. However, it seems that [Material UI v1 is coming](https://material-ui-next.com/) and it appears it's a mature, fully fledged framework complete will all bells and whistles. I am very much looking forward to V1's full release and an opportunity to reproduce our React client application in the new version.
+
+In our next article, we'll be producing a React Native application, extending our API's functionality right on to our handsets. 
