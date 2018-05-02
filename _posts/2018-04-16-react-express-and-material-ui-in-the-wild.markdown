@@ -65,17 +65,20 @@ Components are like JavaScript functions that return React elements, describing 
 
 A simple React component can be defined in basic JavaScript.
 
-```js
+{% highlight js %}
+{% raw %}
 function Auth0(props) {
   return <p>Auth0 welcomes {props.name} to React.</p>;
 }
 
 const Auth0 = (props) => <p>Auth0 welcomes {props.name} to React.</p>;
-```
+{% endraw %}
+{% endhighlight %}
 
 You can also use a JavaScript class, new with ECMAScript 2015 (ES6), to define a component.
 
-```js
+{% highlight js %}
+{% raw %}
 import React, { Component } from 'react';
 
 class Auth0 extends Component {
@@ -83,7 +86,8 @@ class Auth0 extends Component {
     return <p>Auth0 welcomes {props.name} to React.</p>;
   }
 }
-```
+{% endraw %}
+{% endhighlight %}
 
 You can learn more about getting started, and [bootstrapping a React project](https://auth0.com/blog/bootstrapping-a-react-project/) here.
 
@@ -205,7 +209,8 @@ touch index.js
 
 Now edit `index.js` and add the following *hello world* code.
 
-```js
+{% highlight js %}
+{% raw %}
 // index.js
 const express = require('express');
 const app = express();
@@ -219,7 +224,8 @@ app.get('/', (req, res) => {
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => console.log(`Listening on port ${port}`));
-```
+{% endraw %}
+{% endhighlight %}
 
 Before we run our development server, we're going to setup auto-reloading with *Nodemon*. When we change a file the development server will pick-up our changes automatically. I like to believe it's pronounced node-é-mon (like Pokémon).
 
@@ -277,7 +283,8 @@ Looks good!
 
 Now edit `index.js` and add a new route, `/videos`. This route is going to evolve throughout the article, but in essense it always receive a HTTP `GET` request and return JSON with a HTTP `200 OK` response.
 
-```js
+{% highlight js %}
+{% raw %}
 // index.js
 // ...
 
@@ -286,7 +293,8 @@ app.get('/videos', (req, res) => {
 });
 
 // ...
-```
+{% endraw %}
+{% endhighlight %}
 
 #### Fetch content from a remote source
 
@@ -300,7 +308,8 @@ yarn add rss-parser
 
 Now we can use it in our app. Edit `index.js` and add the following code.
 
-```js
+{% highlight js %}
+{% raw %}
 // index.js
 // ...
 
@@ -319,7 +328,8 @@ app.get('/videos', asyncVideosMiddleware, (req, res) => {
 });
 
 // ...
-```
+{% endraw %}
+{% endhighlight %}
 
 Essentially we're applying our `videos` data, fetched from our channel feed, to `req.data` and returning that as JSON. The `asyncVideosMiddleware` is exactly as it says, asynchronous middleware designed to run before we process the rest of our HTTP request.
 
@@ -337,7 +347,8 @@ yarn add memory-cache
 
 Now edit `index.js` and add it to our `asyncVideosMiddleware` so it's not trying to fetch it from the remote source on every request to our API.
 
-```js
+{% highlight js %}
+{% raw %}
 // index.js
 // ...
 const cache = require('memory-cache');
@@ -358,7 +369,8 @@ const asyncVideosMiddleware = async (req, res, next) => {
 };
 
 // ...
-```
+{% endraw %}
+{% endhighlight %}
 
 > `1000 * 60 * 60` - or an hour in English!
 
@@ -389,7 +401,8 @@ touch controllers/videos.js utils/videos.js
 
 Edit `utils/videos.js` where we'll move our async function for getting videos there.
 
-```js
+{% highlight js %}
+{% raw %}
 // utils/videos.js
 const parser = new (require('rss-parser'))();
 const cache = require('memory-cache');
@@ -411,11 +424,13 @@ const videos = async (req, res, next) => {
 };
 
 module.exports = videos;
-```
+{% endraw %}
+{% endhighlight %}
 
 Edit `controllers/videos.js` to place our `/videos` route there.
 
-```js
+{% highlight js %}
+{% raw %}
 // controllers/videos.js
 const router = require('express').Router();
 const videos = require('../utils/videos');
@@ -425,11 +440,13 @@ router.get('/videos', videos, (req, res) => {
 });
 
 module.exports = router;
-```
+{% endraw %}
+{% endhighlight %}
 
 Edit `index.js` to look like this, much tidier.
 
-```js
+{% highlight js %}
+{% raw %}
 // index.js
 const express = require('express');
 const app = express();
@@ -439,7 +456,8 @@ app.use('/', videos);
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => console.log(`Listening on port ${port}`));
-```
+{% endraw %}
+{% endhighlight %}
 
 > ***Note:*** When we require routing files and `use` them like this, we have the opportunity to apply a prefix to an entire routing file. `app.use('/some/prefix', someRouting)`.
 
@@ -533,7 +551,8 @@ yarn add react-router-dom
 
 Edit `src/index.js` with the following code.
 
-```js
+{% highlight js %}
+{% raw %}
 // src/index.js
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -547,7 +566,8 @@ ReactDOM.render((
   </BrowserRouter>
 ), document.getElementById('root'));
 registerServiceWorker();
-```
+{% endraw %}
+{% endhighlight %}
 
 Create some new empty components `Main.js`, `Header.js` and `Home.js`. 
 
@@ -563,7 +583,8 @@ touch src/components/{Main.js,Header.js,Home.js}
 
 For the moment just set them up as basic components by editing `src/components/Main.js`, `src/components/Header.js` and `src/components/Home.js` as shown below.
 
-```js
+{% highlight js %}
+{% raw %}
 // src/components/Header.js
 import React from 'react';
 
@@ -574,9 +595,11 @@ const Header = () => (
 );
 
 export default Header;
-```
+{% endraw %}
+{% endhighlight %}
 
-```js
+{% highlight js %}
+{% raw %}
 // src/components/Home.js
 import React from 'react';
 
@@ -587,9 +610,11 @@ const Home = () => (
 );
 
 export default Home;
-```
+{% endraw %}
+{% endhighlight %}
 
-```js
+{% highlight js %}
+{% raw %}
 // src/components/Main.js
 import React from 'react';
 import Home from './Home';
@@ -601,11 +626,13 @@ const Main = () => (
 );
 
 export default Main;
-```
+{% endraw %}
+{% endhighlight %}
 
 Now edit `src/components/App.js` to use some of our new components. It should look like the following.
 
-```js
+{% highlight js %}
+{% raw %}
 // src/components/App.js
 import React from 'react';
 import Header from './Header';
@@ -619,7 +646,8 @@ const App = () => (
 );
 
 export default App;
-```
+{% endraw %}
+{% endhighlight %}
 
 Nice and neat so far! Let's see if it's working.
 
@@ -633,7 +661,8 @@ touch src/components/Videos.js
 
 Give it this code.
 
-```js
+{% highlight js %}
+{% raw %}
 // src/components/Videos.js
 import React from 'react';
 
@@ -644,11 +673,13 @@ const Videos = () => (
 );
 
 export default Videos;
-```
+{% endraw %}
+{% endhighlight %}
 
 Now we can setup some routing to allow us to switch between `Home` and `Videos`, edit `src/components/Main.js` to look like this.
 
-```js
+{% highlight js %}
+{% raw %}
 // src/components/Main.js
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
@@ -665,7 +696,8 @@ const Main = () => (
 );
 
 export default Main;
-```
+{% endraw %}
+{% endhighlight %}
 
 Now check we can load our `video` route.
 
@@ -673,7 +705,8 @@ Now check we can load our `video` route.
 
 But we don't have any links yet! so lets create a quick navigation menu in our `Header` component. So edit `src/components/Header.js` with the code shown here
 
-```js
+{% highlight js %}
+{% raw %}
 // src/components/Header.js
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -691,7 +724,8 @@ const Header = () => (
 );
 
 export default Header;
-```
+{% endraw %}
+{% endhighlight %}
 
 Check that our nav menu works with our router by being able to navigate between our `Home` and `Video` pages.
 
@@ -707,7 +741,8 @@ yarn add material-ui webfontloader
 
 Now use `webfontloader` it to load `Roboto` by editing `src/index.js` and adding the following code.
 
-```js
+{% highlight js %}
+{% raw %}
 // src/index.js
 // src/index.js
 
@@ -722,11 +757,13 @@ WebFont.load({
 });
 
 // ...
-```
+{% endraw %}
+{% endhighlight %}
 
 While we're here, we can add Material UI's default theme provider component to our app. So our `src/index.js` will end up looking like this.
 
-```js
+{% highlight js %}
+{% raw %}
 // src/index.js
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -750,7 +787,8 @@ ReactDOM.render((
   </MuiThemeProvider>
 ), document.getElementById('root'));
 registerServiceWorker();
-``` 
+{% endraw %}
+{% endhighlight %}
 
 Despite these changes, you'll see nothing has changed.
 
@@ -758,7 +796,8 @@ Despite these changes, you'll see nothing has changed.
 
 We'll start off simple, we'll make our content look a bit prettier but putting it inside a [Material UI `Paper` component](http://www.material-ui.com/#/components/paper). So edit `src/components/Home.js`, import the `Paper` component and place our text inside a `Paper` tag, like so;
 
-```js
+{% highlight js %}
+{% raw %}
 // src/components/Home.js
 import React from 'react';
 import Paper from 'material-ui/Paper';
@@ -773,7 +812,8 @@ const Home = () => (
 );
 
 export default Home;
-```
+{% endraw %}
+{% endhighlight %}
 
 We can check that Material UI is working just fine. Notice how the styles from the base component are applied to Material UI's components, only.
 
@@ -904,7 +944,8 @@ To do this, we need to tell the left most icon on the `AppBar` that it's a butto
 
 Once done the `src/components/Header.js` should end up looking like this.
 
-```js
+{% highlight js %}
+{% raw %}
 // src/components/Header.js
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
@@ -956,7 +997,8 @@ class Header extends Component {
 }
 
 export default Header;
-```
+{% endraw %}
+{% endhighlight %}
 
 And if we run it, we should be able to navigate like this!
 
@@ -975,7 +1017,8 @@ yarn add cors
 
 To configure it, edit our `index.js` to look like the following.
 
-```js
+{% highlight js %}
+{% raw %}
 // index.js
 const express = require('express');
 const cors = require('cors');
@@ -992,7 +1035,8 @@ app.use('/', videos);
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => console.log(`Listening on port ${port}`));
-```
+{% endraw %}
+{% endhighlight %}
 
 Notice origin is set to '*' if the environment variable isn't set `origin: process.env.CORS_ORIGIN || '*'` so that it's not restricted during the development process. It will be insecure if you deploy to production without setting your CORS origin.
 
@@ -1016,7 +1060,8 @@ touch src/components/Video.js
 
 And give it the following code.
 
-```js
+{% highlight js %}
+{% raw %}
 // src/components/Video.js
 import React from 'react';
 import YouTube from 'react-youtube';
@@ -1046,11 +1091,13 @@ const Video = ({video}) => (
 );
 
 export default Video;
-```
+{% endraw %}
+{% endhighlight %}
 
 Use this component to display our videos, edit `src/components/Videos.js` to look like this.
 
-```js
+{% highlight js %}
+{% raw %}
 // src/components/Videos.js
 import React, { Component } from 'react';
 import Video from './Video';
@@ -1092,7 +1139,8 @@ class Videos extends Component {
 }
 
 export default Videos;
-```
+{% endraw %}
+{% endhighlight %}
 
 This is another component that has changed from a [Functional Component to a Class Component](https://reactjs.org/docs/components-and-props.html) so that we can manage it's state.
 
@@ -1102,13 +1150,18 @@ Here we make an request to our API. Our response from our `fetch` is returned as
 
 One quick change to `src/components/Main.js` is to to widen the margin between the header's `AppBar` and the main content.
 
-```diff
+{% highlight js %}
+{% raw %}
 // src/components/Main.js
--   <div>
-+   <div style={{
-+     marginTop: '1em'
-+   }}>
-```
+// ...
+    <div style={{
+      marginTop: '1em'
+    }}>
+      // ...
+    </div>
+// ...
+{% endraw %}
+{% endhighlight %}
 
 Our React application should look something like this.
 
@@ -1154,7 +1207,8 @@ We'll need a new class to manage and coordinate user authentication.
 
 Create a new file `src/auth/Auth.js` and inside it put the following code:
 
-```js
+{% highlight js %}
+{% raw %}
 // src/auth/Auth.js
 import auth0 from 'auth0-js';
 
@@ -1175,7 +1229,8 @@ export default class Auth {
     this.auth0.authorize();
   }
 }
-```
+{% endraw %}
+{% endhighlight %}
 
 Edit `src/auth/Auth.js` and replace `<your-domain>` and `<your-client-id>` with your Auth0 domain prefix and your client ID, found on your [application dashboard](https://manage.auth0.com/#/applications).
 
@@ -1185,7 +1240,8 @@ Edit `src/auth/Auth.js` and replace `<your-domain>` and `<your-client-id>` with 
 
 Quickly, we'll test that our new Auth class is configured properly. To quickly do this we'll add the following code to our `src/components/App.js` file. Don't worry about making a mess, this file is about to change, dramatically.
 
-```js
+{% highlight js %}
+{% raw %}
 // src/components/App.js
 // ...
 
@@ -1197,8 +1253,8 @@ auth.login();
 const App = () => (
   
 // ...
-
-```
+{% endraw %}
+{% endhighlight %}
 
 When you visit [localhost:3000](http://localhost:3000/) now, we'll be redirected to our login page.
 
@@ -1210,7 +1266,8 @@ If we get our login box, we know our library is configured correctly. **Logging 
 
 We need a few more methods in the `Auth` class to help us manage authentication in the app. So add the following code to `src/auth/Auth.js`:
 
-```js
+{% highlight js %}
+{% raw %}
 // src/auth/Auth.js
 // ...
 
@@ -1275,13 +1332,15 @@ export default class Auth {
     return (Date.now() < expiresAt) && this.accessToken !== undefined;
   }
 }
-```
+{% endraw %}
+{% endhighlight %}
 
 #### The callback
 
 Create a new file `src/components/Callback.js` and add this code.
 
-```js
+{% highlight js %}
+{% raw %}
 // src/components/Callback.js
 import React, { Component } from 'react';
 import Paper from 'material-ui/Paper';
@@ -1308,13 +1367,15 @@ class Callback extends Component {
 }
 
 export default Callback;
-```
+{% endraw %}
+{% endhighlight %}
 
 Besides the pretty spinning `CircularProgress`, the function of this class will be to identify an incoming `accessToken` supplied in the `window.location.hash`, and verify token.
 
 We quickly setup some routing to it by editing `src/components/Main.js` and adding a route for `Callback`
 
-```js
+{% highlight js %}
+{% raw %}
 // src/components/Main.js
 
 // ...
@@ -1332,7 +1393,8 @@ import Callback from './Callback';
       </Switch>
 
 // ...
-```
+{% endraw %}
+{% endhighlight %}
 
 When we visit it directly without a hash, you can see it doesn't do very much else!
 
@@ -1340,7 +1402,8 @@ When we visit it directly without a hash, you can see it doesn't do very much el
 
 Now for the magic bit, edit the `src/components/Callback.js` and add the `componentDidMount` method to the component class like this, that looks for a token in our hash and calls our `handleAuthentication` method if it finds one.
 
-```js
+{% highlight js %}
+{% raw %}
 // src/components/Callback.js
 
 // ...
@@ -1355,11 +1418,13 @@ class Callback extends Component {
   // ...
 }
 // ...
-```
+{% endraw %}
+{% endhighlight %}
 
 Edit `src/components/App.js` for our big change. We'll remove our test code and change the component from a stateless functon component to a stateful class component, so it's aware of our authentication situation.
 
-```js
+{% highlight js %}
+{% raw %}
 // src/components/App.js
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
@@ -1407,11 +1472,13 @@ class App extends Component {
 }
 
 export default withRouter(App);
-```
+{% endraw %}
+{% endhighlight %}
 
 You'll see we've now got a `constructor()` that creates our `new Auth()` instance, a bit like our test code did it. Then we apply two callback functions to the class so we call tell our Auth class what to do with our application, after login or logout are called.
 
-```js
+{% highlight js %}
+{% raw %}
   // ...
   authorized(authenticated) {
     this.setState({ authenticated });
@@ -1427,22 +1494,26 @@ You'll see we've now got a `constructor()` that creates our `new Auth()` instanc
     this.props.history.push('/');
   }
   // ...
-```
+{% endraw %}
+{% endhighlight %}
 
 The `authorized` callback function updates the `App` component state. So we've given our `Auth` class the ability to nudge our `React` app once authentication has taken place. The `authorized` function will also look to see if we have a localStorage item for a `redirectTo` path, so after we've authorized we can push the user to a predetermined route, like the page they were on when they tried to login. The `deauthorized` function is response for pushing us back to the `Home` route once we've logged out.
 
 The last little change is adding the `withRouter` [higher-order component](https://reactjs.org/docs/higher-order-components.html). Basically, a higher-order component is a function that takes a component and returns a new component, allowing us to augment it with additional features.
 
-```js
+{% highlight js %}
+{% raw %}
 // src/components/App.js
 // ...
 
 export default withRouter(App);
-```
+{% endraw %}
+{% endhighlight %}
 
 Edit our `Main` component with our final routing changes, which shares the Auth class instance with our main components. Edit `src/components/Main.js` and replace it's contents with the following code.
 
-```js
+{% highlight js %}
+{% raw %}
 // src/components/Main.js
 
 import React from 'react';
@@ -1466,7 +1537,8 @@ const Main = ({auth}) => {
 };
 
 export default Main;
-```
+{% endraw %}
+{% endhighlight %}
 
 You might notice that we've changed from using the Route's `component={}` prop to a [`render={}`](https://reacttraining.com/react-router/web/api/Route/render-func) prop. This allows us to use an inline function to pass props through with our routed components.
 
@@ -1474,7 +1546,8 @@ Now our application is aware of our authentication state, we can modify our `Hea
 
 Replace the contents of `src/components/Header.js` with this code.
 
-```js
+{% highlight js %}
+{% raw %}
 // src/components/Header.js
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
@@ -1546,7 +1619,8 @@ class Header extends Component {
 }
 
 export default Header;
-```
+{% endraw %}
+{% endhighlight %}
 
 The big changes are the handleLogin, handleLogout and button components that we're defining. This are added using the `iconElementRight` prop to the `AppBar`. The state of the button is determined by the authentication state.
 
@@ -1560,7 +1634,8 @@ The last thing to do is add our avatar to our `Log out` button. Because why not!
 
 > ***Note:*** This code assumes they'll always have a `picture` in their OpenID profile, otherwise you could use the [Material UI `Avatar` component](http://www.material-ui.com/#/components/avatar) to show letters or icons.
 
-```js
+{% highlight js %}
+{% raw %}
 // src/components/Header.js
 // ...
 import Avatar from 'material-ui/Avatar';
@@ -1589,7 +1664,8 @@ import Avatar from 'material-ui/Avatar';
 }
 
 // ...
-```
+{% endraw %}
+{% endhighlight %}
 
 And test!
 
@@ -1601,7 +1677,8 @@ So one of the things we want to do is verify our user on our Express application
 
 If we're authenticated on our React application, we want to pass through our authToken to Express. So edit `src/components/Videos.js` where we make our request to Express and add this code.
 
-```js
+{% highlight js %}
+{% raw %}
 // src/components/Videos.js
 // ...
 
@@ -1622,7 +1699,8 @@ class Videos extends Component {
 }
 
 // ...
-```
+{% endraw %}
+{% endhighlight %}
 
 Simply, if `isAuthenticated()` is `true`, we add our `accessToken` to the headers of our `fetch`.
 
@@ -1647,7 +1725,8 @@ yarn add express-jwt jwks-rsa
 
 Now while we're here, we need to create our own middleware to verify our token. So create a new file `utils/auth.js` and add the following to the file.
 
-```js
+{% highlight js %}
+{% raw %}
 // utils/auth.js
 const jwt = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
@@ -1669,33 +1748,39 @@ module.exports = {
     return jwt({...config, credentialsRequired: false})(req, res, next);
   }
 };
-```
+{% endraw %}
+{% endhighlight %}
 
 Now we have a means to protect our endpoints with auth that is both required or optional. Applying authentication to an endpoint is as easy as this;
 
-```js
+{% highlight js %}
+{% raw %}
 const auth = require('utils/auth.js');
 
 app.get('/protected_endpoint', auth.required, (req, res) => {
   res.json(req.data);
 });
-```
+{% endraw %}
+{% endhighlight %}
 
 But if you want an endpoint to be available whether they're authenticated or not, you can do this;
 
-```js
+{% highlight js %}
+{% raw %}
 const auth = require('utils/auth.js');
 
 app.get('/protected_endpoint', auth.optional, (req, res) => {
   res.json(req.data);
 });
-```
+{% endraw %}
+{% endhighlight %}
 
 A couple of steps ago, we applied a condition to our client app's `Videos` component when `componentDidMount` fires, that if a user is authenticated it will apply the `accessToken` to any requests it makes. So lets edit our `/videos` endpoint so it knows to verify our `accessToken`.
 
 Edit `controllers/videos.js` with this code, whicvh allows `/videos` to be accessed with optional authentication.
 
-```js
+{% highlight js %}
+{% raw %}
 // ...
 const auth = require('../utils/auth');
 
@@ -1704,7 +1789,8 @@ router.get('/videos', auth.optional, videos, (req, res) => {
 });
 
 // ...
-```
+{% endraw %}
+{% endhighlight %}
 
 Our `/videos` route (and our `videos` middleware) are both aware when our user is authenticated, as the validated user is stored in `req.user`.
 
@@ -1800,7 +1886,8 @@ yarn add mongoose
 
 Now edit `index.js` and add the following code.
 
-```js
+{% highlight js %}
+{% raw %}
 // ...
 
 const mongoose = require('mongoose');
@@ -1813,7 +1900,8 @@ const corsOptions = {
 };
 
 // ...
-```
+{% endraw %}
+{% endhighlight %}
 
 As long as we get no errors when we try our app now, it would appear we have successfully connected to a MongoDB database instance.
 
@@ -1830,7 +1918,8 @@ touch schemas/video.js
 
 In our new file, add this code.
 
-```js
+{% highlight js %}
+{% raw %}
 // schemas/video.js
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
@@ -1846,7 +1935,8 @@ const VideoSchema = new Schema({
 }, { collection : 'videos' });
 
 module.exports = mongoose.model( 'VideoModel', VideoSchema );
-```
+{% endraw %}
+{% endhighlight %}
 
 This file defines our data structure for our video model, which provides us well formed objects as well as validation further down the line. Notice how it's also defining our collection name, here: `{ collection : 'videos' }`. If you've named your collection anything but `videos` on mLab, this will need to reflect that.
 
@@ -1862,7 +1952,8 @@ yarn add body-parser
 
 Now we can add our new endpoints. Edit `controllers/videos.js` and add this code.
 
-```js
+{% highlight js %}
+{% raw %}
 // controllers/videos.js
 // ...
 const bodyParser = require('body-parser');
@@ -1896,7 +1987,8 @@ router.post('/videos/unfavourite', auth.required, bodyParser.json(), async (req,
 });
 
 // ...
-```
+{% endraw %}
+{% endhighlight %}
 
 Here we're adding the `/favourite` and `/unfavourite` endpoints, and both do ***VERY*** similar things. They receive the `video` to action and set the appropriate `favourite` flag on the object before saving it to our MongoDB database. So we've abstracted this into a function expression that can do what we want for both endpoints and it returns the modified video.
 
@@ -1904,7 +1996,8 @@ Here we're adding the `/favourite` and `/unfavourite` endpoints, and both do ***
 
 Our API is now ready to add and remove our favourites, but we need to be able to return them. Edit `utils/videos.js` and add this code.
 
-```js
+{% highlight js %}
+{% raw %}
 // utils/videos.js
 // ...
 
@@ -1924,7 +2017,8 @@ const videos = async (req, res, next) => {
 };
 
 // ...
-```
+{% endraw %}
+{% endhighlight %}
 
 This is going to try and find any favourited videos stored in the database for our user. Any videos in our list that we find in the database are going to be updated with the details from the database. This is a neat little way to preserve the work we've already build, while adding our new functionality.
 
@@ -1940,7 +2034,8 @@ cd www-client
 
 Edit `src/components/Video.js` and replace it's contents with the following code.
 
-```js
+{% highlight js %}
+{% raw %}
 import React, { Component } from 'react';
 import YouTube from 'react-youtube';
 import { Card, CardMedia, CardActions } from 'material-ui/Card';
@@ -2032,7 +2127,8 @@ class Video extends Component {
 }
 
 export default Video;
-```
+{% endraw %}
+{% endhighlight %}
 
 One of the first things you'll notice is that we've also changed this component from a stateless [Functional Component to a Class Component](https://reactjs.org/docs/components-and-props.html) and made `video` part of the component's `state`. When the component's `state` is change, `render()` is called again. This means we can `React` to state changes, like the callback to an action–leading onto our next change.
 
