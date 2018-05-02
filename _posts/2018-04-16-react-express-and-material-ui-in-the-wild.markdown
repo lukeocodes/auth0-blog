@@ -387,7 +387,7 @@ touch controllers/videos.js utils/videos.js
 
 ![Express router and middleware files](/Users/olaf/Desktop/upload react--structure-of-express-files.png)
 
-Now edit `utils/videos.js` where we'll move our async function for getting videos there.
+Edit `utils/videos.js` where we'll move our async function for getting videos there.
 
 ```js
 // utils/videos.js
@@ -413,7 +413,7 @@ const videos = async (req, res, next) => {
 module.exports = videos;
 ```
 
-Then edit `controllers/videos.js` to place our `/videos` route there.
+Edit `controllers/videos.js` to place our `/videos` route there.
 
 ```js
 // controllers/videos.js
@@ -445,15 +445,13 @@ app.listen(port, () => console.log(`Listening on port ${port}`));
 
 ## Our basic React application
 
-Now we're going to create our React application, which will consume our backend Express API. To do this, we'll use 
+We're going to create our React application, which will consume our backend Express API. Using `create-react-app` will create our new `www-client` directory.
 
 ```bash
 create-react-app www-client
 ```
 
-![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-04-18 at 10.23.34.png)
-
-and test that everything is working
+Test our new React application by changing into our `www-client` directory and running `yarn start`.
 
 ```bash
 cd www-client
@@ -462,35 +460,29 @@ yarn start
 
 From here on out we'll be using the `www-client` directory as our current Working Directory. We'll move back to the express application directory when we need to.
 
-![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-04-18 at 10.49.02.png)
+![Test the new React application](/Users/olaf/Desktop/upload react--create-react-app-first-run.png)
 
 Now just to tidy up a bit and remove some boilerplate.
 
-Create a components directory, where our componenets will live
+Create a components directory, where our React components will live.
 
 ```bash
 mkdir src/components
 ```
 
-and remove some files we're not going to need for a little bit
+Remove some files we're not going to need.
 
 ```bash
 rm src/App.css src/App.test.js src/index.css src/logo.svg
 ```
 
-move our `App.js` componenet into our components directory
+Move our `App.js` component into our `components` directory.
 
 ```bash
 mv src/App.js src/components/
 ```
 
-and our directories will look something like this, which is a little tidier
-
-![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-04-18 at 11.04.52.png)
-
-But our app won't run now. Let's fix it.
-
-Edit our `src/index.js` file so it looks like below
+Everything is much tidier now, but our app won't run now. Let's fix it. Edit our `src/index.js` file like this.
 
 ```diff
 // src/index.js
@@ -502,10 +494,9 @@ Edit our `src/index.js` file so it looks like below
   import registerServiceWorker from './registerServiceWorker';
 
 // ...
-
 ```
 
-and edit our `src/components/App.js` like this
+Edit our `src/components/App.js` to remove the `css` and `svg` use.
 
 ```diff
 // src/components/App.js
@@ -530,19 +521,17 @@ and edit our `src/components/App.js` like this
   }
 ```
 
-Now everything should still work, if not a bit uglier. A good base for whats next.
+Now everything should still work, if not a bit uglier. But it's a good foundation for whats coming.
 
-![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-04-18 at 11.13.31.png)
+![Uglier basic React application](/Users/olaf/Desktop/upload react--uglier-basic-react-application.png)
 
-### setup routes with react router 4
+### Setup routing with React Router 4
 
 ```bash
 yarn add react-router-dom
 ```
 
-![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-04-18 at 11.15.57.png)
-
-edit `src/index.js` to use react router. it should now look something like this
+Edit `src/index.js` with the following code.
 
 ```js
 // src/index.js
@@ -562,7 +551,9 @@ registerServiceWorker();
 
 Create some new empty components `Main.js`, `Header.js` and `Home.js`. 
 
-`Main` is going to be the home of our react routing, where to choose which components to pick based on our route. `Header` is where we'll show our links where we'll interact with react router. `Home` will be where we put the initial content we want to load.
+- `Main` is going to be the home of our routing in React, where we choose component based on our URL.
+- `Header` is where we'll show our links where we'll interact with react router with our navigation components.
+- `Home` will be where we put the initial content we want to load.
 
 ```bash
 touch src/components/{Main.js,Header.js,Home.js}
@@ -612,7 +603,7 @@ const Main = () => (
 export default Main;
 ```
 
-and now edit `src/components/App.js` to use our new components. it should look like the following code
+Now edit `src/components/App.js` to use some of our new components. It should look like the following.
 
 ```js
 // src/components/App.js
@@ -630,17 +621,17 @@ const App = () => (
 export default App;
 ```
 
-nice and neat so far! let's see if it's working.
+Nice and neat so far! Let's see if it's working.
 
-![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-04-18 at 12.12.55.png)
+![App, Main and Header React components](/Users/olaf/Desktop/upload react--app-main-header-components-working.png)
 
-now we're going to create another page, something for us to route to
+Now we're going to create another page, something for us to route to.
 
 ```bash
 touch src/components/Videos.js
 ```
 
-and give it the following contents
+Give it this code.
 
 ```js
 // src/components/Videos.js
@@ -655,7 +646,7 @@ const Videos = () => (
 export default Videos;
 ```
 
-and now we can setup some routing to allow us to switch between `Home` and `Videos`, edit `src/components/Main.js` to look like the following
+Now we can setup some routing to allow us to switch between `Home` and `Videos`, edit `src/components/Main.js` to look like this.
 
 ```js
 // src/components/Main.js
@@ -676,11 +667,11 @@ const Main = () => (
 export default Main;
 ```
 
-another quick check, make sure we haven't broken anything
+Now check we can load our `video` route.
 
-![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-04-18 at 12.27.37.png)
+![React Router 4 loading the Video component](/Users/olaf/Desktop/upload react--react-router-loading-video-component.png)
 
-But we don't have any links yet! so lets create a quick nav menu in our `Header` component. So edit `src/components/Header.js` with the code shown here
+But we don't have any links yet! so lets create a quick navigation menu in our `Header` component. So edit `src/components/Header.js` with the code shown here
 
 ```js
 // src/components/Header.js
@@ -702,11 +693,11 @@ const Header = () => (
 export default Header;
 ```
 
-and check that our nav menu works with our router
+Check that our nav menu works with our router by being able to navigate between our `Home` and `Video` pages.
 
-![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-04-18 at 12.50.45.gif)
+![React Router navigating between the Home and Video routes](/Users/olaf/Desktop/upload react--react-router-navigating-between-home-and-video-routes.gif)
 
-### layout using material ui
+### Layout with Material UI
 
 `material-ui` needs the `Roboto` font, for which we'll need the `webfontloader` library. Let's install those and set them up.
 
@@ -714,7 +705,7 @@ and check that our nav menu works with our router
 yarn add material-ui webfontloader
 ```
 
-and now use it to load `Roboto` by editing `src/index.js` and adding the following code
+Now use `webfontloader` it to load `Roboto` by editing `src/index.js` and adding the following code.
 
 ```js
 // src/index.js
@@ -729,9 +720,7 @@ WebFont.load({
   }
 });
 
-
 // ...
-
 ```
 
 While we're here, we can add Material UI's default theme provider component to our app. So our `src/index.js` will end up looking like this.
@@ -764,7 +753,7 @@ registerServiceWorker();
 
 Despite these changes, you'll see nothing has changed.
 
-![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-04-18 at 13.30.35.png)
+![Material UI and Roboto setup but nothing has changed](/Users/olaf/Desktop/upload react--material-ui-and-roboto-but-nothing-has-changed.png)
 
 We'll start off simple, we'll make our content look a bit prettier but putting it inside a [Material UI `Paper` component](http://www.material-ui.com/#/components/paper). So edit `src/components/Home.js`, import the `Paper` component and place our text inside a `Paper` tag, like so;
 
@@ -786,9 +775,9 @@ export default Home;
 
 We can check that Material UI is working just fine. Notice how the styles from the base component are applied to Material UI's components, only.
 
-![screenshot](/Users/olaf/Desktop/upload react--Screen Shot 2018-04-18 at 14.34.48.png)
+![screenshot](/Users/olaf/Desktop/upload react--content-inside-paper-component.png)
 
-Now to tackle our `Header` component, we'll make use of the [Material UI `AppBar` component](http://www.material-ui.com/#/components/app-bar).
+To tackle our `Header` component, we'll make use of the [Material UI `AppBar` component](http://www.material-ui.com/#/components/app-bar).
 
 Edit `src/components/Header.js` and follow the changes below.
 
