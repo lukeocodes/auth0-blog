@@ -143,6 +143,8 @@ We talk through signing up and creating a MongoDB database with mLab in this art
 
 We're going to connect our Express application to mLab MongoDB database using Mongoose, but you can read more about using [Mongoose in Express](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/mongoose) here.
 
+{% include tweet_quote.html quote_text="There has been a lot said about SPAs and security recently, so lets build one with security as key consideration." %}
+
 ## Security First
 
 There has been [plenty said](https://www.rdegges.com/2018/please-stop-using-local-storage/) about Single Page Applications and [security](https://www.owasp.org/index.php/HTML5_Security_Cheat_Sheet#Local_Storage) recently and it's forced a lot of difficult questions about the use local storage for access tokens.
@@ -2157,6 +2159,8 @@ We've created a function expression `handleFavourite` that receives a `video` an
 The state is used to decide whether the `FlatButton` component is highlighted or not, indicating our video has been favourited. Clicking this button will call the `handleFavourite` function, therefore acting as a toggle. Having a click about, we should end up with something similar to the screenshot below.
 
 ![The Final Product: Favourited Auth0 videos on React](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/the-final-product-favourited-auth0-videos.png)
+
+{% include tweet_quote.html quote_text="Learn how to build a secure ecosystem using @auth0 for frontend authentication in @reactjs, and verifying tokens in @expressjs." %}
 
 ## Conclusion
 
