@@ -29,15 +29,21 @@ related:
 - 2018-03-27-react-router-4-practical-tutorial
 ---
 
-**TL;DR:** In this guide we'll learn how to build a React application using React Router 4 and Material UI. Building a robust backend API with Express, a functional frontend application with React and Material UI. We attempt to build a real-world example using Material UI to keep our user experience in-check, without sacrificing on security. You can download the complete working [application here](http://www.github.com/auth0/auth0-react-material).
+**TL;DR:** In this guide, we'll learn how to build a React application using React Router 4 and Material UI. Building a robust backend API with Express, a functional frontend application with React and Material UI. We attempt to build a real-world example using Material UI to keep our user experience in-check, without sacrificing on security. You can download the complete working [application here](http://www.github.com/auth0/auth0-react-material).
 
 ## What we're going to build
 
-In this article, we're going to be building two individual applications. Firstly, there will be an API, built on [Express](https://expressjs.com/) that is responsible for serving us our data. Secondly, our React application which will access our API. Our Express application is going to be built to verify tokens originally issued to our React application and our React application is going to be built to keep those tokens safe in memory, not persisting them to local storage. This is intended to demonstrate how a SPA application can be used for authentication, securely.
+In this article, we're going to be building two individual applications.
+
+Firstly, there will be an API, built on [Express](https://expressjs.com/) that is responsible for serving us our data. It will by built to verify tokens originally issued to our React application.
+
+Secondly, our [React](https://reactjs.org) application which will be all about our videos! We're going to build an app which will access our API and display videos from our [Auth0 YouTube channel](https://www.youtube.com/auth0). We're going to be authenticating our users in React and keeping our access tokens safe in memory, not persisting them to local storage. 
+
+This application stack is intended to demonstrate how a SPA application can be used for authentication, securely and how backend applications can use our tokens to verify authorization, responsibly.
 
 ### React
 
-For a while now, [React](https://reactjs.org) has been a developer favourite, developed by Facebook, with some amazing features. Working with the DOM can be frustrating, but by offering developers a small set of tools to learn, React makes interacting with the browser DOM accessible to a large set of developers familiar with JavaScript but unfamiliar with the DOM API. 
+For a while now, [React](https://reactjs.org) has been a developer favourite. It was developed by Facebook with some amazing features to take away some of the frustrations of working with the DOM. By offering developers a small set of tools to learn, React makes interacting with the browser DOM accessible to a large set of developers familiar with JavaScript but unfamiliar with the DOM API.
 
 React gives us an ideal, or “virtual”, representation of our application, in our virtual DOM, with that simple set of tools to refine and manipulate it. Then, through a process of “[reconciliation](https://reactjs.org/docs/reconciliation.html)”, it syncs with the real DOM.
 
@@ -63,7 +69,7 @@ Components are like JavaScript functions that return React elements, describing 
 
 A simple React component can be defined in basic JavaScript.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 function Auth0(props) {
   return <p>Auth0 welcomes {props.name} to React.</p>;
@@ -75,7 +81,7 @@ const Auth0 = (props) => <p>Auth0 welcomes {props.name} to React.</p>;
 
 You can also use a JavaScript class, new with ECMAScript 2015 (ES6), to define a component.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 import React, { Component } from 'react';
 
@@ -87,7 +93,7 @@ class Auth0 extends Component {
 {% endraw %}
 {% endhighlight %}
 
-You can learn more about getting started, and [bootstrapping a React project](https://auth0.com/blog/bootstrapping-a-react-project/) here.
+You can learn more about getting started, and [bootstrapping a React project here](https://auth0.com/blog/bootstrapping-a-react-project/).
 
 ### Material UI
 
@@ -101,17 +107,23 @@ In the [next version of Material UI](https://material-ui-next.com/), we'll see a
 
 ### Node, NPM and Yarn
 
-[Node](https://nodejs.org/en/) (or Node.js) is a free, open-source server environment designed to work on pretty much any platform which uses JavaScript server-side. The speed and power of Node comes from how it detaches the request and response. In a traditional web-server, the request is received, waits to read the code, renders a response and returns it to the client. Node does it slightly differently in that the request is received and then it goes back to listening for the next request. Once the response is ready it returns it to the client. This non-blocking asynchronous processing of requests makes it very memory efficient.
+[Node](https://nodejs.org/en/) (or Node.js) is a free, open-source server environment designed to work on pretty much any platform. Node is built on Google's Chrome V8 JavaScript engine. It effectively enables JavaScript to run on on the server-side, allowing us to build sophisticated real-time applications with JavaScript. Node uses an event driven, non-blocking I/O model. 
+
+Traditional server-framework setups like PHP/Apache spawn new synchronous threads for each connection and will keep doing so until you hit your connection, thread or memory limits. Each thread needs to finish a process before it can start on the next and it can become very memory, and/or processor inefficient.
+
+Node operates differently. It uses a single thread that can accept tens of thousands of new requests asynchronously, meaning you can start a new request before finishing an older one. Each new request gets entered into an event loop. I've seen the event loop described as a magical place, filled with rainbows and unicorns. It's also the reason Node itself can be "single threaded", while still being able to handle tens of thousands of asynchronous requests.
+
+You can read more about [understanding node js here](https://www.codeschool.com/blog/2014/10/30/understanding-node-js/). 
 
 [NPM](https://www.npmjs.com/) is the worlds largest software registry, with around 3 billion downloads per week and 600,000 packages registered. Most of these packages can be used on the frontend (on your browser) AND the backend (on your node server), enabling JavaScript developers, previously banished to the frontend, to build software on the backend. NPM can be used in your project for dependency management, creating a lock file that can deploy with your application, so no nasty version surprises occur on deployment.
 
-[Yarn](https://yarnpkg.com/en/) is dependency management solution, also developed by Facebook. This project uses `yarn` but the demo app ships with a lock file for both yarn and NPM. 
+[Yarn](https://yarnpkg.com/en/) is dependency management solution, also developed by Facebook. This project uses `yarn` but the demo app ships with a lock file for both yarn and NPM. You can read [more about the power of Yarn here](https://auth0.com/blog/five-things-you-can-do-with-yarn/).
 
 #### Express
 
 [Express](https://expressjs.com/) (or Express.js) is a super lightweight and flexible web application framework that provides a robust set of features for web and mobile applications.
 
-We're using Express to build an API and Express comes with a whole bunch of HTTP utility methods and middleware, making the creation of a robust API quick and easy.
+We're using Express to build an API and Express comes with a whole bunch of HTTP utility methods and [middleware](https://expressjs.com/en/resources/middleware.html), making the creation of a robust API quick and easy.
 
 ### MongoDB
 
@@ -153,6 +165,8 @@ npm --version
 
 If you don’t have `node` and `npm` installed, check out [nodejs.org](https://nodejs.org/) and install the correct version for your operating system. 
 
+> ***Note:*** This guide was developed for Node 8 and NPM 5, and any versions prior to these might not work as expected.
+
 ### Yarn
 
 Out of personal preference and nothing more, we'll create this project with Yarn. To do so, we'll need Yarn installed. The demo app ships with the ability to get up and running with Yarn and NPM.
@@ -163,7 +177,7 @@ npm install yarn -g
 
 ### Create-react-app
 
-This command will allow us to create react apps with no build configuration. The basic application it gives us will provide us a great foundation to work from. 
+This command will allow us to create React applications with no build configuration. The basic application it gives us will provide us a great foundation to work from. 
 
 ```bash
 npm install create-react-app -g
@@ -207,7 +221,7 @@ touch index.js
 
 Now edit `index.js` and add the following *hello world* code.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // index.js
 const express = require('express');
@@ -281,7 +295,7 @@ Looks good!
 
 Now edit `index.js` and add a new route, `/videos`. This route is going to evolve throughout the article, but in essence it always receives an HTTP `GET` request and return JSON with an HTTP `200 OK` response.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // index.js
 // ...
@@ -296,7 +310,7 @@ app.get('/videos', (req, res) => {
 
 #### Fetch content from a remote source
 
-The data we're going to form out application around is videos posted to the [Auth0 YouTube channel](https://www.youtube.com/auth0). YouTube helpfully provides us with a [public RSS feed for videos available on our channel](https://www.youtube.com/feeds/videos.xml?channel_id=UCUlQ5VoIzE_kFbYjzUwHTKA). We're going to parse this RSS feed and use the data in our application.
+The content we're going to base our application on is the videos posted on the [Auth0 YouTube channel](https://www.youtube.com/auth0). YouTube helpfully provides us with a [public RSS feed for videos available on our channel](https://www.youtube.com/feeds/videos.xml?channel_id=UCUlQ5VoIzE_kFbYjzUwHTKA). We're going to parse this RSS feed and use the data in our application.
 
 To do this, install [`rss-parser`](https://www.npmjs.com/package/rss-parser). There are other feed parsers available, such as [`feedparser`](https://www.npmjs.com/package/feedparser), that offer a richer set of features. But `rss-parser` offers us a neat integration with a small footprint, perfect for our application.
 
@@ -306,7 +320,7 @@ yarn add rss-parser
 
 Now we can use it in our app. Edit `index.js` and add the following code.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // index.js
 // ...
@@ -345,7 +359,7 @@ yarn add memory-cache
 
 Now edit `index.js` and add it to our `asyncVideosMiddleware` so it's not trying to fetch it from the remote source on every request to our API.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // index.js
 // ...
@@ -399,7 +413,7 @@ touch controllers/videos.js utils/videos.js
 
 Edit `utils/videos.js` where we'll move our async function for getting videos there.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // utils/videos.js
 const parser = new (require('rss-parser'))();
@@ -427,7 +441,7 @@ module.exports = videos;
 
 Edit `controllers/videos.js` to place our `/videos` route there.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // controllers/videos.js
 const router = require('express').Router();
@@ -443,7 +457,7 @@ module.exports = router;
 
 Edit `index.js` to look like this, much tidier.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // index.js
 const express = require('express');
@@ -549,7 +563,7 @@ yarn add react-router-dom
 
 Edit `src/index.js` with the following code.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // src/index.js
 import React from 'react';
@@ -581,7 +595,7 @@ touch src/components/{Main.js,Header.js,Home.js}
 
 For the moment just set them up as basic components by editing `src/components/Main.js`, `src/components/Header.js`, and `src/components/Home.js` as shown below.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // src/components/Header.js
 import React from 'react';
@@ -596,7 +610,7 @@ export default Header;
 {% endraw %}
 {% endhighlight %}
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // src/components/Home.js
 import React from 'react';
@@ -611,7 +625,7 @@ export default Home;
 {% endraw %}
 {% endhighlight %}
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // src/components/Main.js
 import React from 'react';
@@ -629,7 +643,7 @@ export default Main;
 
 Now edit `src/components/App.js` to use some of our new components. It should look like the following.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // src/components/App.js
 import React from 'react';
@@ -659,7 +673,7 @@ touch src/components/Videos.js
 
 Give it this code.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // src/components/Videos.js
 import React from 'react';
@@ -676,7 +690,7 @@ export default Videos;
 
 Now we can setup some routing to allow us to switch between `Home` and `Videos`, edit `src/components/Main.js` to look like this.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // src/components/Main.js
 import React from 'react';
@@ -701,9 +715,9 @@ Now check we can load our `video` route.
 
 ![React Router 4 loading the Video component](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/react-router-loading-video-component.png)
 
-But we don't have any links yet! So let's create a quick navigation menu in our `Header` component. So edit `src/components/Header.js` with the code shown here
+But we don't have any links yet! So let's create a quick navigation menu in our `Header` component. So, edit `src/components/Header.js` with the code shown here
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // src/components/Header.js
 import React from 'react';
@@ -739,11 +753,9 @@ yarn add material-ui webfontloader
 
 Now use `webfontloader` it to load `Roboto` by editing `src/index.js` and adding the following code.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // src/index.js
-// src/index.js
-
 // ...
 
 import WebFont from 'webfontloader';
@@ -760,7 +772,7 @@ WebFont.load({
 
 While we're here, we can add Material UI's default theme provider component to our app. So our `src/index.js` will end up looking like this.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // src/index.js
 import React from 'react';
@@ -794,7 +806,7 @@ Despite these changes, you'll see nothing has changed.
 
 We'll start off simple, we'll make our content look a bit prettier but putting it inside a [Material UI `Paper` component](http://www.material-ui.com/#/components/paper). So edit `src/components/Home.js`, import the `Paper` component and place our text inside a `Paper` tag, like so;
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // src/components/Home.js
 import React from 'react';
@@ -942,7 +954,7 @@ To do this, we need to tell the left most icon on the `AppBar` that it's a butto
 
 Once done the `src/components/Header.js` should end up looking like this.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // src/components/Header.js
 import React, { Component } from 'react';
@@ -1015,7 +1027,7 @@ yarn add cors
 
 To configure it, edit our `index.js` to look like the following.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // index.js
 const express = require('express');
@@ -1058,7 +1070,7 @@ touch src/components/Video.js
 
 And give it the following code.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // src/components/Video.js
 import React from 'react';
@@ -1094,7 +1106,7 @@ export default Video;
 
 Use this component to display our videos, edit `src/components/Videos.js` to look like this.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // src/components/Videos.js
 import React, { Component } from 'react';
@@ -1148,7 +1160,7 @@ Here we make a request to our API. Our response from our `fetch` is returned as 
 
 One quick change to `src/components/Main.js` is to widen the margin between the header's `AppBar` and the main content.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // src/components/Main.js
 // ...
@@ -1175,21 +1187,31 @@ The [Auth0 login page](https://auth0.com/docs/hosted-pages/login) is the easiest
 
 ### Sign Up for Auth0
 
-You'll need an [Auth0](https://auth0.com) account to manage authentication. You can <a href="https://auth0.com/signup" data-amp-replace="CLIENT_ID" data-amp-addparams="anonId=CLIENT_ID(cid-scope-cookie-fallback-name)">sign up for a free Auth0 account here</a>. Next, set up an Auth0 Application so Auth0 can interface with your app.
+You'll need an [Auth0](https://auth0.com) account to manage authentication. You can <a href="https://auth0.com/signup" data-amp-replace="CLIENT_ID" data-amp-addparams="anonId=CLIENT_ID(cid-scope-cookie-fallback-name)">sign up for a free Auth0 account here</a>. 
 
-### Set up an Application
+Next, set up an Auth0 Application and API so Auth0 can interface with the React app and Node API.
 
-1. Go to your [**Auth0 Dashboard**](https://manage.auth0.com/#/) and click the "[create a new application](https://manage.auth0.com/#/applications/create)" button. 
-2. Name your new app, select "Single Page Web Applications", and click the "Create" button. 
-3. In the **Settings** for your new Auth0 app, add `http://localhost:3000/callback` to the **Allowed Callback URLs**.
-4. Click the "Save Changes" button.
-5. If you'd like, you can [set up some social connections](https://manage.auth0.com/#/connections/social). You can then enable them for your app in the **Application** options under the **Connections** tab. The example shown in the screenshot above utilizes username/password database, Facebook, Google, and Twitter.
+### Set Up an Auth0 Application
 
-> **Note:** Under the **OAuth** tab of **Advanced Settings** (at the bottom of the **Settings** section) you should see that the **JsonWebToken Signature Algorithm** is set to `RS256`. This is the default for new applications. If it is set to `HS256`, please change it to `RS256`. You can [read more about RS256 vs. HS256 JWT signing algorithms here](https://community.auth0.com/questions/6942/jwt-signing-algorithms-rs256-vs-hs256).
+1. Go to your [**Auth0 Dashboard**](https://manage.auth0.com/#/) and click the "[Create a New Application](https://manage.auth0.com/#/applications/create)" button.
+2. Name your new app (something like `Angular Firebase`) and select "Single Page Web Applications".
+3. In the **Settings** for your new Auth0 application app, add `http://localhost:4200/callback` to the **Allowed Callback URLs**.
+4. Enable the toggle for **Use Auth0 instead of the IdP to do Single Sign On**. 
+5. At the bottom of the **Settings** section, click "Show Advanced Settings". Choose the **OAuth** tab and verify that the **JsonWebToken Signature Algorithm** is set to "RS256".
+6. If you'd like, you can [set up some social connections](https://manage.auth0.com/#/connections/social). You can then enable them for your app in the **Application** options under the **Connections** tab. The example shown in the screenshot above uses username/password database, Facebook, Google, and Twitter. 
+
+> **Note:** For production, make sure you set up your own social keys and do not leave social connections set to use Auth0 dev keys.
+
+### Set Up an Auth0 API
+
+1. Go to [**APIs**](https://manage.auth0.com/#/apis) in your Auth0 dashboard and click on the "Create API" button. Enter a name for the API, such as `Auth0 Videos API`. Set the **Identifier** to your API endpoint URL. In this tutorial, our API identifier is `http://localhost:3001/`. The **Signing Algorithm** should be "RS256".
+2. You can consult the Node.js example under the **Quick Start** tab in your new API's settings. In the next steps, we'll implement our Node API in this fashion using [Express](https://expressjs.com/), [express-jwt](https://github.com/auth0/express-jwt), and [jwks-rsa](https://github.com/auth0/node-jwks-rsa).
+
+We're now ready to implement Auth0 authentication on both our React client and Node back end API.
 
 ### Install auth0.js
 
-You need the auth0.js library to integrate Auth0 into your application.
+You need the [auth0.js library](https://auth0.com/docs/libraries/auth0js) to integrate Auth0 into your application.
 
 Install auth0.js using npm.
 
@@ -1205,7 +1227,7 @@ We'll need a new class to manage and coordinate user authentication.
 
 Create a new file `src/auth/Auth.js` and inside it put the following code:
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // src/auth/Auth.js
 import auth0 from 'auth0-js';
@@ -1218,7 +1240,7 @@ export default class Auth {
     domain: AUTH0_DOMAIN,
     clientID: AUTH0_CLIENT_ID,
     redirectUri: 'http://localhost:3000/callback',
-    audience: `https://${AUTH0_DOMAIN}/api/v2/`,
+    audience: `http://localhost:3001/`,
     responseType: 'token id_token',
     scope: 'openid profile email'
   });
@@ -1230,7 +1252,7 @@ export default class Auth {
 {% endraw %}
 {% endhighlight %}
 
-Edit `src/auth/Auth.js` and replace `<your-domain>` and `<your-client-id>` with your Auth0 domain prefix and your client ID, found on your [application dashboard](https://manage.auth0.com/#/applications).
+Edit `src/auth/Auth.js` and replace `<your-domain>` and `<your-client-id>` with your Auth0 domain prefix and your client ID from the application you've just created. You can find your application on the [application dashboard](https://manage.auth0.com/#/applications).
 
 ![Create a new Auth0 application](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/create-a-new-auth0-application.png)
 
@@ -1238,7 +1260,7 @@ Edit `src/auth/Auth.js` and replace `<your-domain>` and `<your-client-id>` with 
 
 Quickly, we'll test that our new Auth class is configured properly. To quickly do this we'll add the following code to our `src/components/App.js` file. Don't worry about making a mess, this file is about to change, dramatically.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // src/components/App.js
 // ...
@@ -1264,7 +1286,7 @@ If we get our login box, we know our library is configured correctly. **Logging 
 
 We need a few more methods in the `Auth` class to help us manage authentication in the app. So add the following code to `src/auth/Auth.js`:
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // src/auth/Auth.js
 // ...
@@ -1337,7 +1359,7 @@ export default class Auth {
 
 Create a new file `src/components/Callback.js` and add this code.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // src/components/Callback.js
 import React, { Component } from 'react';
@@ -1372,7 +1394,7 @@ Besides the pretty spinning `CircularProgress`, the function of this class will 
 
 We quickly setup some routing to it by editing `src/components/Main.js` and adding a route for `Callback`
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // src/components/Main.js
 
@@ -1400,7 +1422,7 @@ When we visit it directly without a hash, you can see it doesn't do very much el
 
 Now for the magic bit, edit the `src/components/Callback.js` and add the `componentDidMount` method to the component class like this, that looks for a token in our hash and calls our `handleAuthentication` method if it finds one.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // src/components/Callback.js
 
@@ -1421,7 +1443,7 @@ class Callback extends Component {
 
 Edit `src/components/App.js` for our big change. We'll remove our test code and change the component from a stateless function component to a stateful class component, so it's aware of our authentication situation.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // src/components/App.js
 import React, { Component } from 'react';
@@ -1475,7 +1497,7 @@ export default withRouter(App);
 
 You'll see we've now got a `constructor()` that creates our `new Auth()` instance, a bit like our test code did it. Then we apply two callback functions to the class so we call tell our Auth class what to do with our application, after log in or log out are called.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
   // ...
   authorized(authenticated) {
@@ -1499,7 +1521,7 @@ The `authorized` callback function updates the `App` component state. So we've g
 
 The last little change is adding the `withRouter` [higher-order component](https://reactjs.org/docs/higher-order-components.html). Basically, a higher-order component is a function that takes a component and returns a new component, allowing us to augment it with additional features.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // src/components/App.js
 // ...
@@ -1510,7 +1532,7 @@ export default withRouter(App);
 
 Edit our `Main` component with our final routing changes, which shares the Auth class instance with our main components. Edit `src/components/Main.js` and replace its contents with the following code.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // src/components/Main.js
 
@@ -1544,7 +1566,7 @@ Now our application is aware of our authentication state, we can modify our `Hea
 
 Replace the contents of `src/components/Header.js` with this code.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // src/components/Header.js
 import React, { Component } from 'react';
@@ -1632,7 +1654,7 @@ The last thing to do is add our avatar to our `Log out` button. Because why not!
 
 > ***Note:*** This code assumes they'll always have a `picture` in their OpenID profile, otherwise you could use the [Material UI `Avatar` component](http://www.material-ui.com/#/components/avatar) to show letters or icons.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // src/components/Header.js
 // ...
@@ -1675,7 +1697,7 @@ So one of the things we want to do is verify our user on our Express application
 
 If we're authenticated on our React application, we want to pass through our authToken to Express. So edit `src/components/Videos.js` where we make our request to Express and add this code.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // src/components/Videos.js
 // ...
@@ -1721,9 +1743,9 @@ Install `express-jwt` and `jwks-rsa`.
 yarn add express-jwt jwks-rsa
 ```
 
-Now while we're here, we need to create our own middleware to verify our token. So create a new file `utils/auth.js` and add the following to the file.
+Now while we're here, we need to create our own middleware to verify our token. So create a new file `utils/auth.js` and add the following to the file, remembering to replace `<your-domain>` with your Auth0 domain.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // utils/auth.js
 const jwt = require('express-jwt');
@@ -1732,8 +1754,8 @@ const jwksRsa = require('jwks-rsa');
 const AUTH0_DOMAIN = '<your-domain>.auth0.com';
 const issuer = `https://${AUTH0_DOMAIN}`;
 const config = {
-  secret: jwksRsa.expressJwtSecret({ jwksUri: `${issuer}.well-known/jwks.json` }),
-  audience: `${issuer}api/v2/`,
+  secret: jwksRsa.expressJwtSecret({ jwksUri: `${issuer}/.well-known/jwks.json` }),
+  audience: `http://localhost:3001/`,
   issuer: issuer,
   algorithms: [ 'RS256' ]
 };
@@ -1751,7 +1773,7 @@ module.exports = {
 
 Now we have a means to protect our endpoints with auth that is both required or optional. Applying authentication to an endpoint is as easy as this;
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 const auth = require('utils/auth.js');
 
@@ -1763,7 +1785,7 @@ app.get('/protected_endpoint', auth.required, (req, res) => {
 
 But if you want an endpoint to be available whether they're authenticated or not, you can do this;
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 const auth = require('utils/auth.js');
 
@@ -1777,7 +1799,7 @@ A couple of steps ago, we applied a condition to our client app's `Videos` compo
 
 Edit `controllers/videos.js` with this code, which allows `/videos` to be accessed with optional authentication.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // ...
 const auth = require('../utils/auth');
@@ -1882,9 +1904,9 @@ Now we have our database setup and a URL to connect to, we need to connect from 
 yarn add mongoose
 ```
 
-Now edit `index.js` and add the following code.
+Now edit `index.js`, add the following code and replace `mongodb://<db-user>:<db-password>@<user-domain>.mlab.com:<port>/<db-name>` with your connection URL, found on your mLab database overview, and the username and your password of the database user you created.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // ...
 
@@ -1916,7 +1938,7 @@ touch schemas/video.js
 
 In our new file, add this code.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // schemas/video.js
 const mongoose = require('mongoose');
@@ -1950,7 +1972,7 @@ yarn add body-parser
 
 Now we can add our new endpoints. Edit `controllers/videos.js` and add this code.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // controllers/videos.js
 // ...
@@ -1960,7 +1982,7 @@ const bodyParser = require('body-parser');
 
 const toggleFavourite = async (req, favourite) => {
   const VideoModel = require('../schemas/video');
-  let video = await VideoModel.findOne({ id: req.body.id, user: req.user.sub }).then(obj => { return obj });
+  let video = await VideoModel.findOne({ id: req.body.id, user: req.user.sub });
 
   if (!video) {
     video = new VideoModel(req.body);
@@ -1994,7 +2016,7 @@ Here we're adding the `/favourite` and `/unfavourite` endpoints, and both do ***
 
 Our API is now ready to add and remove our favourites, but we need to be able to return them. Edit `utils/videos.js` and add this code.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 // utils/videos.js
 // ...
@@ -2032,7 +2054,7 @@ cd www-client
 
 Edit `src/components/Video.js` and replace its contents with the following code.
 
-{% highlight js %}
+{% highlight javascript %}
 {% raw %}
 import React, { Component } from 'react';
 import YouTube from 'react-youtube';
