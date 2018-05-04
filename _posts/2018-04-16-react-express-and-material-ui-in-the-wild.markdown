@@ -41,6 +41,20 @@ Secondly, our [React](https://reactjs.org) application which will be all about o
 
 This application stack is intended to demonstrate how a SPA application can be used for authentication, securely and how backend applications can use our tokens to verify authorization, responsibly.
 
+If you're wondering about directory structure, our applications should end up structured something like.
+
+```
+auth0-react-material/
+├── server
+│   └── // Express application
+├── www-client
+│   └── // React application
+├── node_modules/
+├── .gitignore
+├── package.json
+└── yarn.lock
+```
+
 ### React
 
 For a while now, [React](https://reactjs.org) has been a developer favourite. It was developed by Facebook with some amazing features to take away some of the frustrations of working with the DOM. By offering developers a small set of tools to learn, React makes interacting with the browser DOM accessible to a large set of developers familiar with JavaScript but unfamiliar with the DOM API.
@@ -187,13 +201,19 @@ npm install create-react-app -g
 
 ## Our basic Express API
 
-First, we need to create our new project directory. Remember where we put it!
+We need to create our new project directory. Remember where we put it!
 
 ```bash
 mkdir auth0-react-material/ && cd "$_"
 ```
 
 > **Note:** Here's a nifty bash technique, `"$_"` contains the last argument of the previous command, so you can `mkdir auth0-react-material/` and `cd auth0-react-material/` all in one command.
+
+Now we need a directory for our Express API server.
+
+```bash
+mkdir server/ && cd "$_"
+```
 
 Initialize a yarn project in our new directory.
 
@@ -479,18 +499,33 @@ app.listen(port, () => console.log(`Listening on port ${port}`));
 
 We're going to create our React application, which will consume our backend Express API. Using `create-react-app` will create our new `www-client` directory.
 
+Change back to our project root directory.
+
+```bash
+cd ..
+```
+
+Now run `create-react-app` which will create our client directory for us.
+
 ```bash
 create-react-app www-client
 ```
 
 Test our new React application by changing into our `www-client` directory and running `yarn start`.
 
+Change into our new React directory.
+
 ```bash
 cd www-client
+```
+
+Run Yarn.
+
+```bash
 yarn start
 ```
 
-From here on out we'll be using the `www-client` directory as our current Working Directory. We'll move back to the express application directory when we need to.
+From here on out we'll be using the `www-client` directory as our current Working Directory. We'll move back to the Express application directory when we need to.
 
 ![Test the new React application](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/create-react-app-first-run.png)
 
@@ -1020,10 +1055,15 @@ And if we run it, we should be able to navigate like this!
 
 First thing is first, we need to enable CORS for our Express app.
 
-Back in our express apps root directory, let's install `cors`.
+So change back to our Express application directory.
 
 ```bash
-cd ..
+cd ../server
+```
+
+Install `cors`.
+
+```bash
 yarn add cors
 ```
 
@@ -1055,7 +1095,7 @@ Notice origin is set to '*' if the environment variable isn't set `origin: proce
 Now change back to our React application.
 
 ```bash
-cd www-client
+cd ../www-client
 ```
 
 We'll need to add a library for embedding youtube videos.
@@ -1176,6 +1216,8 @@ One quick change to `src/components/Main.js` is to widen the margin between the 
 {% endhighlight %}
 
 Our React application should look something like this.
+
+TODO: RUN BOTH APPS
 
 ![React application now shows embedded Auth0 videos](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/react-application-showing-embedded-auth0-videos.png)
 
@@ -1736,7 +1778,7 @@ Combined, these two packages will allow us to verify our token on our backend ev
 Change to our backend application's directory.
 
 ```bash
-cd ..
+cd ../server
 ```
 
 Install `express-jwt` and `jwks-rsa`.
@@ -2051,7 +2093,7 @@ To let our users toggle a favourite video (and to highlight our favourites) we'r
 Change back to our React app.
 
 ```bash
-cd www-client
+cd ../www-client
 ```
 
 Edit `src/components/Video.js` and replace its contents with the following code.
