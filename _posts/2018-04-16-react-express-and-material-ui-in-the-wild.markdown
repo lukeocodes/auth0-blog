@@ -284,7 +284,7 @@ You can also alias it in your `package.json` so you can customize it later witho
 ```diff
 // package.json
   {
-    "name": "auth0-react-material",
+    "name": "server",
     "version": "1.0.0",
     "main": "index.js",
     "license": "MIT",
@@ -304,7 +304,7 @@ You can also alias it in your `package.json` so you can customize it later witho
 So now we can run it like this.
 
 ```bash
-yarn run dev
+yarn dev
 ```
 
 Go and make sure everything is running okay.
@@ -1092,10 +1092,65 @@ app.listen(port, () => console.log(`Listening on port ${port}`));
 
 Notice origin is set to '*' if the environment variable isn't set `origin: process.env.CORS_ORIGIN || '*'` so that it's not restricted during the development process. It will be insecure if you deploy to production without setting your CORS origin.
 
-Now change back to our React application.
+Before we change to our React application, we're going to setup `concurrently`, so that you can run both applications alongside each other from here on in.
+
+Change to our project root.
 
 ```bash
-cd ../www-client
+cd ..
+```
+
+Create a new `package.json` file for our main project's configuration.
+
+```bash
+touch package.json
+```
+
+Give it the following contents.
+
+```json
+{
+  "name": "auth0-react-material",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT"
+}
+```
+
+Add concurrently as a dependency.
+
+```bash
+yarn add concurrently
+```
+
+Add these scripts, similar to our `nodemon` changes before.
+
+```diff
+  {
+    "name": "auth0-react-material",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Auth0: React, Express, and Material UI: In the wild",
+    "repository": "git@github.com:lukeoliff/auth0-react-material.git",
+    "author": "Luke Oliff <luke@lukeoliff.com>",
+    "license": "MIT",
+    "dependencies": {
+      "concurrently": "^3.5.1"
++   },
++   "scripts": {
++     "react":   "cd www-client && yarn start",
++     "express": "cd server && yarn dev",
++     "dev":     "concurrently --kill-others-on-fail \"yarn react\" \"yarn express\""
+    }
+  }
+```
+
+What we've done is setup two scripts that know where our apps exist and how to run their respective development environments (aliased as `react` and `express`)and another script for our main project that runs both `react` and `express` concurrently, making sure it kills other processes if one exits with non zero status code using `--kill-others-on-fail`.
+
+Now change to our React application.
+
+```bash
+cd www-client
 ```
 
 We'll need to add a library for embedding youtube videos.
@@ -1215,9 +1270,17 @@ One quick change to `src/components/Main.js` is to widen the margin between the 
 {% endraw %}
 {% endhighlight %}
 
-Our React application should look something like this.
+Run our two services together using `yarn --cwd=.. dev`. This tells Yarn to operate from `..` with `--cwd=..` and run our `dev` script. `cwd` stands for `current working directory` and it's similar to `cd ..` before the command runs, without changing our own current directory.
 
-TODO: RUN BOTH APPS
+```bash
+yarn --cwd=.. dev
+```
+
+You'll see both apps run and true to form, `yarn start` on our React application will still open our browser. You are, of course, free to start both apps independently.
+
+![Concurrently runs Express and React together](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/concurrently-runs-express-and-react-together.png)
+
+Now when we view our React application, it should look something like this.
 
 ![React application now shows embedded Auth0 videos](https://cdn.auth0.com/blog/react-express-and-material-ui-in-the-wild/react-application-showing-embedded-auth0-videos.png)
 
