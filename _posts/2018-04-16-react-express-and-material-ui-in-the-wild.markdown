@@ -1859,9 +1859,9 @@ const jwt = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
 
 const AUTH0_DOMAIN = '<your-domain>.auth0.com';
-const issuer = `https://${AUTH0_DOMAIN}`;
+const issuer = `https://${AUTH0_DOMAIN}/`;
 const config = {
-  secret: jwksRsa.expressJwtSecret({ jwksUri: `${issuer}/.well-known/jwks.json` }),
+  secret: jwksRsa.expressJwtSecret({ jwksUri: `${issuer}.well-known/jwks.json` }),
   audience: `http://localhost:3001/`,
   issuer: issuer,
   algorithms: [ 'RS256' ]
