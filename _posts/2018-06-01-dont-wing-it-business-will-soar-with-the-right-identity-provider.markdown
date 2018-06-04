@@ -37,3 +37,23 @@ The travel sector is no different, with big players introducing APIs early on. T
 One area where the travel sector still has to improve is on the security of their users data and their security practices. According to a recent study by Dashlane sound that [89%](https://blog.dashlane.com/travel-password-power-rankings-2018/) of travel sites have unsafe password practices.
 
 The [worst offenders](https://auth0.com/blog/the-best-and-worst-travel-sites-at-keeping-your-info-safe) may not even use some of the most common safe password practices, like minimum characters and password strength evaluation.
+
+## Different types of APIs in the travel sector
+
+- **Comprehensive** - Bookings and reservations for flights, hotels, car rentals, cruises, and railways.
+- **Flights** - Routes, fares, delays, and ratings.
+- **Online travel agency (OTA)** - Hotel room reservation.
+- **Content and mapping**
+- **Car rental**
+- **Business travel** - 
+- **Reviews and ratings** - professional and customer feedback
+- **Public transportation** - buses, trains
+- **Things to do** - tours, attractions, and restaurants
+- **Packaged travel** - packages, tours, and attractions
+
+## How APIs add value to the travel sector
+
+
+
+## How Auth0 API Authentication
+
