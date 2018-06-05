@@ -28,32 +28,35 @@ related:
 - 2018-05-25-the-best-and-worst-travel-sites-at-keeping-your-info-safe
 ---
 
-The online travel sector has really taken off in the last decade. The importance of trust and reputation has never been more important for high flying travel businesses. These reputations will sink pretty quickly with a data breach involving personal data.
+The travel sector has really taken off in the last decade. The importance of trust and reputation has never been more important for high flying travel businesses. Travel has been at the forefront of a [digital transformation](https://www.kcom.com/connected-thinking/opinion/the-digital-transformation-of-the-travel-and-tourism-industry/) and organisations are facing challenges where their customers expect a seamless experience, both on the web and on mobile applications. Application programming interfaces (APIs) enable controlled interaction between different platforms, processes and functions of a business. It can do this in a secure way, providing integration between companies and their suppliers, or companies and clients (users on websites and mobile applications).
 
-[Digital transformation](http://deloitte.wsj.com/cio/2016/06/27/apis-help-drive-digital-transformation/) is really helped by APIs. Their ability to abstract data structure from interface requirements provides application developers really powerful tools to develop bigger and better software. 
+> _“Digitisation represents an exciting opportunity for the aviation, travel and tourism ecosystem, with the potential to unlock $1trillion of value to the industry and wider society over the next decade (2016 – 2025)”_ —[World Economic Forum](http://reports.weforum.org/digital-transformation/wp-content/blogs.dir/94/mp/files/pages/files/wef-dti-aviation-travel-and-tourism-white-paper.pdf)
 
-The travel sector is no different, with big players introducing APIs early on. This gave them time to hone them to the benefit of integrators and partners, learn how to write documentation and build them on resilient infrastructure.
+Demand on the travel sector has reached an all time high. Digital transformation is necessary to keep up with the steep demand for enhanced customer experience and lower prices. Emerging markets and buying power is pushing the need for better integrations between products, suppliers, retailers and consumers.
 
-One area where the travel sector still has to improve is on the security of their users data and their security practices. According to a recent study by Dashlane sound that [89%](https://blog.dashlane.com/travel-password-power-rankings-2018/) of travel sites have unsafe password practices.
-
-The [worst offenders](https://auth0.com/blog/the-best-and-worst-travel-sites-at-keeping-your-info-safe) may not even use some of the most common safe password practices, like minimum characters and password strength evaluation.
+Travel organisations are increasingly building APIs to better support their digital transformation efforts; many of these can be monetized and shared with partners and competitors, further bolstering their commercial position within their [business ecosystems](http://deloitte.wsj.com/cio/2015/09/02/ecosystems-expand-the-art-of-the-possible/). 
 
 ## Different types of APIs in the travel sector
 
-- **Comprehensive** - Bookings and reservations for flights, hotels, car rentals, cruises, and railways.
-- **Flights** - Routes, fares, delays, and ratings.
-- **Online travel agency (OTA)** - Hotel room reservation.
-- **Content and mapping**
-- **Car rental**
-- **Business travel** - 
-- **Reviews and ratings** - professional and customer feedback
-- **Public transportation** - buses, trains
-- **Things to do** - tours, attractions, and restaurants
-- **Packaged travel** - packages, tours, and attractions
+There are many types of APIs in the travel sector including but not limited to airlines, hotels, vehicle rental, reviews and rating, packages, tours, attractions, and public transport.
+
+### trainline affiliate API
+
+### tripadvisor Self Implemented Partners
+
+### 
 
 ## How APIs add value to the travel sector
 
 
 
-## How Auth0 API Authentication
+## Jet powered authentication providers
 
+
+
+## Conclusion
+
+Rapid digital transformation with Auth0, etc.
+
+
+Security: One area where the travel sector still has to improve is on the security of their users data and their security practices. According to a recent study by Dashlane sound that [89%](https://blog.dashlane.com/travel-password-power-rankings-2018/) of travel sites have unsafe password practices. The [worst offenders](https://auth0.com/blog/the-best-and-worst-travel-sites-at-keeping-your-info-safe) may not even use some of the most common safe password practices, like minimum characters and password strength evaluation.
