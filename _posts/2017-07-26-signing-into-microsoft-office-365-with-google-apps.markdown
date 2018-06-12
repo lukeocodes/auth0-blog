@@ -228,6 +228,7 @@ function (user, context, callback) {
     userPrincipalName = 'auth0-' + uuid + '@' + AAD_CUSTOM_DOMAIN;
 
     var options = {
+      method: 'POST',
       url: 'https://graph.windows.net/' + AAD_TENANT_NAME + '/users?api-version=1.6',
       headers: {
         'Content-type': 'application/json',

@@ -19,16 +19,17 @@ The [sample Angular application and API](https://github.com/auth0-blog/angular-a
 
 ### Sign Up for Auth0
 
-You'll need an [Auth0](https://auth0.com) account to manage authentication. You can sign up for a <a href="https://auth0.com/signup" data-amp-replace="CLIENT_ID" data-amp-addparams="anonId=CLIENT_ID(cid-scope-cookie-fallback-name)">free account here</a>. Next, set up an Auth0 client app and API so Auth0 can interface with an Angular app and Node API.
+You'll need an [Auth0](https://auth0.com) account to manage authentication. You can sign up for a <a href="https://auth0.com/signup" data-amp-replace="CLIENT_ID" data-amp-addparams="anonId=CLIENT_ID(cid-scope-cookie-fallback-name)">free account here</a>. Next, set up an Auth0 application and API so Auth0 can interface with an Angular app and Node API.
 
-### Set Up a Client App
+### Set Up an Auth0 Application
 
-1. Go to your [**Auth0 Dashboard**](https://manage.auth0.com/#/) and click the "[create a new client](https://manage.auth0.com/#/clients/create)" button.
+1. Go to your [**Auth0 Dashboard**](https://manage.auth0.com/#/) and click the "[create a new application](https://manage.auth0.com/#/applications/create)" button.
 2. Name your new app and select "Single Page Web Applications".
-3. In the **Settings** for your new Auth0 client app, add `http://localhost:4200/callback` to the **Allowed Callback URLs**. Click the "Save Changes" button.
-4. If you'd like, you can [set up some social connections](https://manage.auth0.com/#/connections/social). You can then enable them for your app in the **Client** options under the **Connections** tab. The example shown in the screenshot above utilizes username/password database, Facebook, Google, and Twitter. For production, make sure you set up your own social keys and do not leave social connections set to use Auth0 dev keys.
+3. In the **Settings** for your new Auth0 app, add `http://localhost:4200/callback` to the **Allowed Callback URLs**.
+4. Add `http://localhost:4200` to the **Allowed Logout URLs**. Click the "Save Changes" button.
+5. If you'd like, you can [set up some social connections](https://manage.auth0.com/#/connections/social). You can then enable them for your app in the **Application** options under the **Connections** tab. The example shown in the screenshot above utilizes username/password database, Facebook, Google, and Twitter. For production, make sure you set up your own social keys and do not leave social connections set to use Auth0 dev keys.
 
-> **Note:** Under the **OAuth** tab of **Advanced Settings** (at the bottom of the **Settings** section) you should see that the **JsonWebToken Signature Algorithm** is set to `RS256`. This is  the default for new clients. If it is set to `HS256`, please change it to `RS256`. You can [read more about RS256 vs. HS256 JWT signing algorithms here](https://community.auth0.com/questions/6942/jwt-signing-algorithms-rs256-vs-hs256).
+> **Note:** Under the **OAuth** tab of **Advanced Settings** (at the bottom of the **Settings** section) you should see that the **JsonWebToken Signature Algorithm** is set to `RS256`. This is  the default for new applications. If it is set to `HS256`, please change it to `RS256`. You can [read more about RS256 vs. HS256 JWT signing algorithms here](https://community.auth0.com/questions/6942/jwt-signing-algorithms-rs256-vs-hs256).
 
 ### Set Up an API
 
@@ -65,7 +66,7 @@ module.exports = {
 };
 ```
 
-Change the `AUTH0_CLIENT_DOMAIN` identifier to your Auth0 client domain and set the `AUTH0_AUDIENCE` to your audience (in this example, this is `http://localhost:3001/api/`). The `/api/dragons` route will be protected with [express-jwt](https://github.com/auth0/express-jwt) and [jwks-rsa](https://github.com/auth0/node-jwks-rsa).
+Change the `AUTH0_CLIENT_DOMAIN` identifier to your Auth0 application domain and set the `AUTH0_AUDIENCE` to your audience (in this example, this is `http://localhost:3001/api/`). The `/api/dragons` route will be protected with [express-jwt](https://github.com/auth0/express-jwt) and [jwks-rsa](https://github.com/auth0/node-jwks-rsa).
 
 > **Note:** To learn more about RS256 and JSON Web Key Set, read [Navigating RS256 and JWKS](https://auth0.com/blog/navigating-rs256-and-jwks/).
 
@@ -91,16 +92,19 @@ Authentication logic on the front end is handled with an `AuthService` authentic
 ```js
 // src/app/auth/auth.service.ts
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 import * as auth0 from 'auth0-js';
 import { AUTH_CONFIG } from './auth0-variables';
 import { UserProfile } from './profile.model';
 
+(window as any).global = window;
+
 @Injectable()
 export class AuthService {
   // Create Auth0 web auth instance
-  // @TODO: Update AUTH_CONFIG and remove .example extension in src/app/auth/auth0-variables.ts.example
-  private _auth0 = new auth0.WebAuth({
+  // @TODO: Update AUTH_CONFIG and remove .example extension in
+  // src/app/auth/auth0-variables.ts.example
+  private _Auth0 = new auth0.WebAuth({
     clientID: AUTH_CONFIG.CLIENT_ID,
     domain: AUTH_CONFIG.CLIENT_DOMAIN,
     responseType: 'token',
@@ -110,6 +114,7 @@ export class AuthService {
   });
   userProfile: UserProfile;
   accessToken: string;
+  expiresAt: number;
 
   // Create a stream of logged in status to communicate throughout app
   loggedIn: boolean;
@@ -129,12 +134,12 @@ export class AuthService {
 
   login() {
     // Auth0 authorize request
-    this._auth0.authorize();
+    this._Auth0.authorize();
   }
 
   handleLoginCallback() {
     // When Auth0 hash parsed, get profile
-    this._auth0.parseHash((err, authResult) => {
+    this._Auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken) {
         window.location.hash = '';
         this.getUserInfo(authResult);
@@ -146,33 +151,35 @@ export class AuthService {
 
   getUserInfo(authResult) {
     // Use access token to retrieve user's profile and set session
-    this._auth0.client.userInfo(authResult.accessToken, (err, profile) => {
+    this._Auth0.client.userInfo(authResult.accessToken, (err, profile) => {
       this._setSession(authResult, profile);
     });
   }
 
   private _setSession(authResult, profile) {
-    const expTime = authResult.expiresIn * 1000 + Date.now();
     // Save session data and update login status subject
-    localStorage.setItem('expires_at', JSON.stringify(expTime));
+    this.expiresAt = authResult.expiresIn * 1000 + Date.now();
     this.accessToken = authResult.accessToken;
     this.userProfile = profile;
     this._setLoggedIn(true);
   }
 
   logout() {
-    // Remove token and profile and update login status subject
-    localStorage.removeItem('expires_at');
-    this.accessToken = undefined;
-    this.userProfile = undefined;
-    this._setLoggedIn(false);
+    // Remove token and profile, update login status subject,
+    // and log out of Auth0 authentication session
+    // This does a refresh and redirects back to homepage
+    // Make sure you have the returnTo URL in your Auth0
+    // Dashboard Application settings in Allowed Logout URLs
+    this._Auth0.logout({
+      returnTo: 'http://localhost:4200',
+      clientID: AUTH_CONFIG.CLIENT_ID
+    });
   }
 
   get authenticated(): boolean {
-    // Check if current date is greater than expiration
-    // and user is currently logged in
-    const expiresAt = JSON.parse(localStorage.getItem('expires_at'));
-    return (Date.now() < expiresAt) && this.loggedIn;
+    // Check if current date is greater than
+    // expiration and user is currently logged in
+    return (Date.now() < this.expiresAt) && this.loggedIn;
   }
 
 }
@@ -190,7 +197,9 @@ We'll receive `accessToken` and `expiresIn` in the hash from Auth0 when returnin
 
 > **Note:** The profile takes the shape of [`profile.model.ts`](https://github.com/auth0-blog/angular-auth0-aside/blob/master/src/app/auth/profile.model.ts) from the [OpenID standard claims](https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims).
 
-Finally, we have a `logout()` method that clears data from and updates the `loggedIn$` subject. We also have an `authenticated` accessor to return current authentication status based on presence of a token and the token's expiration.
+Finally, we have a `logout()` method that logs out of the authentication session on Auth0's server and then redirects back to our app's homepage. 
+
+We also have an `authenticated` accessor to return current authentication status based on presence of a token and the token's expiration.
 
 Once [`AuthService` is provided in `app.module.ts`](https://github.com/auth0-blog/angular-auth0-aside/blob/master/src/app/app.module.ts#L32), its methods and properties can be used anywhere in our app, such as the [home component](https://github.com/auth0-blog/angular-auth0-aside/tree/master/src/app/home).
 
@@ -201,7 +210,7 @@ The [callback component](https://github.com/auth0-blog/angular-auth0-aside/tree/
 ```js
 // src/app/callback/callback.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { AuthService } from './../auth/auth.service';
 import { Router } from '@angular/router';
 
@@ -238,10 +247,9 @@ In order to make authenticated HTTP requests, we need to add an `Authorization` 
 ```js
 // src/app/api.service.ts
 import { Injectable } from '@angular/core';
+import { throwError, Observable } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
 import { catchError } from 'rxjs/operators';
-import 'rxjs/add/observable/throw';
 import { AuthService } from './auth/auth.service';
 
 @Injectable()
@@ -255,7 +263,7 @@ export class ApiService {
 
   getDragons$(): Observable<any[]> {
     return this.http
-      .get(`${this.baseUrl}dragons`, {
+      .get<any[]>(`${this.baseUrl}dragons`, {
         headers: new HttpHeaders().set(
           'Authorization', `Bearer ${this.auth.accessToken}`
         )
@@ -267,7 +275,7 @@ export class ApiService {
 
   private _handleError(err: HttpErrorResponse | any) {
     const errorMsg = err.message || 'Unable to retrieve data';
-    return Observable.throw(errorMsg);
+    return throwError(errorMsg);
   }
 
 }

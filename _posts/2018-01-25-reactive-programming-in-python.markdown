@@ -8,7 +8,7 @@ author:
   name: "Valery Calderon"
   url: "https://twitter.com/valerybriz"
   mail: "valerybriz@gmail.com"
-  avatar: "https://twitter.com/valerybriz/profile_image?size=original"
+  avatar: "https://cdn.auth0.com/blog/guest-author/valery-calderon.jpg"
 design:
   bg_color: "#4A4A4A"
   image: https://cdn.auth0.com/blog/python-restful/logo.png

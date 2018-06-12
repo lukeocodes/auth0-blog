@@ -111,7 +111,7 @@ function tokenGenerate(pushSubscription) {
 function sendTokenToServer(currentToken, oldToken) {
   if (!isTokenSentToServer()) {
 		fetch(
-			"https://auth0-marketing.run.webtask.io/pn-push-subscriptions/push-notification/update",
+			"https://wt-139739a316b9b05b2ef2d61c5ed80be7-0.sandbox.auth0-extend.com/push-notification/update",
 			{
 				headers: {
 					Accept: "application/json",
@@ -160,7 +160,7 @@ function pushMessage(payload) {
 
 function fetchDeleteToken(token) {
   return fetch(
-    "https://auth0-marketing.run.webtask.io/pn-push-subscriptions/push-notification/" +
+    "https://wt-139739a316b9b05b2ef2d61c5ed80be7-0.sandbox.auth0-extend.com/push-notification/" +
       token,
     {
       method: "DELETE"
