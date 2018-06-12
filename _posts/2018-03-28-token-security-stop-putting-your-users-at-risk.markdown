@@ -41,7 +41,7 @@ Attackers are actively looking for places we might be exposing sensitive data an
 
 A common place for storing tokens—which should be considered insecure—is JavaScript’s [`Web Storage API`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage), which includes `localStorage` and `sessionStorage`.
 
-The benefits of these are that they're purely JavaScript and allow you to store up to 5MB of data. The data is string data only, has no logic or state, but it can be serialized along with it’s context (i.e. a JSON object). With `localStorage`, storage persists on that domain until such time as it's deleted by the user or the site. This is unlike `sessionStorage` only in that `sessionStorage` persists data limited to the length of that browsing session.
+The benefits of these are that they're purely JavaScript and allow you to store up to 5MB of data. The data can be stored as string data only. Therefore it has no logic or state. But it can be serialized along with its context (i.e. as JSON object). With `localStorage`, storage persists on that domain until such time as it's deleted by the user or the site. This is unlike `sessionStorage` only in that `sessionStorage` persists data limited to the length of that browsing session.
 
 The problem with `Web Storage` is that it assumes anyone who can access it, also has permission to access it. This is because it’s only accessible by JavaScript and based on the current origin or domain. This also means it’s vulnerable to XSS attacks. Especially so because it's stored in such a readily available format. For example, running the JavaScript below in your browser console will loop over every item in your `localStorage` and output the keys **and the values**.
 
@@ -55,7 +55,7 @@ Object.keys(localStorage).forEach(function(key){
 
 Let's speak theoretically. Imagine for a moment that an attacker can place some JavaScript on your site. Replace the console log above with an [XHR](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest) and **off goes your data to some other server**.
 
-What if you’re using [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) to stop anything but my trusted vendors scripts from running on your site? What if you’re using [Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity) to ensure even those vendors scripts can’t open up vulnerabilities on your site? Those **are** pretty good ways to protect your .
+What if you’re using [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) to stop anything but my trusted vendor's scripts from running on your application? What if you’re using [Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity) to ensure even those vendors scripts can’t open up vulnerabilities on your application? Those **are** pretty good ways to protect your application!
 
 **Those security steps should be taken anyway!**
 
@@ -67,9 +67,9 @@ But can you be 100% certain it's safe? Avoiding storing tokens on the frontend i
 
 ## The complexity of web applications
 
-In the 1990's world of basic web development, we had monolithic applications that handled user management, stored sensitive data, processed requests and splatted some HTML on our screen, acting as both our server and our client all rolled into one.
+In the 1990's world of basic web development, we had monolithic applications that handled user management, stored sensitive data, processed requests and returned some HTML to our screen, acting as both our server and our client applications, all rolled into one.
 
-In the years that followed we made that splat of HTML prettier and prettier, and more interactive. But we essentially had one application which kept our users credentials and session secure—for the most part—in the backend and splatted HTML to the frontend. Our HTML splatting application is **one single application**, and its just sending HTML down to our browser, which is more or less just a dumb client that lets us click on our new pretty buttons and links.
+In the years that followed we made that HTML prettier and prettier, and more interactive. But we essentially still had one application which kept our user's credentials and session secure—for the most part—in the backend and still returned HTML to the frontend. Our monolithic application is **one single application**, and its just sending HTML down to our browser, which is more or less just a dumb client that lets us click on our new pretty buttons and links.
 
 At this point the browser is not actively involved in any logic. All we need with each request is to identify the user is who they were at the start of their browsing session. In such a case one would use cookies, because that's what they were designed for, a single party that has no need to expose anything with any potential sensitivity.
 
