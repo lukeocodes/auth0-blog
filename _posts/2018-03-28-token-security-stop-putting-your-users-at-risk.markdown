@@ -2,7 +2,6 @@
 layout: post
 title: "Token Security: Stop Putting Your Users At Risk"
 description: "Access tokens are a credential that can be used by a client to access a service, like an API. Like any credential—passwords for instance—they should be kept safe and secure."
-longdescription: "Are you putting your users at unnecessary risk? If you store access tokens in your frontend app, you might be! Access tokens are a credential that can be used by a client to access a service, like an API. Like any credential—passwords for instance—they should be kept safe and secure."
 date: 2018-03-28 23:23
 category: Hot Topics, Security
 author:
@@ -11,8 +10,8 @@ author:
   avatar: https://avatars1.githubusercontent.com/u/956290?s=200
   mail: luke.oliff@auth0.com
 design:
-  bg_color: <A HEX BACKGROUND COLOR>
-  image: <A PATH TO A 200x200 IMAGE>
+  bg_color: "#222228"
+  image: https://cdn.auth0.com/blog/series-c/auth0-logo.png
 tags:
 - security
 - access-tokens
