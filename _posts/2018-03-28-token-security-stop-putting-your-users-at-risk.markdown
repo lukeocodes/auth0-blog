@@ -27,7 +27,7 @@ related:
 - 2018-03-22-cambridge-analytica-and-facebook
 ---
 
-**TL;DR:** We explore keeping your tokens and you users data safe. `localStorage` has been used as an example of how to store access tokens, especially in single page applications (SPAs). Auth0 has an alternative to storing a token for a persistent user session, so your returning users can stay logged in without putting them at unnecessary risk.
+**TL;DR:** We explore keeping your tokens and you users data safe. `localStorage` has been used as an example of how to store access tokens, especially in single-page applications (SPAs). Auth0 has an alternative to storing a token for a persistent user session, so your returning users can stay logged in without putting them at unnecessary risk.
 
 ## Storing tokens on the frontend—don’t do it
 
@@ -69,17 +69,17 @@ But can you be 100% certain it's safe? Avoiding storing tokens on the frontend i
 
 In the 1990's world of basic web development, we had monolithic applications that handled user management, stored sensitive data, processed requests and returned some HTML to our screen, acting as both our server and our client applications, all rolled into one.
 
-In the years that followed we made that HTML prettier and prettier, and more interactive. But we essentially still had one application which kept our user's credentials and session secure—for the most part—in the backend and still returned HTML to the frontend. Our monolithic application is **one single application**, and its just sending HTML down to our browser, which is more or less just a dumb client that lets us click on our new pretty buttons and links.
+In the years that followed, we made that HTML prettier and prettier, and more interactive. But we essentially still had one application which kept our user's credentials and session secure—for the most part—in the backend and still returned HTML to the frontend. Our monolithic application is **one single application**, and its just sending HTML down to our browser, which is more or less just a dumb client that lets us click on our new pretty buttons and links.
 
-At this point the browser is not actively involved in any logic. All we need with each request is to identify the user is who they were at the start of their browsing session. In such a case one would use cookies, because that's what they were designed for, a single party that has no need to expose anything with any potential sensitivity.
+At this point, the browser is not actively involved in any logic. All we need with each request is to identify the user is who they were at the start of their browsing session. In such a case one would use cookies, because that's what they were designed for, a single party that has no need to expose anything with any potential sensitivity.
 
-Roll on two decades of user experience improvements and technological advancements and we land smack bang in the world of single page applications (SPAs). A SPA is essentially software that runs in browser. When we load up our new website, we download very thin code (we hope) that comes with all the necessaries to be able to communicate with a server.
+Roll on two decades of user experience improvements and technological advancements and we land smack bang in the world of single-page applications (SPAs). An SPA is essentially software that runs in the browser. When we load up our new website, we download very thin code (we hope) that comes with all the necessaries to be able to communicate with a server.
 
 The server is essentially the same as our old 1990's application, but it's learned some tricks. It has had an upgrade. It only talks in computer language now – HTTP requests sending and receiving JSON payloads. We now call it an application programming interface (API) and it doesn't give us HTML anymore. Instead, it leaves that up to the SPA.
 
 Web tokens were designed for cases like this, in which there are *two applications*, such as our API and our SPA. It allows the SPA and API to identify a user. But if we don't protect our tokens with all the responsibility other credentials (usernames and passwords) deserve, and the token it's accessed by a bad actor, then they can access our API on behalf of that user.
 
-**Now imagine that the API is your bank, and the SPA is your banks online banking software.**
+**Now imagine that the API is your bank, and the SPA is your bank's online banking software.**
 
 ## Auth0’s old guides—they store tokens in localStorage!
 
@@ -89,7 +89,7 @@ A lot of people will still go ahead and use `localStorage` assuming they’ll ne
 
 That’s ok, but it’s only responsible for us to teach you the **most secure way**.
 
-Until recently, we believed that with simple and common steps to secure your SPAs against XSS and other attack vectors, it was okay to store tokens in `localStorage`. It made our guides very simple to follow. The reality is that the only way to build secure apps is to do absolutely **everything** you can to secure them, because ***attackers are always one step ahead***.
+Until recently, we believed that with simple and common steps to secure your SPAs against XSS and other attack vectors, it was okay to store tokens in `localStorage`. It made our guides very simple to follow. The reality is that the only way to build secure appliations is to do absolutely **everything** you can to secure them, because ***attackers are always one step ahead***.
 
 It's not just Auth0 though, [more](https://www.rdegges.com/2018/please-stop-using-local-storage/) and [more](https://www.owasp.org/index.php/JSON_Web_Token_(JWT)_Cheat_Sheet_for_Java#Token_storage_on_client_side) developers and groups are putting up red flags on token storage.
 
@@ -99,11 +99,11 @@ So we’ve discussed the risk of storing tokens with the `Web Storage API` and h
 
 The [Auth0.js](https://auth0.com/docs/libraries/auth0js) `checkSession()` method allows you to acquire a new token from Auth0 for a user who is already authenticated against Auth0 for your domain. The method accepts any valid OAuth2 parameters that would normally be sent to our `authorize()` method, which is used to initiate authentication.
 
-Our guides would normally include an authentication utility script to provide some much needed functions for authentication on our SPAs. So below you'll find an example using our `auth0-js` SDK. This example isn't working code and shouldn't be expected to run, but it gives you a good idea of what methods you should be looking to deploy in order to avoid storing tokens using the `Web Storage API`.
+Our guides would normally include an authentication utility script to provide some much-needed functions for authentication on our SPAs. So below you'll find an example using our `auth0-js` SDK. This example isn't working code and shouldn't be expected to run, but it gives you a good idea of what methods you should be looking to deploy in order to avoid storing tokens using the `Web Storage API`.
 
 Our utility script needs our `auth0-js` SDK loaded and then it needs to configure it. You might load it using a loader like CommonJS or RequireJS, or fetch it from our CDN using traditional `script` tags. 
 
-So here is the start of our util script, that uses our `auth0-js` SDK.
+So here is the start of our utilily script, that uses our `auth0-js` SDK.
 
 ```js
 // authutil.js
@@ -170,7 +170,7 @@ window.addEventListener('load', function() {
 });
 ```
 
-If we use this utility as it is, in a SPA you'll remain logged in until we re-request the SPA from the server. So, something like a page refresh or browsing to another page without using your SPA's router will likely log you out.
+If we use this utility as it is, in an SPA you'll remain logged in until we re-request the SPA from the server. So, something like a page refresh or browsing to another page without using your SPA's router will likely log you out.
 
 If we want to re-authorize a user when they return to the site, or if they refresh, we can add something like this to our utility class:
 
