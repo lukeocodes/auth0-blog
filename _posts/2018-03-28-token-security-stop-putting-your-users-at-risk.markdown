@@ -34,7 +34,7 @@ Access tokens are a credential that can be used by a client to access a service,
 
 {% include tweet_quote.html quote_text="Are you putting your users at unnecessary risk? If you store access tokens in your front-end app, you might be!" %}
 
-You should not be storing anything as sensitive as credentials anywhere they can be accessed by a third party. Storing them your front-end application is asking for trouble. Attackers are actively looking for places you might be exposing sensitive data and they’re using more elaborate methods all the time. The last thing you need to do is make it easy for them.
+You should not be storing anything as sensitive as credentials anywhere they can be accessed by a third party. Storing them in your front-end application is asking for trouble. Attackers are actively looking for places you might be exposing sensitive data and they’re using more elaborate methods all the time. The last thing you need to do is make it easy for them.
 
 A common place for storing tokens on the front-end is JavaScript’s [`Web Storage API`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage), which should be considered insecure.
 
