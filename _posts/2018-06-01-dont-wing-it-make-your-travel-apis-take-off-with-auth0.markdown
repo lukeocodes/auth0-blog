@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Don’t wing it, make travel APIs more secure with Auth0"
+title: "Don’t wing it, make your travel APIs take off with Auth0"
 description: "High flying travel businesses reputations are destroyed by data breaches. Protect against breaches with identity management from Auth0."
 longdescription: "High flying travel businesses reputations are destroyed by data breaches. The online travel sector has really taken off in the last decade. The importance of trust and reputation has never been more important. Protect against breaches with identity management from Auth0."
 date: 2018-06-01 10:42
@@ -76,10 +76,19 @@ Global distribution systems offer comprehensive booking and reservation manageme
 
 ## Jet powered authentication with Auth0
 
-The Auth0 Authentication API exposes authentication functionality including supported identity protocols such as OpenID Connect, OAuth, and SAML. Typically, you would consume this API through one of the Auth0 SDKs.
+Building API Authentication can be a real drag. But lucky for you, Auth0 is quick to implement, with some enterprise clients being up and running within 30 days.
 
-- automated competitor analysis through lost keys
-- api auth provides b2c analytics on b2b apis
+We also offer some fantastic features that can work just as well with, or enhance, API Authentication.
+
+### Account linking
+
+Social logins are popular features right now. But with API Authentication it's difficult to provide that functionality. If you're building your native application with your own login box, then you'll likely skip social authentication. But on your website, your user might sign up with Google.
+
+Account linking can be used to automatically link social accounts and normal user accounts together, providing you a wider collection of data from that users profile. This enables us to use another neat feature; profile enhancement. Profile enhancement allows us to enhance user profiles by fetching user data from an external source, like when they logged in using Google.
+
+### Simplify GDPR
+
+Using Auth0 for your API Authentication allows you to offload vulnerabilities and risks in your API's security to Auth0. We are actively working to improve the security around our authentication. Meanwhile, you can seek to reduce the amount of personal data you're storing, further simplifying any potential exposure to GDPR regulations and risks of being caught up in a data breach.
 
 ## Conclusion
 
