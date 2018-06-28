@@ -78,7 +78,7 @@ Global distribution systems offer comprehensive booking and reservation manageme
 
 ## Jet powered authentication with Auth0
 
-Building API Authentication can be a real drag. But lucky for you, Auth0 is quick to implement, with enterprises being able to launch within 30 days.
+Building API Authentication can be a real drag. But lucky for you, Auth0 is quick to implement. In a survey of nearly 400 customers 94% were able to implement in less than a month.
 
 We also offer some fantastic features that can work just as well with, or enhance, API Authentication.
 
