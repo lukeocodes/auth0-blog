@@ -40,6 +40,8 @@ Travel organisations are increasingly building APIs to better support their digi
 
 There are many types of APIs in the travel sector including but not limited to hotels, airlines, vehicle rental, reviews and rating, packages, tours, attractions, and public transport.
 
+{% include tweet_quote.html quote_text="There are many types of APIs in the travel sector. Super-charge them with Auth0 API Authentication." %}
+
 ### Hotel reservations
 
 You're spoilt for choice for availability APIs, as online travel agencies stumble over themselves to give you the most options and best prices. Priceline and Expedia are the two big players in this area. Expedia's model is particularly interesting, offering two services that directly compliment each other. The Expedia Partner Central and Expedia Affiliate Network (EAN).
@@ -76,7 +78,7 @@ Global distribution systems offer comprehensive booking and reservation manageme
 
 ## Jet powered authentication with Auth0
 
-Building API Authentication can be a real drag. But lucky for you, Auth0 is quick to implement, with some enterprise clients being up and running within 30 days.
+Building API Authentication can be a real drag. But lucky for you, Auth0 is quick to implement, with enterprises being able to launch within 30 days.
 
 We also offer some fantastic features that can work just as well with, or enhance, API Authentication.
 
@@ -86,12 +88,11 @@ Social logins are popular features right now. But with API Authentication it's d
 
 Account linking can be used to automatically link social accounts and normal user accounts together, providing you a wider collection of data from that users profile. This enables us to use another neat feature; profile enhancement. Profile enhancement allows us to enhance user profiles by fetching user data from an external source, like when they logged in using Google.
 
+{% include tweet_quote.html quote_text="Building API Authentication can be a real drag. But lucky for you, Auth0 is quick to implement, with enterprises being able to launch within 30 days." %}
+
 ### Simplify GDPR
 
 Using Auth0 for your API Authentication allows you to offload vulnerabilities and risks in your API's security to Auth0. We are actively working to improve the security around our authentication. Meanwhile, you can seek to reduce the amount of personal data you're storing, further simplifying any potential exposure to GDPR regulations and risks of being caught up in a data breach.
 
-## Conclusion
+{% include asides/about-auth0.markdown %}
 
-Rapid digital transformation with Auth0, etc.
-
-One area where the travel sector still has to improve is on the security of their users data and their security practices. According to a recent study by Dashlane sound that [89%](https://blog.dashlane.com/travel-password-power-rankings-2018/) of travel sites have unsafe password practices. The [worst offenders](https://auth0.com/blog/the-best-and-worst-travel-sites-at-keeping-your-info-safe) may not even use some of the most common safe password practices, like minimum characters and password strength evaluation.
