@@ -37,7 +37,7 @@ related:
 
 In this article, you will build a birthdates API that lets you register and query birthdays from the people you know.
 
-Structuring Node.js APIs has been a pain most beginner Node.js developers have been through. So, in the next sections, you will learn how to properly structure and organise a RESTful Node.js API with some cool tools like Restify, Joi, and MongoDB. 
+Structuring Node.js APIs has been a pain most beginner Node.js developers have been through. So, in the next sections, you will learn how to properly structure and organize a RESTful Node.js API with some cool tools like Restify, Joi, and MongoDB. 
 
 ## What Tools Will You Use
 
@@ -102,7 +102,7 @@ npm init
 
 ### Installing Dependencies
 
-After initialising your project with NPM, you can install its dependencies:
+After initializing your project with NPM, you can install its dependencies:
 
 ```bash
 npm install --save mongoose restify joi http-status restify-errors restify-url-semver winston@next dotenv
@@ -112,9 +112,9 @@ The list below provides a brief explanation of what these libraries do:
 
 * `mongoose` is a MongoDB object modeling tool designed to work in an asynchronous environment.
 * `http-status` is a utility to interact with HTTP status code.
-* `restify-errors` is a library that contains sets of error contructors to create new error objects with their default status codes.
+* `restify-errors` is a library that contains sets of error constructors to create new error objects with their default status codes.
 * `restify-url-semver` is a library used for versioning the Restify API.
-* `winston` is a universal logging library with support for multiple transports.
+* `winston` is a universal logging library with support for multiple transports. A [transport](https://github.com/winstonjs/winston#transports) is essentially a storage device for your logs.
 * `dotenv` is a tiny package that loads environment variables from `.env` file into `process.env`.
 
 ### Creating the App Configuration
@@ -224,7 +224,7 @@ function formatJSend(req, res, body) {
 module.exports = formatJSend;
 ```
 
-The main function, `formatJSend` (the other two are used only by this function), checks the body of the response to see if it's an error type or not. If it is, it calls the `formatError` function that construct a `jsend` compliant error response with the HTTP status code. Otherwise, the `formatSuccess` is called for every successful request transaction and formatted following the `jsend` json response specification.
+The main function, `formatJSend` (the other two are used only by this function), checks the body of the response to see if it's an error type or not. If it is, it calls the `formatError` function that constructs a `jsend` compliant error response with the HTTP status code. Otherwise, the `formatSuccess` is called for every successful request transaction and formatted following the `jsend` JSON response specification.
 
 Your formatter overrides the default Restify formatter for `content-type` of `application/json`.
 
@@ -322,7 +322,7 @@ const createTransports = function (config) {
 
 module.exports = {
   create: function (config) {
-    return new createLogger({
+    return createLogger({
       transports: createTransports(config),
       format: combine(
         label({label: 'Birthdates API'}),
@@ -334,7 +334,7 @@ module.exports = {
 };
 ```
 
-For a better understanding on how to create Winston logger, you can have a look at the [official Winston documentation](http://github.com/winstonjs/winston). 
+For a better understanding of how to create Winston logger, you can have a look at the [official Winston documentation](http://github.com/winstonjs/winston). 
 
 For this tutorial, you created two transports; `console` and `file`. Both transports use the log level you set in your environment variable which can be overridden in the code with `logger.log_level(...)` (e.g. `logger.info(...)` instead of `logger.log(...)`).
 
@@ -443,7 +443,7 @@ Before you proceed, you will need to start a MongoDB server in a separate termin
 mongod
 ```
 
-> **Note:** You can also use a service like [mLab](https://mlab.com/) or you can [use Docker to initiliase a MongoDB instance](https://github.com/brunokrebs/cheat-sheet/tree/master/docker#mongodb-commands).
+> **Note:** You can also use a service like [mLab](https://mlab.com/) or you can [use Docker to initialize a MongoDB instance](https://github.com/brunokrebs/cheat-sheet/tree/master/docker#mongodb-commands).
 
 If the command above fails, check out their [documentation](https://docs.mongodb.com/manual/tutorial/) on how to start the server for your OS.
 
@@ -596,9 +596,9 @@ class UserService {
 module.exports = UserService;
 ```
 
-This is a brief analysis over this file:
+This is a brief analysis of this file:
 
-* The `constructor` initalizes all the dependencies passed to it from your dependency injection file when creating the object.
+* The `constructor` initializes all the dependencies passed to it from your dependency injection file when creating the object.
 * The `createUser` method checks if the user with the username in the request body exists then throws an error that 'User with username already exists' already exists. Otherwise, it proceeds to save the user and returns the result to the controller.
 * The `getUser` method fetches the user that matches the `username` provided and returns the result to the controller.
 
@@ -704,9 +704,9 @@ class BirthdateService {
 module.exports = BirthdateService;
 ```
 
-The following list provides a brief analysis over the code above:
+The following list provides a brief analysis of the code above:
 
-* The `constructor` method initalizes all the dependencies passed to it from your dependency injection file when creating the object.
+* The `constructor` method initializes all the dependencies passed to it from your dependency injection file when creating the object.
 * The `createBirthdate` method fetches the user that made the request, then saves the `birthdates` with the `fullname` and returns the result to the Birthdate controller completing the request.
 * The `getBirthdates` method gets all the `birthdates` of the user that made the request and returns the result to the Birthdate controller.
 
@@ -999,7 +999,7 @@ After defining the route specification in the first arguments, you specify the c
 
 ### Handling Restify Errors
 
-Restify has built-in error event listener that get fired when an `Error` is encountered by restify as part of a `next(error)` statement. So, now you need to add handlers for possible errors you want to listen for.
+Restify has built-in error event listener that gets fired when an `Error` is encountered by restify as part of a `next(error)` statement. So, now you need to add handlers for possible errors you want to listen for.
 
 So, inside `./app/lib/`, create `error_handler.js` and add this:
 
@@ -1105,7 +1105,7 @@ server.listen(config.app.port, () => {
 });
 ```
 
-That's it!!! You have just built a well-organised API with Restify. Time take your baby for a spin:
+That's it!!! You have just built a well-organized API with Restify. Time take your baby for a spin:
 
 ```bash
 # make sure you are running this from the project root
@@ -1155,6 +1155,6 @@ This will get you a response similar to:
 
 ## Conclusion
 
-In this article, you learned how to use great tools like Node.js, Mongoose, Restify, Joi, and Mongo to build well-organised RESTful APIs. You also learned that without too much effort you can integrate a simple module to handle the injection of dependencies on modules. Although lengthy, the content of this article is not hard to grasp and paves the way for more complex applications.
+In this article, you learned how to use great tools like Node.js, Mongoose, Restify, Joi, and Mongo to build well-organized RESTful APIs. You also learned that without too much effort you can integrate a simple module to handle the injection of dependencies on modules. Although lengthy, the content of this article is not hard to grasp and paves the way for more complex applications.
 
 In a next opportunity, you will see how to integrate the project created here in a CI/CD (Continuous Integration and Continuous Delivery) workflow to automate the release process. Stay tuned!

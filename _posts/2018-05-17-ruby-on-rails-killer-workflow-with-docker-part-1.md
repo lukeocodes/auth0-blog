@@ -34,7 +34,7 @@ related:
 
 You will be able to build a small shelf and fill them with books in the process. You can have a look at the app [here](https://shelvedbooks.herokuapp.com/) and this [repository on GitHub](https://github.com/vijayabharathib/dockerized-rails-app) has the code and configuration of the finished product.
 
-{% include tweet_quote.html quote_text="I'm learning how to integrate @Docker and @rails on a modern, full-stack, and database-driven development enviroment." %}
+{% include tweet_quote.html quote_text="I'm learning how to integrate @Docker and @rails on a modern, full-stack, and database-driven development environment." %}
 
 ## Development Workflow
 

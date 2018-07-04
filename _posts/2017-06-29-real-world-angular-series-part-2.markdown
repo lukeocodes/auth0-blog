@@ -3,7 +3,8 @@ layout: post
 title: "Real-World Angular Series - Part 2: Authentication and Data Modeling"
 description: "Build and deploy a real-world app with MongoDB, Express, Angular, and Node (MEAN): authentication, authorization, and data modeling."
 date: 2017-06-29 8:30
-category: Technical guide, Angular, Angular 4
+updated: 2018-07-15 8:30
+category: Technical guide, Angular, Angular 6
 banner:
   text: "Auth0 makes it easy to add authentication to your Angular application."
 author:
@@ -28,12 +29,12 @@ related:
 
 ---
 
-<div class="alert alert-danger alert-icon">
+<div class="alert alert-info alert-icon">
   <i class="icon-budicon-487"></i>
-  <strong>WARNING: This series of articles uses Angular 5 and RxJS 5.</strong> Please be aware that code changes are necessary to use Angular 6 and RxJS 6 with this tutorial. We are in the process of upgrading the series to latest versions. In the meantime, you can <a href="https://update.angular.io/">follow the update instructions here</a> for more information. Thank you for your patience!
+  <strong>This article was updated June 15, 2018.</strong> This series and associated repository use Angular 6, CLI 6, RxJS 6, and revised recommendations regarding the storage of sensitive data.
 </div>
 
-**TL;DR:** This 8-part tutorial series covers building and deploying a full-stack JavaScript application from the ground up with hosted [MongoDB](https://www.mongodb.com/), [Express](https://expressjs.com/), [Angular (v2+)](https://angular.io), and [Node.js](https://nodejs.org) (MEAN stack). The completed code is available in the [mean-rsvp-auth0 GitHub repo](https://github.com/auth0-blog/mean-rsvp-auth0/) and a deployed sample app is available at [https://rsvp.kmaida.net](https://rsvp.kmaida.net).  **Part 2 of the tutorial series covers authentication, authorization, and data modeling.**
+**TL;DR:** This 8-part tutorial series covers building and deploying a full-stack JavaScript application from the ground up with hosted [MongoDB](https://www.mongodb.com/), [Express](https://expressjs.com/), [Angular](https://angular.io), and [Node.js](https://nodejs.org) (MEAN stack). The completed code is available in the [mean-rsvp-auth0 GitHub repo](https://github.com/auth0-blog/mean-rsvp-auth0/) and a deployed sample app is available at [https://rsvp.kmaida.net](https://rsvp.kmaida.net).  **Part 2 of the tutorial series covers authentication, authorization, and data modeling.**
 
 ---
 
@@ -67,23 +68,22 @@ The second installment in the series covers authentication, authorization, featu
 
 ## <span id="angular-auth"></span>Angular: Authentication
 
-Let's pick up right where we left off [last time](https://auth0.com/blog/real-world-angular-series-part-1). We've built the main layout for our app. Now it's time to add an authentication feature. Our app's basic authentication should include:
+Let's pick up right where [we left off last time](https://auth0.com/blog/real-world-angular-series-part-1). We've built the main layout for our app. Now it's time to add an authentication feature. Our app's basic authentication should include:
 
 * Login and logout
-* User profile storage
-* Access token storage
+* User profile and token management
 * Session persistence
-* Factory to authorize HTTP requests with access token
+* Authorization of HTTP requests with access token
 
 ### Install Auth0.js
 
 First let's install a new dependency. We need the [auth0-js](https://www.npmjs.com/package/auth0-js) package to interface with our [Auth0 account](https://auth0.com/blog/real-world-angular-series-part-1#auth0-setup). Install this package with npm from the project root:
 
 ```bash
-$ npm install auth0-js --save
+$ npm install auth0-js@latest --save
 ```
 
-### Environment Configuration
+### Dynamic Environment Configuration
 
 Let's create a file to store information about our app's environment. We're currently developing on `localhost:4200`, but the app will be deployed on the Node server eventually, and in production, it will run on a [reverse proxy](https://en.wikipedia.org/wiki/Reverse_proxy). We'll need to make sure our development environment doesn't break our production environment and vice versa.
 
@@ -106,6 +106,8 @@ export const ENV = {
 ```
 
 This code detects the host environment and sets the app's base URI and base API URI. We'll import this `ENV` configuration wherever we need to detect and use these URIs.
+
+> **Note:** Another way to do this would be to set up your `environments/environment.*.ts` files with environment-dependent settings. In our app, we will allow this to be generated dynamically based on the URL, but feel free to use the `environment.*.ts` files instead if you prefer.
 
 ### Authentication Configuration
 
@@ -150,7 +152,7 @@ Now open the generated `auth.service.ts` file and add the necessary code to our 
 // src/app/auth/auth.service.ts
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 import { AUTH_CONFIG } from './auth.config';
 import * as auth0 from 'auth0-js';
 
@@ -165,23 +167,18 @@ export class AuthService {
     audience: AUTH_CONFIG.AUDIENCE,
     scope: AUTH_CONFIG.SCOPE
   });
+  accessToken: string;
   userProfile: any;
+  expiresAt: number;
   // Create a stream of logged in status to communicate throughout app
   loggedIn: boolean;
   loggedIn$ = new BehaviorSubject<boolean>(this.loggedIn);
+  loggingIn: boolean;
 
   constructor(private router: Router) {
-    // If authenticated, set local profile property
-    // and update login status subject.
-    // If not authenticated but there are still items
-    // in localStorage, log out.
-    const lsProfile = localStorage.getItem('profile');
-
-    if (this.tokenValid) {
-      this.userProfile = JSON.parse(lsProfile);
-      this.setLoggedIn(true);
-    } else if (!this.tokenValid && lsProfile) {
-      this.logout();
+    // If app auth token is not expired, request new token
+    if (JSON.parse(localStorage.getItem('expires_at')) > Date.now()) {
+      this.renewToken();
     }
   }
 
@@ -198,7 +195,7 @@ export class AuthService {
 
   handleAuth() {
     // When Auth0 hash parsed, get profile
-    this._auth0.parseHash((err, authResult) => {
+    this._auth0.parseHash(window.location.href, (err, authResult) => {
       if (authResult && authResult.accessToken) {
         window.location.hash = '';
         this._getProfile(authResult);
@@ -210,45 +207,57 @@ export class AuthService {
   }
 
   private _getProfile(authResult) {
+    this.loggingIn = true;
     // Use access token to retrieve user's profile and set session
     this._auth0.client.userInfo(authResult.accessToken, (err, profile) => {
       if (profile) {
         this._setSession(authResult, profile);
       } else if (err) {
-        console.error(`Error authenticating: ${err.error}`);
+        console.warn(`Error retrieving profile: ${err.error}`);
       }
     });
   }
-
-  private _setSession(authResult, profile) {
-    // Save session data and update login status subject
-    const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + Date.now());
-    // Set tokens and expiration in localStorage and props
-    localStorage.setItem('access_token', authResult.accessToken);
-    localStorage.setItem('expires_at', expiresAt);
-    localStorage.setItem('profile', JSON.stringify(profile));
+  
+  private _setSession(authResult, profile?) {
+    this.expiresAt = (authResult.expiresIn * 1000) + Date.now();
+    // Store expiration in local storage to access in constructor
+    localStorage.setItem('expires_at', JSON.stringify(this.expiresAt));
+    this.accessToken = authResult.accessToken;
     this.userProfile = profile;
     // Update login status in loggedIn$ stream
     this.setLoggedIn(true);
+    this.loggingIn = false;
   }
-
-  logout() {
-    // Ensure all auth items removed from localStorage
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('profile');
+  
+  private _clearExpiration() {
+    // Remove token expiration from localStorage
     localStorage.removeItem('expires_at');
-    localStorage.removeItem('authRedirect');
-    // Reset local properties, update loggedIn$ stream
-    this.userProfile = undefined;
-    this.setLoggedIn(false);
-    // Return to homepage
-    this.router.navigate(['/']);
+  }
+  
+  logout() {
+    // Remove data from localStorage
+    this._clearExpiration();
+    // End Auth0 authentication session
+    this._auth0.logout({
+      clientId: AUTH_CONFIG.CLIENT_ID,
+      returnTo: ENV.BASE_URI
+    });
   }
 
   get tokenValid(): boolean {
     // Check if current time is past access token's expiration
-    const expiresAt = JSON.parse(localStorage.getItem('expires_at'));
-    return Date.now() < expiresAt;
+    return Date.now() < JSON.parse(localStorage.getItem('expires_at'));
+  }
+  
+  renewToken() {
+    // Check for valid Auth0 session
+    this._auth0.checkSession({}, (err, authResult) => {
+      if (authResult && authResult.accessToken) {
+        this._getProfile(authResult);
+      } else {
+        this._clearExpiration();
+      }
+    });
   }
 
 }
@@ -258,15 +267,23 @@ This service uses the config variables from `auth.config.ts` to instantiate an [
 
 An [RxJS `BehaviorSubject`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/subjects/behaviorsubject.md) is used to provide a stream of authentication status events that we can subscribe to anywhere in the app.
 
-The constructor checks the current authentication status upon app initialization. If the user is still logged in from a previous session and their token has not expired, the local properties are set using data from local storage and the `loggedIn` property and `loggedIn$` subject are updated. If the token is expired but the user has not logged themselves out, the `logout()` method is executed to clear any expired session data.
+The constructor checks the app authentication status upon initialization. If the user has not logged out of our Angular app from a previous session (their token has not expired), we'll call a method called `renewToken()` to verify that their _Auth0 session on the authentication server_ is _also_ still valid. If it is, we'll receive a fresh access token.
 
-The `login()` method authorizes the authentication request with Auth0 using the auth config variables. An Auth0 hosted Lock instance will be shown to the user and they can then log in.
+> **Note:** The Angular app's authentication lifespan is not the same thing as the authentication session on the server. We manage the Angular app authentication with the expiration of the JWT access token, and the persistence or removal of this tells us whether or not to ask the server if the user's Auth0 authentication session is still valid when initializing the app.
+
+The `login()` method authorizes the authentication request with Auth0 using the auth config variables. The Auth0 login page will be shown to the user and they can then log in.
 
 > **Note:** If it's the user's first visit to our app _and_ our callback is on localhost, they'll also be presented with a consent screen where they can grant access to our API. A first party client on a non-localhost domain would be highly trusted, so the consent dialog would not be presented in this case. You can modify this by editing your [Auth0 Dashboard API](https://manage.auth0.com/#/apis) **Settings**. Look for the "Allow Skipping User Consent" toggle.
 
 We'll receive an an `access_token` and a time until token expiration (`expiresIn`) from Auth0 when returning to our app. The `handleAuth()` method uses Auth0's `parseHash()` method callback to get the user's profile (`_getProfile()`) and set the session (`_setSession()`) by saving the tokens, expiration, and profile to local storage and calling `setLoggedIn()` so that any components in the app are informed that the user is now authenticated.
 
-Finally, we'll define a `logout()` method that clears data from local storage and updates `setLoggedIn()`. We also have a `tokenValid()` accessor to check whether the current datetime is less than the token expiration datetime.
+Next we'll create a little helper method to easily clear the expiration from local storage, since we will need to do this in multiple places.
+
+We'll define a `logout()` method that clears expiration and then calls the [Auth0 `logout()` method](https://auth0.com/docs/libraries/auth0js/v9#logout) to officially end the user's Auth0 authentication session. This performs a redirect back to the URL we specify (in this case, our app's public homepage). 
+
+We also have a `tokenValid()` accessor to check whether the current datetime is less than the token expiration datetime.
+
+Finally, we'll implement the `renewToken()` method, which uses the [Auth0 `checkSession()` method](https://auth0.com/docs/libraries/auth0js/v9#using-checksession-to-acquire-new-tokens) to request a fresh access token from Auth0 if the user's authentication session is still active. If there is no session active, we won't take any action. We don't want to produce any errors or logs here because having no session does not mean anything _went wrong_, it just tells us the user should not be automatically and silently logged back into the Angular app.
 
 ### Provide AuthService in App Module
 
@@ -288,24 +305,9 @@ import { AuthService } from './auth/auth.service';
 ...
 ```
 
-### Handle Authentication in App Component
-
-The authentication service's `handleAuth()` method must be called in the `app.component.ts` constructor so it will run on initialization of our app:
-
-```js
-// src/app/app.component.ts
-import { AuthService } from './auth/auth.service';
-...
-  constructor(private auth: AuthService) {
-    // Check for authentication and handle if hash present
-    auth.handleAuth();
-  }
-...
-```
-
 ### Create a Callback Component
 
-Next we'll create a Callback component. This is where the app is redirected after authentication. This component simply shows a loading message until hash parsing is completed and the Angular app redirects back to the home page.
+Next we'll create a Callback component. This is where the app is redirected after authentication. This component handles the authentication information and then shows a loading message until hash parsing is completed and the Angular app redirects back to the home page.
 
 > **Note:** Recall that we already added `http://localhost:4200/callback` and `http://localhost:8083/callback` to our [Auth0 Client](https://manage.auth0.com/#/clients) **Allowed Callback URLs** setting.
 
@@ -315,7 +317,20 @@ Let's generate this component with the Angular CLI:
 $ ng g component pages/callback
 ```
 
-For now, all we need to do in this component is change the text in `callback.component.html` to `Loading...`, like so:
+The authentication service's `handleAuth()` method must be called in the `callback.component.ts` constructor so it will run on initialization of our app:
+
+```js
+// src/app/pages/callback/callback.component.ts
+import { AuthService } from './auth/auth.service';
+...
+  constructor(private auth: AuthService) {
+    // Check for authentication and handle if hash present
+    auth.handleAuth();
+  }
+...
+```
+
+All we need to do in this component's template is change the text in `callback.component.html` to `Loading...`, like so:
 
 {% highlight html %}
 <!-- src/app/pages/callback/callback.component.html -->
@@ -374,19 +389,21 @@ Now let's add login, logout, and a user greeting to the `header.component.html` 
   <div class="header-page bg-primary">
     ...
     <div class="header-page-authStatus">
-      <a *ngIf="!auth.loggedIn" (click)="auth.login()">Log In</a>
-      <span *ngIf="auth.loggedIn">
-        {{auth.userProfile?.name}} <span class="opacity-half">|</span> <a (click)="auth.logout()">Log Out</a>
-      </span>
+      <span *ngIf="auth.loggingIn">Logging in...</span>
+      <ng-template [ngIf]="!auth.loggingIn">
+        <a *ngIf="!auth.loggedIn" (click)="auth.login()">Log In</a>
+        <span *ngIf="auth.loggedIn && auth.userProfile">
+          {{ auth.userProfile.name }}
+          <span class="divider">|</span>
+          <a (click)="auth.logout()">Log Out</a>
+        </span>
+      </ng-template>
     </div>
-  </div>
   ...
 {% endraw %}
 {% endhighlight %}
 
-We've added a `<div class="header-page-authStatus>` element. We'll use the [ngIf directive](https://angular.io/api/common/NgIf) with the `loggedIn` property from our authentication service to determine if the user is logged in to show or hide the appropriate markup. If the user is not logged in, we'll show a "Log In" link. If they're already authenticated, we'll show their name and a link to log out.
-
-> **Note:** Notice the `auth.userProfile?.name` binding. The `?.` is the [safe navigation operator](https://angular.io/guide/template-syntax#the-safe-navigation-operator----and-null-property-paths). This operator protects against `null` and `undefined` values in property paths. If the object is not yet defined, the safe navigation operator prevents an error from occurring and waits to render until the data is available.
+We've added a `<div class="header-page-authStatus>` element. In order to prevent a flash of content while our service is busy processing a new login, we'll use the [ngIf directive](https://angular.io/api/common/NgIf) to show "Logging in..." if our `auth.loggingIn` property is `true`. We'll then use ngIf again with the `loggedIn` property to determine if the user is logged in to show or hide the appropriate markup. If the user is not logged in, we'll show a "Log In" link. If they're already authenticated, we'll show their name and a link to log out.
 
 Now let's add a little bit of CSS to style our new authentication status elements. Open the `header.component.scss` file:
 
@@ -406,11 +423,16 @@ Now let's add a little bit of CSS to style our new authentication status element
     a:hover {
       text-decoration: underline;
     }
+    .divider {
+      display: inline-block;
+      opacity: .5;
+      padding: 0 4px;
+    }
   }
 }
 ```
 
-We can now log into our app! Try it out in the browser.
+We can now log into our app! Try it out in the browser by clicking the "Log In" link and authenticating. You should see the Auth0 login page like so:
 
 ![Auth0 hosted login screen](https://cdn2.auth0.com/blog/angular-aside/angular-aside-login.jpg)
 
@@ -418,7 +440,7 @@ Once logged in, you should see your name and a link to log out in the upper righ
 
 ![Auth0 logged into Angular app](https://cdn.auth0.com/blog/mean-series/logged-in.jpg)
 
-You should also be able to close the browser and reopen it to find your session has persisted (unless enough time has passed for the token to expire).
+You should also be able to close the browser and reopen it to find your login status has persisted (unless enough time has passed for the token to expire, or you clicked the "Log Out" link).
 
 ## <span id="admin-authorization"></span>Admin Authorization
 
@@ -426,7 +448,7 @@ For our RSVP app, only users with `admin` privileges should be able to create, e
 
 First, let's take a look at the steps involved:
 
-1. Use [Auth0 Rules](https://auth0.com/docs/rules) to establish user roles and then add them to the ID (client) and access (API) tokens.
+1. Use [Auth0 Rules](https://auth0.com/docs/rules) to establish user roles and then add them to the ID (client user info) and access (API) tokens.
 2. Implement middleware in our Node.js API to ensure only `admin` users can access certain API routes.
 3. Use the role information in the Angular app to restrict access to certain routes and features.
 
@@ -481,11 +503,11 @@ function (user, context, callback) {
 
 Replace `[MY_FULL_GOOGLE_ACCOUNT_EMAIL]` with your own credentials. We're replacing `indexOf()` with a strict equality expression `===` because we want to match a full email address rather than just a domain as in the example rule template.
 
-> **Note:** If you want to use a non-Google account, make sure you identify the account by an appropriate property. Not all properties are returned by all connection types. You can also be more explicit regarding the details of the account if you want _all_ accounts with that email to be set as administrators, or if you want only a Google account versus a username/password account to match the check. You can check your [Auth0 Users](https://manage.auth0.com/#/users) or test your [Auth0 Social Connections](https://manage.auth0.com/#/connections/social) to see what kind of data is returned and stored from logins from different identity providers.
+> **Note:** If you want to use a non-Google IdP account, make sure you identify the account by an appropriate property. Not all properties are returned by all connection types. You can also be more explicit regarding the details of the account if you want _all_ accounts with that email to be set as administrators, or if you want only a Google account versus a username/password account to match the check. You can check your [Auth0 Users](https://manage.auth0.com/#/users) or test your [Auth0 Social Connections](https://manage.auth0.com/#/connections/social) to see what kind of data is returned and stored from logins from different identity providers.
 
-We added `app_metadata` with a `roles` array to our users, but since this isn't part of the [OpenID standard claims](http://openid.net/specs/openid-connect-core-1_0.html#StandardClaims), we need to add [_custom_ claims](https://auth0.com/docs/scopes/current#custom-claims) in order to include roles data in the ID and access tokens when the `updateAppMetadata()` promise is resolved.
+We added `app_metadata` with a `roles` array to our users, but since this isn't included in the [OpenID standard claims](http://openid.net/specs/openid-connect-core-1_0.html#StandardClaims), we need to add [_custom_ claims](https://auth0.com/docs/scopes/current#custom-claims) in order to include roles data in the ID and access tokens when the `updateAppMetadata()` promise is resolved.
 
-The `namespace` identifier can be any non-Auth0 HTTP or HTTPS URL and does not have to point to an actual resource. Auth0 enforces this [recommendation from OIDC regarding additional claims](https://openid.net/specs/openid-connect-core-1_0.html#AdditionalClaims) and will _silently exclude_ any claims that do not have a namespace. You can read more about [implementing custom claims with Auth0 here](https://auth0.com/docs/scopes/current#custom-claims).
+The `namespace` identifier can be any non-Auth0 HTTP or HTTPS URL and _does not_ have to point to an actual resource. Auth0 enforces this [recommendation from OIDC regarding additional claims](https://openid.net/specs/openid-connect-core-1_0.html#AdditionalClaims) and will _silently exclude_ any claims that do not have a namespace. You can read more about [implementing custom claims with Auth0 here](https://auth0.com/docs/scopes/current#custom-claims).
 
 The key for our custom claim will be `http://myapp.com/roles`. This is how we'll retrieve the `roles` array from the ID and access tokens in our Angular app and Node API. Our rule assigns the Auth0 user's `app_metadata.roles` to this property.
 
@@ -493,7 +515,7 @@ When finished, click the "Save" button to save this rule.
 
 ### Sign In with Admin Account
 
-The next thing we need to do is _sign in_ with our intended admin user. This will trigger the rules to execute and the app metadata will be added to our targeted account. Then the roles data will also be available in the tokens whenever the user logs in.
+The next thing we need to do is _sign in_ with our intended admin user. This will trigger the rule to execute and the app metadata will be added to our targeted account. Then the roles data will also be available in the tokens whenever the user logs in.
 
 Since we've implemented login in our Angular app already, all we need to do is sign in with the account we specified in our `Set roles to a user` rule. Visit your Angular app in the browser at [http://localhost:4200](http://localhost:4200) and click the "Log In" link we added in the header.
 
@@ -583,26 +605,18 @@ Now that we have the namespace stored, let's add support for storing admin statu
 export class AuthService {
   ...
   isAdmin: boolean;
-  ...
-  constructor(private router: Router) {
-    // If authenticated, set local profile property,
-    // admin status, and update login status subject.
-    // If token is expired but user data still in localStorage, log out
-    if (this.tokenValid) {
-      this.userProfile = JSON.parse(localStorage.getItem('profile'));
-      this.isAdmin = localStorage.getItem('isAdmin') === 'true';
-      this.setLoggedIn(true);
-    }
-  }
 
   ...
 
   private _setSession(authResult, profile) {
-    // Save session data and update login status subject
     ...
-    this.isAdmin = this._checkAdmin(profile);
-    localStorage.setItem('isAdmin', this.isAdmin.toString());
-    this.setLoggedIn(true);
+    // If initial login, set profile and admin information
+    if (profile) {
+      ...
+      this.isAdmin = this._checkAdmin(profile);
+    }
+    // Update login status in loggedIn$ stream
+    ...
   }
 
   private _checkAdmin(profile) {
@@ -611,32 +625,16 @@ export class AuthService {
     return roles.indexOf('admin') > -1;
   }
 
-  logout() {
-    // Ensure all auth items removed from localStorage
-    ...
-    localStorage.removeItem('isAdmin');
-    // Reset local properties, update loggedIn$ stream
-    this.userProfile = undefined;
-    this.isAdmin = undefined;
-    this.setLoggedIn(false);
-  }
-
   ...
 ```
 
 First we'll add a new property called `isAdmin: boolean`. This will store the user's admin status so we can use it in the front end.
 
-In the constructor, if the user is authenticated, we'll look for an `isAdmin` key in local storage. Local storage stores values as strings, so we'll _cast_ it as a boolean.
-
 Next we'll update the `_setSession()` function. After setting the local `userProfile` property, we'll use a private `_checkAdmin()` method to determine whether the user has `admin` in their roles.
-
-> **Note:** We have to cast `isAdmin` to a string because its type is `boolean`, but local storage expects strings.
-
-Finally, we'll remove `isAdmin` data from local storage and the service in the `logout()` method.
 
 We now have the ability to check whether or not a user has admin privileges on the client side.
 
-> **Security Note:** This should never be done on the client-side _alone_. Always ensure that API routes are protected as well, as we've done in the API middleware section above.
+> **Security Note:** This should _never_ be done on the client-side _alone_. Always ensure that API routes are protected as well, as we've done in the API middleware section above.
 
 We now have admin authorization set up on both our API and in our Angular app. We'll do a lot more with this as we develop our application!
 
@@ -700,7 +698,7 @@ Let's consider our RSVP app's intended features at a high level, then we'll extr
 
 We now have an idea about what features our events and RSVPs need to support. Let's create both the server and client-side models necessary to support our application.
 
-### Create Schema
+### Create Mongoose Schema
 
 First we'll create the necessary schema to leverage our database. Create a new folder in the `server` directory called `models`. In this folder, add a file called `Event.js` and a file called `Rsvp.js`. These will contain our Event and Rsvp models. We're using [mongoose](http://mongoosejs.com/index.html) for MongoDB object modeling. Each [mongoose schema](http://mongoosejs.com/docs/guide.html) maps to a MongoDB collection and defines the shape of the documents within that collection.
 
@@ -801,7 +799,7 @@ export class EventModel {
 }
 ```
 
-We're naming the models `EventModel` (and `RsvpModel`) to avoid conflicts with existing `Event` constructors if your editor or IDE uses [intelligent code completion](https://en.wikipedia.org/wiki/Intelligent_code_completion). Optional members must be listed after required members. The `_id` property is optional because it only exists if retrieving data from the database, but not if we're creating _new_ records.
+We're naming the models `EventModel` (and `RsvpModel`) to avoid conflicts with existing `Event` constructors if your editor or IDE uses [intelligent code completion](https://en.wikipedia.org/wiki/Intelligent_code_completion). Optional members must be listed after required members. The `_id` property is optional because it only exists if we're _retrieving_ data from the database, but not if we're creating _new_ records.
 
 Now add the RSVP model in `rsvp.model.ts`:
 
@@ -839,27 +837,27 @@ db.events.insert([{
   "title": "Test Event Past",
   "location": "Home",
   "description": "This event took place in the past.",
-  "startDatetime": ISODate("2017-05-04T18:00:00.000-04:00"),
-  "endDatetime": ISODate("2017-05-04T20:00:00.000-04:00"),
+  "startDatetime": ISODate("2018-05-04T18:00:00.000-04:00"),
+  "endDatetime": ISODate("2018-05-04T20:00:00.000-04:00"),
   "viewPublic": true
 }, {
   "title": "MongoBooster Test",
   "location": "Seattle, WA",
   "description": "I entered this seed event into the database using Mongo shell.",
-  "startDatetime": ISODate("2017-08-12T20:00:00.000-04:00"),
-  "endDatetime": ISODate("2017-08-13T10:00:00.000-04:00"),
+  "startDatetime": ISODate("2019-08-12T20:00:00.000-04:00"),
+  "endDatetime": ISODate("2019-08-13T10:00:00.000-04:00"),
   "viewPublic": true
 }, {
   "title": "Bob's Private Event",
   "location": "Bob's House",
   "description": "An event at Bob's house.",
-  "startDatetime": ISODate("2017-10-05T12:30:00.000-04:00"),
-  "endDatetime": ISODate("2017-10-05T14:30:00.000-04:00"),
+  "startDatetime": ISODate("2019-10-05T12:30:00.000-04:00"),
+  "endDatetime": ISODate("2019-10-05T14:30:00.000-04:00"),
   "viewPublic": false
 }])
 ```
 
-> **Note:** Make sure you update the seed data dates so that most of them are in the future and at least one is in the past. You may need to make changes depending on the _current_ date versus the publication date of this tutorial. You'll also want at least one to have a `viewPublic` value of `false`.
+> **Important Note:** Make sure you update the seed data dates so that most of them are in the future and at least one is in the past. You may need to make changes depending on the _current_ date versus the publication date of this tutorial. You'll also want at least one to have a `viewPublic` value of `false`.
 
 When finished, click "Run" in the top bar. A console tab and a result tab should appear. You can then double-click on the `events` collection again to see your new documents listed. They should each have an `_id` property containing the automatically-generated [object ID](https://docs.mongodb.com/manual/reference/method/ObjectId/) and should look something like this:
 

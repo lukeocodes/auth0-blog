@@ -12,7 +12,7 @@ author:
   name: Dan Arias
   url: http://twitter.com/getDanArias
   mail: dan.arias@auth.com
-  avatar: https://pbs.twimg.com/profile_images/918124318076256256/wMFapJ1C_400x400.jpg
+  avatar: https://pbs.twimg.com/profile_images/1002301567490449408/1-tPrAG__400x400.jpg
 tags:
   - hashing
   - salting
@@ -22,7 +22,7 @@ tags:
   - salt
   - password
 related:
-  - 2017-03-29-is-passwordless-authentication-more-secure-than-passwords
+  - 2018-05-31-hashing-in-action-understanding-bcrypt
   - 2016-03-17-data-breach-response-planning-for-startups
   - 2018-04-25-hashing-passwords-one-way-road-to-security
 ---

@@ -28,6 +28,13 @@ related:
 - 2014-02-26-openid-connect-final-spec-10
 ---
 
+<div class="alert alert-info alert-icon">
+  <i class="icon-budicon-500"></i>
+  <strong>EDITOR’S NOTE (June 22, 2018): Today, open standards alone won’t save you from vendor lock-in. Find out why they ought to now be considered “table stakes” and what “pure breed” providers are doing to help you avoid hard lock-in in this post by Auth0 Principal Architect Vittorio Bertocci.  <a href="https://auth0.com/blog/open-standards-wont-save-you-from-vendor-lock-in">Read now</a>.</strong>
+</div> 
+
+---
+
 It’s hard to close an enterprise software deal with a large company, but once you do, you have a customer for life . . . or so the logic goes. If a big company goes through all the trouble to run through the buying process, integrate its systems, train its people and more, it’ll be a cold day in hell before it even considers ripping your software out.
 
 This is what’s called vendor lock-in, and it’s what makes the massive headache of selling to the enterprise worth it.
