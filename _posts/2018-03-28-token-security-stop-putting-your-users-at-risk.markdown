@@ -23,7 +23,7 @@ tags:
 related:
 - 2018-02-27-8-ways-to-avoid-healthcare-breaches
 - 2018-02-14-what-is-data-security
-- 2018-03-22-cambridge-analytica-and-facebook§t
+- 2018-03-22-cambridge-analytica-and-facebook
 ---
 
 **TL;DR:** We explore keeping your tokens and your user’s data safe. The [Web Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) has been used as an example of how to store access tokens, especially in single-page applications (SPAs). Access tokens represent your authorization to access your application. We don’t store our login details insecurely. Why would we risk exposing our access tokens?
@@ -181,6 +181,6 @@ That session will expire eventually, according to authorization server configura
 
 Access tokens represent the application's permission access to some of your user data, until that expires.
 
-Unnecessary risks with access tokens such as storing them in `localStorage` and storing them incorrectly in a cookie leaves them vulnerable to many attack vectors. Some of these attack vectors are only recently being discovered ([Meltdown](https://meltdownattack.com/) and [Cloudbleed](https://en.wikipedia.org/wiki/Cloudbleed)). While some of these attacks can be defended against, it’s only responsible of us to present you with a more secure way to handle access tokens and personal data.
+Unnecessary risks with access tokens such as storing them in `localStorage` and storing them incorrectly in a cookie leaves them vulnerable to many attack vectors, some of which were only recently being discovered ([Meltdown](https://meltdownattack.com/) and [Cloudbleed](https://en.wikipedia.org/wiki/Cloudbleed)). While some of these attacks can be defended against, it’s only responsible of us to present you with a more secure way to handle access tokens and personal data.
 
 That's why we're recommending using Single Sign-on to fetch your access token and only keep it in memory. Do not access or store unnecessary personal data in your frontend application. The [Auth0.js](https://auth0.com/docs/libraries/auth0js) library can help with this by retrieving a token from our authentication servers using Single Sign-on, to ensure we're never storing anything as sensitive as access tokens and personal data in the frontend.
