@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Token Security: Stop Putting Your Users At Risk"
-description: "Access tokens are a credential that can be used by a client to access a service, like an API. Like any credential, passwords for instance, they should be kept safe and secure."
+description: "Access tokens represent your authorization to access your application. We don’t store our login details insecurely. Why would we risk exposing our access tokens?"
 date: 2018-03-28 23:23
 category: Hot Topics, Security
 author:
@@ -26,21 +26,21 @@ related:
 - 2018-03-22-cambridge-analytica-and-facebook§t
 ---
 
-**TL;DR:** We explore keeping your tokens and your user’s data safe. The [Web Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) has been used as an example of how to store access tokens, especially in single-page applications (SPAs). Auth0 has an alternative to storing a token for a persistent user session, so your returning users can stay logged in without putting them at unnecessary risk.
+**TL;DR:** We explore keeping your tokens and your user’s data safe. The [Web Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) has been used as an example of how to store access tokens, especially in single-page applications (SPAs). Access tokens represent your authorization to access your application. We don’t store our login details insecurely. Why would we risk exposing our access tokens?
 
 ## Storing tokens on the front-end, don’t do it
 
-Access tokens are a credential that can be used by a client to access a service, like an application programming interface (API). Like any credential, passwords for instance, they should be kept safe and secure.
+Access tokens can be used by a client to access a service. Just like credentials, they should be kept safe and secure.
 
 {% include tweet_quote.html quote_text="Are you putting your users at unnecessary risk? If you store access tokens in your front-end app, you might be!" %}
 
-You should not be storing anything as sensitive as credentials anywhere they can be accessed by a third party. Storing them in your front-end application is asking for trouble. Attackers are actively looking for places you might be exposing sensitive data and they’re using more elaborate methods all the time. The last thing you need to do is make it easy for them.
+You should not be storing any personal data or access tokens anywhere they can be accessed by a bad actor. Attackers are actively looking for places you might be exposing sensitive data and they’re using more elaborate methods all the time.
 
-A common place for storing tokens on the front-end is JavaScript’s [`Web Storage API`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage), which should be considered insecure.
+A common place for storing tokens on the front-end is JavaScript’s [Web Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage). Storing anything as sensitive as personal data, access tokens, and credentials with `localStorage` should be considered insecure.
 
-The benefit of the `Web Storage API` is that it’s purely JavaScript and allows you to store up to 5MB of data. The data can be stored as string data only, therefore it has no logic or state. But it can be serialized along with its context (i.e. as JSON object). With `localStorage`, storage persists on that domain until such time as it’s deleted by the user or the site. This is unlike `sessionStorage` only in that `sessionStorage` persists data limited to the length of that browsing session.
+The benefit of the `Web Storage API` is that it’s a client API that can be accessed by JavaScript, and allows you to store up to 5MB of string data. With `localStorage`, storage persists on that domain until such time as it’s deleted by the user or the site. This is unlike `sessionStorage` only in that `sessionStorage` persists data limited to the length of that browsing session.
 
-The problem with the `Web Storage API` is that it assumes anyone who _can_ access it, also has _permission_ to access it. This is because it’s only accessible by JavaScript and based on the current origin or domain. But, this means it’s vulnerable to XSS attacks. Especially so because it’s stored in such a readily available format. It’s easier to use, but easier to abuse. For example, running the JavaScript below in your browser console will loop over every item on that site's `localStorage` and output the keys **and the values**.
+The problem with the `Web Storage API` is that it assumes anyone who _can_ access it, also has _permission_ to access it. This is because its only access control is that is must be from the same origin. But, this means it’s vulnerable to XSS attacks. Especially so, because it’s stored in such a readily available format. It’s easier to use, but easier to abuse. For example, running the JavaScript below in your browser console will loop over every item on that site's `localStorage` and output the keys **and the values**.
 
 ```js
 Object.keys(localStorage).forEach(function(key){
@@ -52,11 +52,9 @@ Object.keys(localStorage).forEach(function(key){
 
 Let's speak theoretically. Imagine for a moment that an attacker can place some JavaScript on your site. Replace the `console.log()` above with an [XHR](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest) script and **off goes your users' data to some other server**.
 
-What if you’re using [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) to stop anything but your trusted vendor's scripts from running on your application? What if you’re using [Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity) to ensure even those vendor scripts can’t open up vulnerabilities on your application? Those **are** pretty good ways to protect your application! ***Those security steps should be taken anyway!*** But can you be 100% certain it’s safe? Avoiding storing tokens with the `Web Storage API` is the best way.
+What if you’re using [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) to stop anything but your trusted vendor's scripts from running on your application? What if you’re using [Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity) to ensure even those vendor scripts can’t open up vulnerabilities on your application? Those **are** pretty good ways to protect your application, but there are other general security concerns around exposing tokens to the large variety of attack vectors in the browser. [Meltdown](https://meltdownattack.com/) and [Cloudbleed](https://en.wikipedia.org/wiki/Cloudbleed) are both good examples where vulnerabilities were discovered that could take advantage of person data and tokens being stored in the frontend.
 
-**Remember, having someone’s access token can be as good as having their username and password, and you wouldn’t ever risk exposing your username and password.**
-
-{% include tweet_quote.html quote_text="Having someone’s access token can be as good as having their username and password, and you wouldn’t ever risk exposing your username and password" %}
+{% include tweet_quote.html quote_text="Let's speak theoretically. Imagine for a moment that an attacker can place some JavaScript on your site. Would you store your access token where they could find it?" %}
 
 ## The complexity of web applications
 
@@ -64,23 +62,21 @@ In the 1990s world of basic web development, you had monolithic applications tha
 
 In the years that followed, developers made that HTML prettier and prettier, and more interactive. But they essentially still had one application which kept our users' credentials and session secure, for the most part, in the backend and still returned HTML to the front-end. Our monolithic application is **one single application**, and it's just sending HTML down to our browser, which is more or less just a dumb client that lets us click on our new pretty buttons and links.
 
-At this point, the browser is not actively involved in any logic. All you need to do with each request is to identify the user is who they were at the start of their browsing session. In such a case you would use cookies, because that's what they were designed for: a single party that has no need to expose anything with any potential sensitivity.
+All you need to do with each request is to identify the user is who they were at the start of their browsing session. In such a case you would use cookies, because that's what they were designed for: a single party that has no need to expose anything with any potential sensitivity.
 
-Roll on two decades of user experience improvements and technological advancements and you land smack bang in the world of single-page applications (SPAs). An SPA is essentially software that runs in the browser. When you load up a new website, you download very thin code that comes with all the necessaries to be able to communicate with a server.
+Roll on two decades of user experience improvements and technological advancements and you land smack bang in the world of single-page applications (SPAs). An SPA is essentially software that runs in the browser. When you load up a new website, you download the code that comes with all the necessaries to be able to communicate with a server.
 
-The server remains essentially the same as our old 1990s application, but it’s learned some tricks. It has had an upgrade. It only talks in computer language now, HTTP requests sending and receiving JSON payloads. It’s now called an API and it doesn't return HTML anymore. Instead, it leaves the HTML up to the SPA.
+The server remains essentially the same as our old 1990s application, but it’s learned some tricks. It has had an upgrade. It only talks in computer language now, sending and receiving code instead of giving you a nice pretty interface with button and links. It’s now called an API and it leaves the interface up to the SPA.
 
-Web tokens were designed for use in cases where there are *two or more applications*, such as our API and our SPA. It allows the SPA to talk to the API, where you can identify the authorized user. If you don't protect your tokens with all the responsibility you give other credentials and then the token is accessed by a bad actor, they could access your API on behalf of that user.
+Web tokens were designed for use in cases where there are *two or more applications*. An example of this would be our API and our SPA. It allows the SPA to talk to the API, where you can identify the authorized user. If you don't protect your tokens with all the responsibility you give other credentials and then the token is accessed by a bad actor, they could access your API on behalf of that user.
 
 **Now imagine that the API is a bank, and the SPA is a user's online banking software.**
 
-## Auth0’s old guides, they store tokens in localStorage!
+## Auth0 is moving away from token-based auth
 
-We know and we’re working really hard to update our existing guides.
+A lot of people will still go ahead and use `localStorage` assuming they’ll never be vulnerable to the variety of attacks out there.
 
-A lot of people will still go ahead and use `localStorage` assuming they’ll never be vulnerable to XSS attacks, having taken the appropriate steps to protect against them.
-
-That’s okay, but the responsible thing for Auth0 to do **is teach you the most secure way**.
+That’s okay, but the responsible thing for Auth0 to do **is present you with the most secure way** we can.
 
 Until recently, we presented simple and common steps to secure your SPAs against XSS and other attack vectors. This was done as a way to make our guides simple to understand and follow, which is one of the strengths of the Web Storage API. The reality is that the only way to build secure applications is to do absolutely **everything** you can to secure them, because ***attackers are always one step ahead***.
 
@@ -175,18 +171,16 @@ window.addEventListener('load', function() {
 
 At this point you might be wondering how `checkSession()` works, right?
 
-`checkSession()` works by creating an invisible iframe which makes a request to `the-users-domain.auth0.com/authorize`. What this request does is return a new `token` to the application.
+`checkSession()` works by creating an invisible iframe which makes use of traditional Single Sign-on at your Auth0 domain – `your-domain.auth0.com/authorize` for example. What this request does is return a new `token` to our SPA.
 
-It returns tokens if the user is still logged in to the authentication server. The authentication server uses normal `web sessions` to know whether the user is authenticated or not, just like like going back to Facebook a day later and it logging users back in. They can still get a `token` from the authentication server while their session still exists.
+It returns tokens if the user is still logged in to the authentication server. The authentication server uses a session to know whether the user is authenticated or not, just like like going back to Facebook a day later and it logging users back in.
 
 That session will expire eventually, according to authorization server configuration. If the session has expired, the application will receive an `interaction_required` error in the response, which is when it’s time to log in again!
 
 ## Conclusion
 
-Access tokens are to an application what usernames and passwords are to a login box, representing a user until expiry.
+Access tokens represent the application's permission access to some of your user data, until that expires.
 
-Unnecessary risks with access tokens such as storing them in `localStorage` and storing them incorrectly in a cookie leaves them vulnerable to many attack vectors. While these attacks can be defended against, it’s only responsible of us to teach you the most secure way to handle authentication.
+Unnecessary risks with access tokens such as storing them in `localStorage` and storing them incorrectly in a cookie leaves them vulnerable to many attack vectors. Some of these attack vectors are only recently being discovered ([Meltdown](https://meltdownattack.com/) and [Cloudbleed](https://en.wikipedia.org/wiki/Cloudbleed)). While some of these attacks can be defended against, it’s only responsible of us to present you with a more secure way to handle access tokens and personal data.
 
-That is why we're recommending that access tokens aren't stored with the `Web Storage API`, and if they're stored in a cookie then you should apply `HttpOnly`, `SameSite` and `Secure`  directives. Additionally, cookies can have `__Secure` and `__Host` prefixes. For more information on securing cookies, [read about common threats in web application security and how to prevent them](https://auth0.com/blog/common-threats-in-web-app-security/).
-
-Instead, the [Auth0.js](https://auth0.com/docs/libraries/auth0js) library can help with user authentication and with re-authentication of returning users by retrieving a token from our authentication servers using a web session.
+That's why we're recommending using Single Sign-on to fetch your access token and only keep it in memory. Do not access or store unnecessary personal data in your frontend application. The [Auth0.js](https://auth0.com/docs/libraries/auth0js) library can help with this by retrieving a token from our authentication servers using Single Sign-on, to ensure we're never storing anything as sensitive as access tokens and personal data in the frontend.
