@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Build a secure API using Postman and Auth0
+title: Build a secure Express API using Postman and Auth0
 description: <A SHORT DESCRIPTION OF THE POST <= 200 CHARACTERS >
 date: 2018-07-19 12:09
 category: <FROM HERE: https://docs.google.com/spreadsheets/d/1e_RKzi8kVwzqPG8si8kyDOWPiBk9tI-XNGh0KgRIF7Q>
