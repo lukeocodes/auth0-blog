@@ -47,7 +47,6 @@ task :new_post, :title do |t, args|
 layout: post
 title: #{title.gsub(/&/,'&amp;')}
 description: <A SHORT DESCRIPTION OF THE POST <= 200 CHARACTERS >
-longdescription: <A LONG DESCRIPTION OF THE POST BETWEEN 230 AND 320 CHARACTERS>
 date: #{Time.now.strftime('%Y-%m-%d %H:%M')}
 category: <FROM HERE: https://docs.google.com/spreadsheets/d/1e_RKzi8kVwzqPG8si8kyDOWPiBk9tI-XNGh0KgRIF7Q>
 press_release: <true|false (FOR FALSE YOU COULD ALSO REMOVE THIS LINE)>
@@ -61,7 +60,7 @@ design:
   bg_color: <A HEX BACKGROUND COLOR>
   image: <A PATH TO A 200x200 IMAGE>
 tags:
-- foo
+- hyphenated-tags
 related:
 - <ADD SOME RELATED POSTS FROM AUTH0'S BLOG>
 ---

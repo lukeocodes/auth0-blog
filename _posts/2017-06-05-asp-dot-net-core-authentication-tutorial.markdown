@@ -68,7 +68,7 @@ ln -s /usr/local/opt/openssl/lib/libcrypto.1.0.0.dylib /usr/local/lib/
 ln -s /usr/local/opt/openssl/lib/libssl.1.0.0.dylib /usr/local/lib/
 ```
 
-After updating OpenSSL locally, you will have to [download the .NET Core SDK and install it](Download .NET Core SDK). Having the SDK installed, you can check if everything is in place by issuing the following command:
+After updating OpenSSL locally, you will have to [download the .NET Core SDK and install it](https://www.microsoft.com/net/download/macos). Having the SDK installed, you can check if everything is in place by issuing the following command:
 
 ```bash
 dotnet --info

@@ -251,7 +251,7 @@ _Converted to Bootstrap v4 code_
 
 Auth0, a global leader in Identity-as-a-Service (IDaaS), provides thousands of customers in every market sector with the only identity solution they need for their web, mobile, IoT, and internal applications. Its extensible platform seamlessly authenticates and secures more than 50M logins per day, making it loved by developers and trusted by global enterprises.
 
-[Auth0 offers a free tier](Auth0 offers a free tier) to get started with modern authentication. Check it out, or [sign up for a free Auth0 account here](https://auth0.com/signup)!
+[Auth0 offers a free tier](https://auth0.com/pricing) to get started with modern authentication. Check it out, or [sign up for a free Auth0 account here](https://auth0.com/signup)!
 
 ![Auth0 Login Page](https://cdn.auth0.com/blog/auth0/lpg.png)
 _Auth0 Login Page_

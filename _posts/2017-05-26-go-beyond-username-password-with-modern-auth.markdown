@@ -49,9 +49,7 @@ With social login, users confirm their identity by using a third party site that
 
 It takes less time for users to set up an account and profile since their personal information is automatically filtered into the new site. Almost everyone has at least one social media profile, so it's perfect for users who want one fewer password.
 
-With passwordless authentication, users are sent timed codes via SMS or email, or they can use their iPhone’s TouchID to access their account.
-
-![Auth0 passwordless authentication](https://cdn.auth0.com/blog/userpass/auth0-passwordless.png)
+With passwordless authentication, users are sent timed codes via SMS or email to access their account.
 
 They only need to have immediate access to their phone or email to quickly access their account. Again, this saves them time and effort while their account remains accessible and secure.
 

@@ -104,7 +104,7 @@ You might be thinking:
 
 > Wasn't the whole point of using JWTs avoiding a DB query?
 
-Well, that is a benefit, though harshly the _whole point_. There is a caveat though: that question only applies if you have an application with a single issuer, not a multi-tenant system.
+Well, that is a benefit, though hardly the _whole point_. There is a caveat though: that question only applies if you have an application with a single issuer, not a multi-tenant system.
 
 If there is more than one tenant, you don't want all of them to share the same secret. You still have to perform a database query to map the `aud` claim to the required `secret`.
 

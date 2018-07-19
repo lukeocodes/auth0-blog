@@ -3,7 +3,8 @@ layout: post
 title: "Real-World Angular Series - Part 6: Reactive Forms and Custom Validation"
 description: "Build and deploy a real-world app with MongoDB, Express, Angular, and Node (MEAN): reactive forms and custom validation."
 date: 2017-07-13 8:30
-category: Technical guide, Angular, Angular 4
+updated: 2018-07-15 8:30
+category: Technical guide, Angular, Angular 6
 banner:
   text: "Auth0 makes it easy to add authentication to your Angular application."
 author:
@@ -28,7 +29,12 @@ related:
 
 ---
 
-**TL;DR:** This 8-part tutorial series covers building and deploying a full-stack JavaScript application from the ground up with hosted [MongoDB](https://www.mongodb.com/), [Express](https://expressjs.com/), [Angular (v2+)](https://angular.io), and [Node.js](https://nodejs.org) (MEAN stack). The completed code is available in the [mean-rsvp-auth0 GitHub repo](https://github.com/auth0-blog/mean-rsvp-auth0/) and a deployed sample app is available at [https://rsvp.kmaida.net](https://rsvp.kmaida.net).  **Part 6 of the tutorial series covers posting data with reactive forms and implementing custom validation.**
+<div class="alert alert-info alert-icon">
+  <i class="icon-budicon-487"></i>
+  <strong>This article was updated June 15, 2018.</strong> This series and associated repository use Angular 6, CLI 6, RxJS 6, and revised recommendations regarding the storage of sensitive data.
+</div>
+
+**TL;DR:** This 8-part tutorial series covers building and deploying a full-stack JavaScript application from the ground up with hosted [MongoDB](https://www.mongodb.com/), [Express](https://expressjs.com/), [Angular](https://angular.io), and [Node.js](https://nodejs.org) (MEAN stack). The completed code is available in the [mean-rsvp-auth0 GitHub repo](https://github.com/auth0-blog/mean-rsvp-auth0/) and a deployed sample app is available at [https://rsvp.kmaida.net](https://rsvp.kmaida.net).  **Part 6 of the tutorial series covers posting data with reactive forms and implementing custom validation.**
 
 ---
 
@@ -208,7 +214,7 @@ Open the `api.service.ts` file and add these three methods:
   // POST new event (admin only)
   postEvent$(event: EventModel): Observable<EventModel> {
     return this.http
-      .post(`${ENV.BASE_API}event/new`, event, {
+      .post<EventModel>(`${ENV.BASE_API}event/new`, event, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(
@@ -219,7 +225,7 @@ Open the `api.service.ts` file and add these three methods:
   // PUT existing event (admin only)
   editEvent$(id: string, event: EventModel): Observable<EventModel> {
     return this.http
-      .put(`${ENV.BASE_API}event/${id}`, event, {
+      .put<EventModel>(`${ENV.BASE_API}event/${id}`, event, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(
@@ -325,7 +331,7 @@ Now open the `create-event.component.html` template:
 {% highlight html %}
 {% raw %}
 <!-- src/app/pages/admin/create-event/create-event.component.html -->
-<h1 class="text-center">{{pageTitle}}</h1>
+<h1 class="text-center">{{ pageTitle }}</h1>
 
 <app-event-form></app-event-form>
 {% endraw %}
@@ -347,7 +353,7 @@ import { AuthService } from './../../../auth/auth.service';
 import { ApiService } from './../../../core/api.service';
 import { UtilsService } from './../../../core/utils.service';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { EventModel } from './../../../core/models/event.model';
 
 @Component({
@@ -369,7 +375,8 @@ export class UpdateEventComponent implements OnInit, OnDestroy {
     public auth: AuthService,
     private api: ApiService,
     public utils: UtilsService,
-    private title: Title) { }
+    private title: Title
+  ) { }
 
   ngOnInit() {
     this.title.setTitle(this.pageTitle);
@@ -417,7 +424,7 @@ Open the `update-event.component.html` template next and add the following:
 {% highlight html %}
 {% raw %}
 <!-- src/app/pages/admin/update-event/update-event.component.html -->
-<h1 class="text-center">{{pageTitle}}</h1>
+<h1 class="text-center">{{ pageTitle }}</h1>
 
 <app-loading *ngIf="loading"></app-loading>
 
@@ -830,7 +837,7 @@ Open the `event-form.component.ts` file and let's get started.
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { ApiService } from './../../../core/api.service';
 import { EventModel, FormEventModel } from './../../../core/models/event.model';
 import { DatePipe } from '@angular/common';
@@ -867,7 +874,8 @@ export class EventFormComponent implements OnInit, OnDestroy {
     private api: ApiService,
     private datePipe: DatePipe,
     public ef: EventFormService,
-    private router: Router) { }
+    private router: Router
+  ) { }
 
   ngOnInit() {
     this.formErrors = this.ef.formErrors;
@@ -1514,7 +1522,7 @@ Our inputs then need `formControlName`s matching the controls belonging to the n
 
 At the bottom of this form group, we'll add a `<p>` element alert to handle showing the custom dates/times group validation that we'll create. This message will conditionally indicate when the dates are out of range.
 
-The rest of the form fields should feel familiar and abide by the same rules as the first few that we created (i.e., `title` and `location`).
+The rest of the form fields should feel familiar and abide by the same rules as the first few that we created (e.g., `title` and `location`).
 
 We want to disable our submit button if the form isn't valid. However, unlike template-driven forms, reactive forms [don't play nicely with a dynamic `[disabled]` directive](https://github.com/angular/angular/issues/11271). Instead, we'll use a dynamic _attribute_ (`[attr.disabled]`) on our submit button, setting it to `true` if the form is invalid or currently `submitting`. If the button should be enabled, we'll set it to `null` so that the `disabled` attribute is not activated.
 

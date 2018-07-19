@@ -220,6 +220,22 @@
     }
     </script>
     <script type="text/javascript">
+      function executeABExperiment(experimentName, callback) {
+        var path = window.location.pathname;
+        var experiments = window.experiments;
+        if (!experimentName) {
+          return callback && callback(null);
+        }
+
+        var experiment = abTestingLib.experiments.findByName(experimentName);
+        if (!experiment) {
+          return callback && callback(null);
+        }
+
+        var variant = experiment.run();
+        return callback && callback(variant);
+
+      }
     function executeABExperiments () {
       var path = window.location.pathname;
       var experiments = window.experiments;
@@ -414,7 +430,7 @@
 
               $.ajax({
                 type: "POST",
-                url: 'https://webtask.it.auth0.com/api/run/wt-martin-gon_to-0/auth0-blog-user?webtask_no_cache=1',
+                url: 'https://wt-139739a316b9b05b2ef2d61c5ed80be7-0.sandbox.auth0-extend.com/create-blog-user',
                 data: {
                   email: value
                 },

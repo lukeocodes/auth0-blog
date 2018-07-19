@@ -1,0 +1,24 @@
+<div>
+    <h3>
+        <a href="{{ include.url }}" target="_blank">{{ include.title }}</a>
+    </h3>
+    <h4>
+        by {{ include.author }}
+    </h4>
+    <div>
+        <img alt="{{ include.title }}" src="{{ include.cover }}"
+             style="max-height: 180px; margin: 10px 20px 10px 0; float: left" />
+       <div>
+           <p class="selectionShareable">
+
+           {{ include.description }}
+               <br/>—
+           <a href="{{ include.referrer_url }}" style="font-size: 17px; color: #666 !important;" target="_blank">
+               {{ include.referred_by }}
+           </a>
+           </p>
+       </div>
+    </div>
+</div>
+
+<div style="clear: both; margin-bottom: 80px;"></div>

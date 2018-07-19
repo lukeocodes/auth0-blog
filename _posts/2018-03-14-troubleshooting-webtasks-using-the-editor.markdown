@@ -7,6 +7,7 @@ date: 2018-03-14 08:00
 category: Extend, Technical, Webtasks
 press_release: false
 is_non-tech: false
+canonical_url: true
 author:
   name: "Bobby Johnson"
   url: "https://twitter.com/NotMyself"
@@ -24,11 +25,17 @@ tags:
 - webtask-editor
 related:
   - 2017-08-01-auth0-webtasks-the-quickest-of-all-quick-starts
-  - 2017-08-22-for-the-best-security-think-beyond-webhooks
-  - 2017-10-04-securing-webtasks-part-1-shared-secret-authorization
+  - 2018-03-21-troubleshooting-webtasks-using-the-cli
+  - 2018-03-28-troubleshooting-webtasks-using-debuggers
 ---
 
 **TL;DR:** In this series, we will learn how to troubleshoot webtasks from monitoring logs in the editor all the way to debugging locally using devtool and visual studio code.
+
+The full list of posts in this series:
+
+- [Troubleshooting Webtasks: Using the Editor](https://auth0.com/blog/troubleshooting-webtasks-using-the-editor/)
+- [Troubleshooting Webtasks: Using the CLI](https://auth0.com/blog/troubleshooting-webtasks-using-the-cli/)
+- [Troubleshooting Webtasks: Using Debuggers](https://auth0.com/blog/troubleshooting-webtasks-using-debuggers/)
 
 This post covers the tools built into the Webtasks Editor, here are some shortcuts to help you locate the topics you are interested in quickly.
 
@@ -238,6 +245,6 @@ The Runner panel is handy when we have sample data that we know causes a runtime
 
 # Summary
 
-In this post we have covered the various techniques available via the Webtask Editor to troubleshoot failures. These techniques work with all of the products using the Webtasks technology. Feel free to bookmark this post and reference it when you are working on your next project.
+In this post, we have covered the various techniques available via the Webtask Editor to troubleshoot failures. These techniques work with all of the products using the Webtasks technology. Feel free to bookmark this post and reference it when you are working on your next project.
 
-In the next post we will cover using the Webtask CLI to monitor logs and execute webtasks locally.
+In the next post, we will cover [using the Webtask CLI](https://auth0.com/blog/troubleshooting-webtasks-using-the-cli/) to monitor logs and execute webtasks locally.

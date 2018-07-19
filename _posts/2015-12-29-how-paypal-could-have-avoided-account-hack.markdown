@@ -86,7 +86,7 @@ Using Auth0 you can add the following features to your application in a breeze.
 
 - **Multifactor Authentication**: Using Auth0 you can have MFA implemented in minutes! You can use the out-of-the-box providers or easily integrate any different provider using Auth0's extensibility.
 
-- **Passwordless**: [Auth0 Passwordless](https://auth0.com/passwordless) supports one-time codes or “magic links” delivered via SMS or email, or enables your users to use the iPhone’s TouchID without having to worry about the implementation details.
+- **Passwordless**: [Auth0 Passwordless](https://auth0.com/passwordless) supports one-time codes or “magic links” delivered via SMS or email without having to worry about the implementation details.
 
 - **Single Sign-On**: By taking advantage of our wide range of SDKs you will have Single Sign-On with any Identity Provider running in minutes. Provide your users with a seamless authentication experience when they navigate either through the applications you built and/or third party apps.
 

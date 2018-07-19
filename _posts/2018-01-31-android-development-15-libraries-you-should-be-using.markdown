@@ -7,9 +7,9 @@ date: "2018-01-31 08:30"
 category: Technical Guide, Mobile, Android
 author:
   name: "Idorenyin Obong"
-  url: "kingidee"
+  url: "https://twitter.com/kingidee/"
   mail: "idee4ril@gmail.com"
-  avatar: "https://twitter.com/kingidee/profile_image?size=original"
+  avatar: "https://cdn.auth0.com/blog/guest-author/idorenyin-obong.jpg"
 design:
   bg_color: "#2C4721"
   image: "https://cdn.auth0.com/blog/android-libraries/logo.png"

@@ -75,7 +75,7 @@ Today, we see federated identity everywhere, most noticeably in what we call “
 * Authentication is done through a central domain
 * A token or cookie is generated to authenticate you across other domains
 
-![Typical Single Sign On](https://cdn.auth0.com/blog/federated-identity/typical-sso.png)
+![Typical Single Sign On](https://cdn.auth0.com/blog/sso/typical-sso-v2.png)
 
 [Dozens upon dozens](https://auth0.com/docs/identityproviders#enterprise) of different SSO identity providers have cropped up to provide this kind of service to webmasters, each with its unique requirements, uses, strengths and weaknesses:
 

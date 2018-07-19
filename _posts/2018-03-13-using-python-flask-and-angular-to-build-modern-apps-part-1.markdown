@@ -9,7 +9,7 @@ author:
   name: "Bruno Krebs"
   url: "https://twitter.com/brunoskrebs"
   mail: "bruno.krebs@gmail.com"
-  avatar: "https://twitter.com/brunoskrebs/profile_image?size=original"
+  avatar: "https://cdn.auth0.com/blog/profile-picture/bruno-krebs.png"
 design:
   bg_color: "#4A4A4A"
   image: https://cdn.auth0.com/blog/python-flask-angular/logo.png
@@ -27,6 +27,12 @@ related:
 ---
 
 **TL;DR:** In this series, you will learn how to create modern web applications with Python, Flask, and Angular. You will use this stack to build a SPA and a backend API to expose exams and questions so users can test their knowledge regarding different technologies. [In this GitHub repository](https://github.com/auth0-blog/python-flask-angular-1), you can find the final code created throughout the first part of the series.
+
+So far, this series contains three parts:
+
+1. [Part 1 (this one) includes topics like bootstrapping the Flask application, managing Entities with SQLAlchemy ORM, and bootstrapping the Angular application](https://auth0.com/blog/using-python-flask-and-angular-to-build-modern-apps-part-1/).
+2. [Part 2 includes topics like securing Flask Apps, handling Angular forms, and securing Angular Apps](https://auth0.com/blog/using-python-flask-and-angular-to-build-modern-web-apps-part-2/).
+3. [Part 3 includes topics like configuring Angular Material, handling Authorization, and migrating Databases with Alembic](https://auth0.com/blog/using-python-flask-and-angular-to-build-modern-web-apps-part-3/).
 
 ---
 

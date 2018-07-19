@@ -26,8 +26,9 @@ tags:
 - apigateway
 related:
 - 2017-07-14-getting-a-competitive-edge-with-a-microservices-based-architecture
-- 2017-11-15-api-less-scary-approach
-- 2017-10-13-how-do-i-modernize-my-legacy-system
+- 2018-03-26-application-metrics-with-express-gateway
+- 2018-04-20-express-gateway-kubernetes
+
 ---
 
 **TL;DR:** In this tutorial, I'll show you how an API Gateway can be a great tool when you have multiple
@@ -215,7 +216,7 @@ provide any JWT with the request, so it didn't go through.
 Moreover, the second request has been refused by the rate limiting policy, without event arriving to the
 **authentication** phase. Policies are executed following the definition order in the configuration file.
 
-Now grab any HTTP client and let's configure it to start an OAuth 2.0 authorization process against our API hosted in Auth0. We can grab all the necessary parameters going on _Clients_ -> _billings (Test Client)_ -> _Settings_ -> _Advanced Settings_ -> _Endpoints_
+Now grab any HTTP client and let's configure it to start an OAuth 2.0 authorization process against our API hosted in Auth0. We can grab all the necessary parameters going on _Applications_ -> _billings (Test Application)_ -> _Settings_ -> _Advanced Settings_ -> _Endpoints_
 
 In my case, I am going to use `curl`, but you can use the one you prefer:
 
@@ -224,8 +225,8 @@ curl --request POST \
   --url https://bkrebs.auth0.com/oauth/token \
   --header 'content-type: application/json' \
   --data '{
-    "client_id":"my-client-id-copied-from-auth0-client",
-    "client_secret":"my-super-secret-copied-from-auth0-client",
+    "client_id":"my-client-id-copied-from-auth0-application",
+    "client_secret":"my-super-secret-copied-from-auth0-application",
     "audience":"http://orders",
     "grant_type":"client_credentials"
 }'

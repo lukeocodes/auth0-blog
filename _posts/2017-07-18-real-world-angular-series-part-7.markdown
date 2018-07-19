@@ -3,7 +3,8 @@ layout: post
 title: "Real-World Angular Series - Part 7: Relational Data and Token Renewal"
 description: "Build and deploy a real-world app with MongoDB, Express, Angular, and Node (MEAN): relational data and auth token renewal."
 date: 2017-07-18 8:30
-category: Technical guide, Angular, Angular 4
+updated: 2018-07-15 8:30
+category: Technical guide, Angular, Angular 6
 banner:
   text: "Auth0 makes it easy to add authentication to your Angular application."
 author:
@@ -28,7 +29,12 @@ related:
 
 ---
 
-**TL;DR:** This 8-part tutorial series covers building and deploying a full-stack JavaScript application from the ground up with hosted [MongoDB](https://www.mongodb.com/), [Express](https://expressjs.com/), [Angular (v2+)](https://angular.io), and [Node.js](https://nodejs.org) (MEAN stack). The completed code is available in the [mean-rsvp-auth0 GitHub repo](https://github.com/auth0-blog/mean-rsvp-auth0/) and a deployed sample app is available at [https://rsvp.kmaida.net](https://rsvp.kmaida.net).  **Part 7 of the tutorial series covers deleting data, retrieving relational data from MongoDB, and renewing authentication tokens.**
+<div class="alert alert-info alert-icon">
+  <i class="icon-budicon-487"></i>
+  <strong>This article was updated June 15, 2018.</strong> This series and associated repository use Angular 6, CLI 6, RxJS 6, and revised recommendations regarding the storage of sensitive data.
+</div>
+
+**TL;DR:** This 8-part tutorial series covers building and deploying a full-stack JavaScript application from the ground up with hosted [MongoDB](https://www.mongodb.com/), [Express](https://expressjs.com/), [Angular](https://angular.io), and [Node.js](https://nodejs.org) (MEAN stack). The completed code is available in the [mean-rsvp-auth0 GitHub repo](https://github.com/auth0-blog/mean-rsvp-auth0/) and a deployed sample app is available at [https://rsvp.kmaida.net](https://rsvp.kmaida.net).  **Part 7 of the tutorial series covers deleting data, retrieving relational data from MongoDB, and renewing authentication tokens.**
 
 ---
 
@@ -64,7 +70,7 @@ The seventh installment in the series covers deleting events, retrieving relatio
 
 ## <span id="angular-delete-event"></span>Angular: Delete Event
 
-Let's pick up right where we left off [last time](https://auth0.com/blog/real-world-angular-series-part-7). Our app's administrator can now create and update events. We also need to be able to _delete_ events. We already added a `DELETE` <a href="https://auth0.com/blog/real-world-angular-series-part-6#api-events">API route in Part 6</a>. Now let's call this endpoint in our Angular app. We'll do so in our Update Event component.
+Let's pick up right where [we left off last time](https://auth0.com/blog/real-world-angular-series-part-7). Our app's administrator can now create and update events. We also need to be able to _delete_ events. We already added a `DELETE` <a href="https://auth0.com/blog/real-world-angular-series-part-6#api-events">API route in Part 6</a>. Now let's call this endpoint in our Angular app. We'll do so in our Update Event component.
 
 We want to make deleting an event slightly more involved than simply clicking a button. We also want to avoid showing the user a modal or pop-up message making them confirm their action. To delete an event, we'll have the user confirm the _title_ of the event by entering it into a text field.
 
@@ -126,20 +132,20 @@ Let's add the markup necessary to display tabs and dynamic content in our Update
           <a
             class="nav-link"
             [routerLink]="[]"
-            [queryParams]="{tab: 'edit'}"
-            [ngClass]="{'active': utils.tabIs(tab, 'edit')}">Edit</a>
+            [queryParams]="{ tab: 'edit' }"
+            [ngClass]="{ 'active': utils.tabIs(tab, 'edit') }">Edit</a>
         </li>
         <li class="nav-item">
           <a
             class="nav-link"
             [routerLink]="[]"
-            [queryParams]="{tab: 'delete'}"
-            [ngClass]="{'active': utils.tabIs(tab, 'delete')}">Delete</a>
+            [queryParams]="{ tab: 'delete' }"
+            [ngClass]="{ 'active': utils.tabIs(tab, 'delete') }">Delete</a>
         </li>
       </ul>
     </div>
 
-    <div class="card-block">
+   <div class="card-body">
       <!-- Edit event form -->
       <app-event-form
         *ngIf="utils.tabIs(tab, 'edit')"
@@ -160,7 +166,7 @@ Let's add the markup necessary to display tabs and dynamic content in our Update
 
 We can change our `<ng-template [ngIf]="event">` to `<div *ngIf="event" class="card">` because this element should now render in the page as a container. Then we'll add the necessary markup to create tabs in a card header element. We'll set up the `routerLink`s with query parameters and `[ngClass]` to apply a conditional `active` class for the current tab. Our two tabs will be called "Edit" and "Delete".
 
-Next we'll add a `.card-block` element containing our conditional tab content. We'll show the `<app-event-form>` component if the active tab is `edit`. We'll show an `<app-delete-event>` component if the `delete` tab is active. We'll also pass the `[event]` to the Delete Event component, which we'll create next.
+Next we'll add a `.card-body` element containing our conditional tab content. We'll show the `<app-event-form>` component if the active tab is `edit`. We'll show an `<app-delete-event>` component if the `delete` tab is active. We'll also pass the `[event]` to the Delete Event component, which we'll create next.
 
 Once we have tabs in place, our Update Event component should like this by default:
 
@@ -184,7 +190,7 @@ Open the `delete-event.component.ts` and let's add some functionality:
 // src/app/pages/admin/update-event/delete-event/delete-event.component.ts
 import { Component, OnDestroy, Input } from '@angular/core';
 import { EventModel } from './../../../../core/models/event.model';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { ApiService } from './../../../../core/api.service';
 import { Router } from '@angular/router';
 
@@ -202,7 +208,8 @@ export class DeleteEventComponent implements OnDestroy {
 
   constructor(
     private api: ApiService,
-    private router: Router) { }
+    private router: Router
+  ) { }
 
   removeEvent() {
     this.submitting = true;
@@ -264,7 +271,6 @@ Now open the `delete-event.component.html` template and add the following code:
     type="text"
     id="deleteEvent"
     class="form-control"
-    name="deleteEvent"
     [(ngModel)]="confirmDelete">
 </div>
 
@@ -337,7 +343,7 @@ Now let's add a link to each event in the Admin component that will take us stra
           ...
           <p class="mb-1">
             <a
-              class="btn btn-info btn-sm"
+              class="btn btn-info btn-sm mr-1"
               [routerLink]="['/admin/event/update', event._id]">Edit</a>
             <a
               class="btn btn-danger btn-sm"
@@ -431,7 +437,7 @@ Let's add our new API endpoint to our API service. Open the `api.service.ts` fil
   // GET all events a specific user has RSVPed to (login required)
   getUserEvents$(userId: string): Observable<EventModel[]> {
     return this.http
-      .get(`${ENV.BASE_API}events/${userId}`, {
+      .get<EventModel[]>(`${ENV.BASE_API}events/${userId}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(
@@ -511,7 +517,7 @@ import { AuthService } from './../../auth/auth.service';
 import { ApiService } from './../../core/api.service';
 import { UtilsService } from './../../core/utils.service';
 import { FilterSortService } from './../../core/filter-sort.service';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { EventModel } from './../../core/models/event.model';
 
 @Component({
@@ -521,6 +527,7 @@ import { EventModel } from './../../core/models/event.model';
 })
 export class MyRsvpsComponent implements OnInit, OnDestroy {
   pageTitle = 'My RSVPs';
+  loggedInSub: Subscription;
   eventListSub: Subscription;
   eventList: EventModel[];
   loading: boolean;
@@ -532,16 +539,22 @@ export class MyRsvpsComponent implements OnInit, OnDestroy {
     public auth: AuthService,
     private api: ApiService,
     public fs: FilterSortService,
-    public utils: UtilsService) { }
+    public utils: UtilsService
+  ) { }
 
   ngOnInit() {
+    this.loggedInSub = this.auth.loggedIn$.subscribe(
+      loggedIn => {
+        this.loading = true;
+        if (loggedIn) {
+          this._getEventList();
+        }
+      }
+    );
     this.title.setTitle(this.pageTitle);
-    this.userIdp = this._getIdp;
-    this._getEventList();
   }
 
   private _getEventList() {
-    this.loading = true;
     // Get events user has RSVPed to
     this.eventListSub = this.api
       .getUserEvents$(this.auth.userProfile.sub)
@@ -558,40 +571,17 @@ export class MyRsvpsComponent implements OnInit, OnDestroy {
       );
   }
 
-  private get _getIdp(): string {
-    const sub = this.auth.userProfile.sub.split('|')[0];
-    let idp = sub;
-
-    if (sub === 'auth0') {
-      idp = 'Username/Password';
-    } else if (idp === 'google-oauth2') {
-      idp = 'Google';
-    } else {
-      idp = this.utils.capitalize(sub);
-    }
-    return idp;
-  }
-
   ngOnDestroy() {
+    this.loggedInSub.unsubscribe();
     this.eventListSub.unsubscribe();
   }
 
 }
 ```
 
-We'll use our standard imports for routed components with an API call, as well as the `FilterSortService` to order the events by date. Then we'll add our standard properties to manage page title, the event list subscription, etc. We'll also add a `userIdp` property.
+We'll use our standard imports for routed components with an API call, as well as the `FilterSortService` to order the events by date. Then we'll add our standard properties to manage page title, the event list subscription, etc.
 
 In our `ngOnInit()` method, we'll set the page title and `_getEventList()`, which subscribes to the `getUserEvents$()` observable we created earlier, passing the user's ID (the `auth.userProfile.sub` property) to the API endpoint.
-
-Our `_getIdp()` accessor gets the identity provider from the user's account ID. The `userProfile.sub` account IDs look something like this:
-
-```bash
-google-oauth2|23C94879435023998476321
-twitter|34B23492010786950049439
-auth0|09C3764109863877665210
-```
-
-They are strings with the identity provider followed by a pipe `|` and then a string of alphanumeric characters. In order to display the user's IdP in a friendly way, we'll `split()` on the pipe and then treat the IdP to make it more readable, if necessary.
 
 Finally, we'll unsubscribe from our API observable in the `ngOnDestroy()` method.
 
@@ -602,9 +592,9 @@ Open the `my-rsvps.component.html` template file:
 {% highlight html %}
 {% raw %}
 <!-- src/app/pages/my-rsvps/my-rsvps.component.html -->
-<h1 class="text-center">{{pageTitle}}</h1>
-<p class="lead" *ngIf="auth.loggedIn">
-  Hello, <strong [innerHTML]="auth.userProfile.name"></strong>! You logged in with {{userIdp}}.
+<h1 class="text-center">{{ pageTitle }}</h1>
+<p class="lead" *ngIf="auth.loggedIn && auth.userProfile">
+  Hello, <strong [innerHTML]="auth.userProfile.name"></strong>!
   <ng-template [ngIf]="auth.isAdmin">
     You may <a routerLink="/admin">create and administer events</a>.
   </ng-template>
@@ -627,11 +617,11 @@ Open the `my-rsvps.component.html` template file:
         <a
           *ngFor="let event of fs.orderByDate(eventList, 'startDatetime')"
           [routerLink]="['/event', event._id]"
-          [queryParams]="{tab: 'rsvp'}"
+          [queryParams]="{ tab: 'rsvp' }"
           class="list-group-item list-group-item-action flex-column align-items-start">
           <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1" [innerHTML]="event.title"></h5>
-            <small>{{utils.eventDates(event.startDatetime, event.endDatetime)}}</small>
+            <small>{{ utils.eventDates(event.startDatetime, event.endDatetime) }}</small>
           </div>
           <small class="mb-1">Click to view or update this RSVP</small>
         </a>
@@ -647,7 +637,7 @@ Open the `my-rsvps.component.html` template file:
 {% endraw %}
 {% endhighlight %}
 
-We'll ensure the user is logged in, welcome them by name, and display the IdP they logged in with. If the user has admin privileges, we'll show a message with a link to the Admin page where they can create and administer events.
+We'll ensure the user is logged in and welcome them by name. If the user has admin privileges, we'll show a message with a link to the Admin page where they can create and administer events.
 
 We'll then check whether data has been loaded from the API. If the user hasn't RSVPed to any events yet, we'll show a message letting them know to check out the events listed on the homepage.
 
@@ -668,8 +658,8 @@ We have a route for our My RSVPs component, but no links to it in the applicatio
 <!-- src/app/header/header.component.html -->
 <header id="header" class="header">
   ...
-      <span *ngIf="auth.loggedIn">
-        <a routerLink="/my-rsvps">{{auth.userProfile?.name}}</a>
+      <span *ngIf="auth.loggedIn && auth.userProfile">
+        <a routerLink="/my-rsvps">{{ auth.userProfile.name }}</a>
   ...     
   <nav id="nav" class="nav" role="navigation">
     <ul class="nav-list">
@@ -691,15 +681,15 @@ We'll link the authenticated user's name to the `/my-rsvps` route. We'll also ad
 
 ---
 
-## <span id="renew-auth"></span>Angular: Renew Token with Auth0
+## <span id="renew-auth"></span>Angular: Silently Renew Token with Auth0
 
 You may have noticed throughout development that your access token periodically expires if the same session is left open for longer than two hours. This can result in unexpected loss of access to the API, or the UI still displaying elements that aren't actually accessible to unauthenticated users.
 
-In order to prevent session disruption, we're going to implement automatic authentication renewal with Auth0. The [auth0.js library](https://auth0.com/docs/libraries/auth0js/v8) has a method for performing silent authentication to [acquire new tokens](https://auth0.com/docs/libraries/auth0js/v8#using-checksession-to-acquire-new-tokens).
+In order to prevent session disruption, we're going to implement automatic authentication renewal with Auth0. The [auth0.js library](https://auth0.com/docs/libraries/auth0js) has a method for performing silent authentication to [acquire new tokens](https://auth0.com/docs/libraries/auth0js/v9#using-checksession-to-acquire-new-tokens). If you recall, we have actually already implemented token renewal way back in [Part 2: Angular Authentication](https://auth0.com/blog/real-world-angular-series-part-2) in our Authentication service's `renewToken()` method. We'll now set up a way to silently and automatically call this method when the user's token expires during an active browser session.
 
 > **Important Note:** If you are using [Auth0 social connections](https://manage.auth0.com/#/connections/social) in your app, please make sure that you have set the connections up to use your _own_ client app keys. If you're using Auth0 dev keys, token renewal will always return `login_required`. Each social connection's details has a link with explicit instructions on how to acquire your own key for the particular IdP.
 
-Token renewal with silent authentication will _not_ reload our app or redirect users to the hosted Auth0 login page. The renewal will take place behind the scenes in an iframe, preventing disruption of the user experience.
+Token renewal with silent authentication will _not_ reload our app or redirect users to the Auth0 login page. The renewal will take place behind the scenes in an iframe, preventing disruption of the user experience.
 
 ### Update Auth Service to Support Token Renewal
 
@@ -710,11 +700,8 @@ Open the `auth.service.ts` file and let's get started:
 ```typescript
 // src/app/core/auth/auth.service.ts
 ...
-import { Subscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject, Subscription, of, timer } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/observable/timer';
 
 @Injectable()
 export class AuthService {
@@ -722,31 +709,9 @@ export class AuthService {
   // Subscribe to token expiration stream
   refreshSub: Subscription;
 
-  constructor(private router: Router) {
-    // If authenticated, set local profile property,
-    // admin status, update login status, schedule renewal.
-    // If not authenticated but there are still items
-    // in localStorage, log out.
-    ...
-    if (this.tokenValid) {
-      ...
-      this.scheduleRenewal();
-    } else if ...
-  }
-
   ...
 
   private _setSession(authResult, profile?) {
-    // Set tokens and expiration in localStorage
-    ...
-    // If initial login, set profile and admin information
-    if (profile) {
-      localStorage.setItem('profile', JSON.stringify(profile));
-      this.userProfile = profile;
-      this.isAdmin = this._checkAdmin(profile);
-      localStorage.setItem('isAdmin', this.isAdmin.toString());
-    }
-    // Update login status in loggedIn$ stream
     ...
     // Schedule access token renewal
     this.scheduleRenewal();
@@ -754,48 +719,19 @@ export class AuthService {
 
   ...
 
-  logout(noRedirect?: boolean) {
-    ...
-    // Unschedule access token renewal
-    this.unscheduleRenewal();
-    // Return to homepage
-    if (noRedirect !== true) {
-      this.router.navigate(['/']);
-    }
-  }
-
-  ...
-
-  renewToken() {
-    this._auth0.checkSession({},
-      (err, authResult) => {
-        if (authResult && authResult.accessToken) {
-          this._setSession(authResult);
-        } else if (err) {
-          console.warn(`Could not renew token: ${err.errorDescription}`);
-          // Log out without redirecting to clear auth data
-          this.logout(true);
-          // Log in again
-          this.login();
-        }
-      }
-    );
-  }
-
   scheduleRenewal() {
-    // If user isn't authenticated, do nothing
+    // If last token is expired, do nothing
     if (!this.tokenValid) { return; }
     // Unsubscribe from previous expiration observable
     this.unscheduleRenewal();
     // Create and subscribe to expiration observable
-    const expiresAt = JSON.parse(localStorage.getItem('expires_at'));
-    const expiresIn$ = Observable.of(expiresAt).pipe(
+    const expiresIn$ = of(this.expiresAt).pipe(
       mergeMap(
         expires => {
           const now = Date.now();
           // Use timer to track delay until expiration
           // to run the refresh at the proper time
-          return Observable.timer(Math.max(1, expires - now));
+          return timer(Math.max(1, expires - now));
         }
       )
     );
@@ -818,57 +754,45 @@ export class AuthService {
 }
 ```
 
-First we'll import `Observable`, `Subscription` and to support creating an observable token expiration timer. We'll then need to import the `mergeMap` operator from RxJS along with `of` and `timer` observable methods.
+First we'll import `Subscription`, `of`, and `timer` to support creating an observable token expiration timer. We'll then need to import the `mergeMap` operator from RxJS.
 
 We'll declare a new property for a subscription to a token expiration stream we'll create shortly. This property is called `refreshSub` and has a type of `Subscription`.
 
-In the `constructor()` method, we already check to see if the user already has a valid token with `this.tokenValid`. This accounts for persistent login and can occur if the user leaves our app and then returns before their access token has expired. In this case, we also want to schedule a renewal of their access token. This will be implemented with a new `scheduleRenewal()` method, so let's call this function in the constructor.
+Next, we'll update the `_setSession()` method. We need to call `scheduleRenewal()` to restart the expiration timer when a new token has been retrieved. This will then initiate the process of updating the token, and also fetching the user's info again, just in case something has changed or gone awry. If we're getting a new token, we also want to get the user data again as well for security.
 
-Next, we'll update the `_setSession()` method. We'll make the `profile` argument optional by adding a question mark. We'll do this because we'll be calling this method when tokens have been successfully renewed with silent authentication, but the same user is logging in so we won't need to set all the profile information again. It will simply persist from the previous session. We can then wrap anything related to setting profile data in an `if` statement that checks to see if a `profile` argument has been passed to the method. We also need to call `scheduleRenewal()` to restart the expiration timer when a new token has been retrieved.
-
-The `logout()` method will now support an optional argument: `noRedirect`. This way, we can call `logout()` _without_ being redirected back to the homepage. This is useful if our silent authentication encounters an error. In such a case, we want the app to clean up all existing authentication data before prompting the user to log in again. We'll check that the `noRedirect` parameter is not equal to `true` before redirecting.
-
-Now we'll create three new methods to implement token renewal. The first method is `renewToken()`:
+Let's talk about the `renewToken()` method that already exists, but in a little more depth this time. Here's the method for a refresher:
 
 ```typescript
   renewToken() {
-    this._auth0.checkSession({},
-      (err, authResult) => {
-        if (authResult && authResult.accessToken) {
-          this._setSession(authResult);
-        } else if (err) {
-          console.warn(`Could not renew token: ${err.errorDescription}`);
-          // Log out without redirecting to clear auth data
-          this.logout(true);
-          // Log in again
-          this.login();
-        }
+    // Check for valid Auth0 session
+    this._auth0.checkSession({}, (err, authResult) => {
+      if (authResult && authResult.accessToken) {
+        this._getProfile(authResult);
+      } else {
+        this._clearExpiration();
       }
-    );
+    });
   }
 ```
 
-This method uses [auth0.js to acquire new tokens](https://auth0.com/docs/libraries/auth0js/v8#using-checksession-to-acquire-new-tokens) using the `checkSession()` method on our existing `_auth0` web auth instance. This approach uses [`postMessage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage) under the hood to implement cross-origin communication between our parent app and the silent authentication taking place in an iframe. On successful acquisition of a new access token, we'll call `_setSession()` to start a new session. If an error occurs, we'll execute `logout(true)` (without redirection) to quietly clear authentication data, then we'll prompt the user to log in again.
+This method uses [auth0.js to acquire new tokens](https://auth0.com/docs/libraries/auth0js/v9#using-checksession-to-acquire-new-tokens) using the `checkSession()` method on our existing `_auth0` web auth instance. This approach uses [`postMessage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage) under the hood to implement cross-origin communication between our parent app and the silent authentication taking place in an iframe. On successful acquisition of a new access token, we'll call `_getProfile()` to retrieve user info and then update the session data.
 
-> **Note:** As written, the hosted login redirect will happen automatically without forewarning the user. Keep in mind that this _only_ occurs if silent authentication _fails_ for some reason. If you'd like to notify the user _before_ automatically prompting them to log in again or give them a choice to stay logged out and return to the homepage, you should do so here.
-
-The next new method is `scheduleRenewal()`:
+The first _new_ method is `scheduleRenewal()`:
 
 ```typescript
   scheduleRenewal() {
-    // If user isn't authenticated, do nothing
+    // If last token is expired, do nothing
     if (!this.tokenValid) { return; }
     // Unsubscribe from previous expiration observable
     this.unscheduleRenewal();
     // Create and subscribe to expiration observable
-    const expiresAt = JSON.parse(localStorage.getItem('expires_at'));
-    const expiresIn$ = Observable.of(expiresAt).pipe(
+    const expiresIn$ = of(this.expiresAt).pipe(
       mergeMap(
         expires => {
           const now = Date.now();
           // Use timer to track delay until expiration
           // to run the refresh at the proper time
-          return Observable.timer(Math.max(1, expires - now));
+          return timer(Math.max(1, expires - now));
         }
       )
     );
@@ -883,11 +807,11 @@ The next new method is `scheduleRenewal()`:
   }
 ```
 
-If the user is authenticated, we'll do a cleanup check and then create an observable called `expiresIn$`. We'll use the [`mergeMap()` RxJS operator](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-mergeMap) to flatten the stream. We'll then utilize an [`Observable.timer()`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/timer.md) that produces a value (`0`) when the current access token expires.
+If the user is authenticated, we'll do a cleanup check and then create an observable called `expiresIn$`. We'll use the [`mergeMap()` RxJS operator](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-mergeMap) to flatten the stream. We'll then utilize a [`timer()`](http://reactivex.io/documentation/operators/timer.html) that produces a value (`0`) when the current access token expires.
 
 Then we'll subscribe to the `expiresIn$` observable. As declared with our properties earlier, this subscription is called `refreshSub`. When the `0` value is produced indicating the token is expired, we'll call `renewToken()` and `scheduleRenewal()` to set the session and reset the timer with the fresh token's expiration countdown.
 
-The final new method is `unscheduleRenewal()`:
+The other new method is `unscheduleRenewal()`:
 
 ```typescript
   unscheduleRenewal() {
@@ -901,7 +825,7 @@ This method simply checks for the existence of a `refreshSub` subscription and u
 
 {% include tweet_quote.html quote_text="Using Auth0, we can silently renew JSON Web Tokens with ease." %}
 
-### Update Auth0 Client Settings
+### Update Auth0 Application Settings
 
 In order to avoid getting a `403 Forbidden` error when silently renewing authentication, we need to make sure our Auth0 Client's allowed origin settings are updated.
 

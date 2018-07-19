@@ -40,7 +40,7 @@ Throughout 2016 we gathered data on how Auth0's users and our user's users were 
 
 ## What Types of Connections Are On The Rise?
 
-Single Sign On (SSO) and Passwordless have been around for a while, even as traditional username and password (U/P) have been around much longer. In 2015 we launched Auth0 Passwordless, which  removes passwords from the login process completely and instead uses TouchID, or “Magic Links” sent through SMS.
+Single Sign On (SSO) and Passwordless have been around for a while, even as traditional username and password (U/P) have been around much longer. In 2015 we launched Auth0 Passwordless, which  removes passwords from the login process completely and instead uses “Magic Links” sent through email or one-time codes sent through SMS.
 
 Since 2015 we've seen Passwordless grow at a fairly steady rate of 10,000-20,000 connections [per month](https://auth0.com/blog/analysis-of-passwordless-connections/), though it hasn't yet caught up to social or enterprise login. Social connections have seen a big increase in 2016 and it's easy to see why. Users log into your site with existing login information from a social network provider. It's quick and takes out a lot of friction for the user.
 
@@ -100,4 +100,4 @@ From 2015 to 2016 we saw the dominance of U/P slip even further. It still makes 
 
 In running this analysis of our 2016 data we found 16,972 logins with breached passwords being entered every month, on average. In April of this year, 4.42% of logins were with leaked credentials. On average, we added 40 million new leaked credentials to our database in 2016.
 
-These numbers may seem startling, but they also illustrate why companies are moving away from U/P so rapidly. Safer, simpler options are available and the industry is having a lot of success nudging users towards social, enterprise, and finally Passwordless options like TouchID and Magic Links.
+These numbers may seem startling, but they also illustrate why companies are moving away from U/P so rapidly. Safer, simpler options are available and the industry is having a lot of success nudging users towards social, enterprise, and finally Passwordless options like one-time codes and Magic Links.

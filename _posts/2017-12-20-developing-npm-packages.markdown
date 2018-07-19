@@ -12,7 +12,7 @@ author:
   name: "Bruno Krebs"
   url: "https://twitter.com/brunoskrebs"
   mail: "bruno.krebs@gmail.com"
-  avatar: "https://twitter.com/brunoskrebs/profile_image?size=original"
+  avatar: "https://cdn.auth0.com/blog/profile-picture/bruno-krebs.png"
 tags:
 - npm
 - node.js

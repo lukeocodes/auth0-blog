@@ -31,7 +31,7 @@ A large number of these systems have web access management, or WAM, as their cen
 
 As time passed, however, these kinds of systems have grown increasingly expensive to maintain, and most are unprepared for the kind of threats and issues that businesses need to worry about today. In other words, legacy WAM solutions leave your business exposed. 
 
-{% include tweet_quote.html quote_text="Web access management systems are expensive to maintime and unprepared for the threats of today." %}
+{% include tweet_quote.html quote_text="Web access management systems are expensive to maintain and unprepared for the threats of today." %}
 
 ## What Is Web Access Management?
 

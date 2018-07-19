@@ -3,7 +3,8 @@ layout: post
 title: "Real-World Angular Series - Part 3: Fetching and Displaying API Data"
 description: "Build and deploy a real-world app with MongoDB, Express, Angular, and Node (MEAN): fetching, displaying, and filtering data."
 date: 2017-07-05 8:30
-category: Technical guide, Angular, Angular 4
+updated: 2018-07-15 8:30
+category: Technical guide, Angular, Angular 6
 banner:
   text: "Auth0 makes it easy to add authentication to your Angular application."
 author:
@@ -28,7 +29,12 @@ related:
 
 ---
 
-**TL;DR:** This 8-part tutorial series covers building and deploying a full-stack JavaScript application from the ground up with hosted [MongoDB](https://www.mongodb.com/), [Express](https://expressjs.com/), [Angular (v2+)](https://angular.io), and [Node.js](https://nodejs.org) (MEAN stack). The completed code is available in the [mean-rsvp-auth0 GitHub repo](https://github.com/auth0-blog/mean-rsvp-auth0/) and a deployed sample app is available at [https://rsvp.kmaida.net](https://rsvp.kmaida.net). **Part 3 of the tutorial series covers fetching data from MongoDB with a Node API and displaying and filtering it with Angular.**
+<div class="alert alert-info alert-icon">
+  <i class="icon-budicon-487"></i>
+  <strong>This article was updated June 15, 2018.</strong> This series and associated repository use Angular 6, CLI 6, RxJS 6, and revised recommendations regarding the storage of sensitive data.
+</div>
+
+**TL;DR:** This 8-part tutorial series covers building and deploying a full-stack JavaScript application from the ground up with hosted [MongoDB](https://www.mongodb.com/), [Express](https://expressjs.com/), [Angular](https://angular.io), and [Node.js](https://nodejs.org) (MEAN stack). The completed code is available in the [mean-rsvp-auth0 GitHub repo](https://github.com/auth0-blog/mean-rsvp-auth0/) and a deployed sample app is available at [https://rsvp.kmaida.net](https://rsvp.kmaida.net). **Part 3 of the tutorial series covers fetching data from MongoDB with a Node API and displaying and filtering it with Angular.**
 
 ---
 
@@ -63,7 +69,7 @@ The third installment in the series covers fetching data from MongoDB with a Nod
 
 ## <span id="api-events"></span>API: Fetching Events
 
-Let's pick up right where we left off [last time](https://auth0.com/blog/real-world-angular-series-part-2). We have data in our database, so it's time to retrieve it with the API. We'll start by writing four endpoints that will get data from MongoDB:
+Let's pick up right where [we left off last time](https://auth0.com/blog/real-world-angular-series-part-2). We have data in our database, so it's time to retrieve it with the API. We'll start by writing four endpoints that will get data from MongoDB:
 
 * List of public events starting in the future
 * List of all public and private events (admin access required)
@@ -112,7 +118,7 @@ Add the following code to the `API Routes` section of the `api.js` file:
 
 This endpoint does not require any authentication. We'll pass the `find()` query as `{viewPublic: true, startDatetime: { $gte: new Date() }` because we only want public events with a starting datetime [greater than or equal to](https://docs.mongodb.com/manual/reference/operator/query/gte/) now.
 
-We also want to pass a [projection (see first example)](http://mongoosejs.com/docs/queries.html). Projections state which fields we want returned in the documents that match our query. If no projection is specified, all fields are returned. In our case, we don't need descriptions or locations in main event listings, so our projection will contain only the properties we _do_ want returned.
+We also want to pass a [projection (see first example in this doc)](http://mongoosejs.com/docs/queries.html). Projections state which fields we want returned in the documents that match our query. If no projection is specified, all fields are returned. In our case, we don't need descriptions or locations in main event listings, so our projection will contain only the properties we _do_ want returned.
 
 {% include tweet_quote.html quote_text="Projections can be used with mongoose to return specific MongoDB document properties." %}
 
@@ -146,7 +152,7 @@ Next we'll create a similar endpoint that will return _all_ events: `/api/events
 
 The code for this endpoint is very similar to the route fetching public events, but we'll include both the `jwtCheck` and `adminCheck` middleware. We won't add any parameters to the query object because we want to retrieve _all_ events in the database. We'll pass the same `_eventListProjection` to leave out locations and descriptions.
 
-> **Note:** It's worthwhile to note that this endpoint is simply for admin display purposes. We want the admin to be able to see and interact with a _listing_ of public and private events. However, authenticated _users_ can still see private event details too, they just need to know the direct link and can't access them from a list.
+> **Note:** It's worthwhile to note that this endpoint is simply for admin display purposes. We want the admin to be able to see and interact with a _listing_ of public and private events. However, authenticated _users_ can still see private event details too, they just need to have the direct link and can't stumble across them from a listing.
 
 ### GET Event Details
 
@@ -243,9 +249,8 @@ This command creates a file called `api.service.ts` in the `src/app/core` folder
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from './../auth/auth.service';
-import { Observable } from 'rxjs/Observable';
+import { throwError as ObservableThrowError, Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import 'rxjs/add/observable/throw';
 import { ENV } from './env.config';
 import { EventModel } from './models/event.model';
 import { RsvpModel } from './models/rsvp.model';
@@ -255,16 +260,17 @@ export class ApiService {
 
   constructor(
     private http: HttpClient,
-    private auth: AuthService) { }
+    private auth: AuthService
+  ) { }
 
   private get _authHeader(): string {
-    return `Bearer ${localStorage.getItem('access_token')}`;
+    return `Bearer ${this.auth.accessToken}`;
   }
 
   // GET list of public, future events
   getEvents$(): Observable<EventModel[]> {
     return this.http
-      .get(`${ENV.BASE_API}events`)
+      .get<EventModel[]>(`${ENV.BASE_API}events`)
       .pipe(
         catchError((error) => this._handleError(error))
       );
@@ -273,7 +279,7 @@ export class ApiService {
   // GET all events - private and public (admin only)
   getAdminEvents$(): Observable<EventModel[]> {
     return this.http
-      .get(`${ENV.BASE_API}events/admin`, {
+      .get<EventModel[]>(`${ENV.BASE_API}events/admin`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(
@@ -284,7 +290,7 @@ export class ApiService {
   // GET an event by ID (login required)
   getEventById$(id: string): Observable<EventModel> {
     return this.http
-      .get(`${ENV.BASE_API}event/${id}`, {
+      .get<EventModel>(`${ENV.BASE_API}event/${id}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(
@@ -295,7 +301,7 @@ export class ApiService {
   // GET RSVPs by event ID (login required)
   getRsvpsByEventId$(eventId: string): Observable<RsvpModel[]> {
     return this.http
-      .get(`${ENV.BASE_API}event/${eventId}/rsvps`, {
+      .get<RsvpModel[]>(`${ENV.BASE_API}event/${eventId}/rsvps`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(
@@ -308,21 +314,19 @@ export class ApiService {
     if (err.message && err.message.indexOf('No JWT present') > -1) {
       this.auth.login();
     }
-    return Observable.throw(errorMsg);
+    return ObservableThrowError(errorMsg);
   }
 
 }
 ```
 
-We'll need to make unauthenticated _and_ authenticated requests, so we'll import `HttpClient` and `HttpHeaders` (to add the `Authorization` header with access token) along with `HttpErrorResponse`. We also need `AuthService` to prompt login if no JWT is found when attempting to make an authenticated request. We'll create streams with our API calls so we'll import `Observable`, as well as the pipeable `catchError` operator and the `throw` observable method from RxJS. We need `ENV` from our environment config to get the appropriate API URIs. Finally, in order to declare the types for our event streams, we need the models (`EventModel` and `RsvpModel`) we created earlier.
+We'll need to make unauthenticated _and_ authenticated requests, so we'll import `HttpClient` and `HttpHeaders` (to add the `Authorization` header with access token) along with `HttpErrorResponse`. We also need `AuthService` to prompt login if no JWT is found when attempting to make an authenticated request. We'll create streams with our API calls so we'll import `Observable` and `ObservableThrowError`, as well as the pipeable `catchError` operator from RxJS. We need `ENV` from our environment config to get the appropriate API URIs. Finally, in order to declare the types for our event streams, we need the models (`EventModel` and `RsvpModel`) we created earlier.
 
 Once `HttpClient` and `AuthService` are added to the constructor, we can use the HTTP methods to create observables of API data. We expect to receive streams of type `EventModel[]` (an array of events) for our two event list endpoints, a single `EventModel` when retrieving event details by ID, and `RsvpModel[]` when retrieving all RSVPs for an event.
 
-In order to make authenticated requests, we'll need to set an `Authorization` header using the access token stored in local storage from the authentication service we created in <a href="https://auth0.com/blog/real-world-angular-series-part-2#angular-auth">Angular: Basic Authentication</a> in Part 2. We'll create an accessor method called `_authHeader` to return the necessary `Authorization` value with the currently stored access token. The token may change if authentication is silently renewed _during_ a session (we'll implement silent token renewal much later), so we'll fetch it from local storage on each request to ensure its validity.
+In order to make authenticated requests, we'll need to set an `Authorization` header using the access token stored in local storage from the authentication service we created in <a href="https://auth0.com/blog/real-world-angular-series-part-2#angular-auth">Angular: Basic Authentication</a> in Part 2. We'll create an accessor method called `_authHeader` to return the necessary `Authorization` value with the currently stored access token. The token may change if authentication is silently renewed _during_ a session (we'll implement silent token renewal much later), so we'll fetch it from the service on each request to ensure its validity.
 
 If we need to pass parameters to the request, such as with the `getEventById$(id)` and `getRsvpsByEventId$(eventId)` methods, we'll specify the arguments when calling the endpoint from our components. Our `HttpClient` methods (e.g., `get()`, `post()`, etc.) accept a parameter that uses an instance of `HttpHeaders().set()` to add authorization to that request. You can read more about this [in the Angular Http Docs here](https://angular.io/guide/http).
-
-> **Note:** `HttpClient` is new as of Angular v4.3. If you are using a previous version of Angular, you should either upgrade or continue to use `Http` as per earlier documentation.
 
 Finally, we'll handle errors. A successful API call returns the response as the body (in our case, this returns JSON). This does not require any mapping on our end as of Angular v4.3. A failed call checks the error message and prompts a fresh login if necessary, canceling the observable and producing an error if something else went wrong.
 
@@ -524,7 +528,7 @@ We're now ready to use our new utilities in components. We'll add more methods t
 
 ## <span id="angular-filterSort-service"></span>Angular: Create a Filter/Sort Service
 
-Our app is going to need several different ways to organize arrays of data. In AngularJS, we would have used built-in filters for this, such as `filter` and `orderBy`. Angular (v2+) uses [pipes](https://angular.io/guide/pipes) to transform data, but no longer provides out-of-the-box pipes for filtering or sorting [for reasons cited here](https://angular.io/guide/pipes#appendix-no-filterpipe-or-orderbypipe).
+Our app is going to need several different ways to organize arrays of data. In AngularJS, we would have used built-in filters for this, such as `filter` and `orderBy`. Angular uses [pipes](https://angular.io/guide/pipes) to transform data, but no longer provides out-of-the-box pipes for filtering or sorting [for reasons cited here](https://angular.io/guide/pipes#appendix-no-filterpipe-or-orderbypipe).
 
 Due to the performance and minification impacts of this choice, we will _not_ create custom pipes to implement filtering or sorting functionality. This would simply re-introduce the same problems the Angular team was attempting to solve by removing these filters. Instead, the appropriate approach is to use _services_.
 
@@ -710,7 +714,7 @@ import { Title } from '@angular/platform-browser';
 import { ApiService } from './../../core/api.service';
 import { UtilsService } from './../../core/utils.service';
 import { FilterSortService } from './../../core/filter-sort.service';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { EventModel } from './../../core/models/event.model';
 
 @Component({
@@ -731,7 +735,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     private title: Title,
     public utils: UtilsService,
     private api: ApiService,
-    public fs: FilterSortService) { }
+    public fs: FilterSortService
+  ) { }
 
   ngOnInit() {
     this.title.setTitle(this.pageTitle);
@@ -792,7 +797,7 @@ Now open the `home.component.html` template:
 {% highlight html %}
 {% raw %}
 <!-- src/app/pages/home/home.component.html -->
-<h1 class="text-center">{{pageTitle}}</h1>
+<h1 class="text-center">{{ pageTitle }}</h1>
 <app-loading *ngIf="loading"></app-loading>
 
 <ng-template [ngIf]="utils.isLoaded(loading)">
@@ -800,25 +805,28 @@ Now open the `home.component.html` template:
     <ng-template [ngIf]="eventList.length">
 
       <!-- Search events -->
-      <section class="search input-group mb-3">
-        <label class="input-group-addon" for="search">Search</label>
+      <label class="sr-only" for="search">Search</label>
+      <div class="search input-group mb-3">
+        <div class="input-group-prepend">
+          <div class="input-group-text">Search</div>
+        </div>
         <input
           id="search"
           type="text"
           class="form-control"
           [(ngModel)]="query"
           (keyup)="searchEvents()" />
-        <span class="input-group-btn">
+        <span class="input-group-append">
           <button
             class="btn btn-danger"
             (click)="resetQuery()"
             [disabled]="!query">&times;</button>
         </span>
-      </section>
+      </div>
 
       <!-- No search results -->
       <p *ngIf="fs.noSearchResults(filteredEvents, query)" class="alert alert-warning">
-        No events found for <em class="text-danger">{{query}}</em>, sorry!
+        No events found for <em class="text-danger">{{ query }}</em>, sorry!
       </p>
 
       <!-- Events listing -->
@@ -829,7 +837,7 @@ Now open the `home.component.html` template:
           class="list-group-item list-group-item-action flex-column align-items-start">
           <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1" [innerHTML]="event.title"></h5>
-            <small>{{utils.eventDates(event.startDatetime, event.endDatetime)}}</small>
+            <small>{{ utils.eventDates(event.startDatetime, event.endDatetime) }}</small>
           </div>
         </a>
       </section>

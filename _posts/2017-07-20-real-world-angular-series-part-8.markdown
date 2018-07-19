@@ -3,7 +3,8 @@ layout: post
 title: "Real-World Angular Series - Part 8: Lazy Loading, Production Deployment, SSL"
 description: "Build and deploy a real-world app with MongoDB, Express, Angular, and Node (MEAN): lazy loading, production deployment, SSL."
 date: 2017-07-20 8:30
-category: Technical guide, Angular, Angular 4
+updated: 2018-07-15 8:30
+category: Technical guide, Angular, Angular 6
 banner:
   text: "Auth0 makes it easy to add authentication to your Angular application."
 author:
@@ -28,7 +29,12 @@ related:
 
 ---
 
-**TL;DR:** This 8-part tutorial series covers building and deploying a full-stack JavaScript application from the ground up with hosted [MongoDB](https://www.mongodb.com/), [Express](https://expressjs.com/), [Angular (v2+)](https://angular.io), and [Node.js](https://nodejs.org) (MEAN stack). The completed code is available in the [mean-rsvp-auth0 GitHub repo](https://github.com/auth0-blog/mean-rsvp-auth0/) and a deployed sample app is available at [https://rsvp.kmaida.net](https://rsvp.kmaida.net).  **Part 8 of the tutorial series covers NgModule refactoring, lazy loading, and production deployment on VPS with nginx and SSL.**
+<div class="alert alert-info alert-icon">
+  <i class="icon-budicon-487"></i>
+  <strong>This article was updated June 15, 2018.</strong> This series and associated repository use Angular 6, CLI 6, RxJS 6, and revised recommendations regarding the storage of sensitive data.
+</div>
+
+**TL;DR:** This 8-part tutorial series covers building and deploying a full-stack JavaScript application from the ground up with hosted [MongoDB](https://www.mongodb.com/), [Express](https://expressjs.com/), [Angular](https://angular.io), and [Node.js](https://nodejs.org) (MEAN stack). The completed code is available in the [mean-rsvp-auth0 GitHub repo](https://github.com/auth0-blog/mean-rsvp-auth0/) and a deployed sample app is available at [https://rsvp.kmaida.net](https://rsvp.kmaida.net).  **Part 8 of the tutorial series covers NgModule refactoring, lazy loading, and production deployment on VPS with nginx and SSL.**
 
 ---
 
@@ -491,18 +497,21 @@ Stop both the Angular CLI server and the Node server. Then run:
 
 ```bash
 $ ng build --prod
+```
+
+The `ng build --prod` command will create a `/dist` folder containing our compiled production Angular app. 
+
+When the build has completed, run:
+
+```bash
 $ node server
 ```
 
-The `ng build --prod` command will create a `/dist` folder containing our compiled production Angular app. Running `node server` without the `NODE_ENV=dev` environment variable will serve our application from Node, running the API while also serving the Angular front end from the production `/dist` folder.
+Running `node server` without the `NODE_ENV=dev` environment variable will serve our application from Node, running the API while also serving the Angular front end from the production `/dist` folder.
 
 > **Note:** AOT is the default compilation for production builds in the Angular CLI as of v1.0.0-beta.28.
 
-We can now access our production build at [http://localhost:8083](http://localhost:8083). The app should load and run as expected.
-
-> **Note:** Silent <a href="https://auth0.com/blog/real-world-angular-series-part-7#renew-auth">token renewal</a> will produce errors on a production build if you don't update the redirect URLs in the `silent.html` file. However, this is actually the perfect opportunity to test token renewal _error handling_. You may want to decrease the token expiration again in your [Auth0 API](https://manage.auth0.com/#/apis/) to trigger a renewal attempt that will fail due to improper configuration. Then you can ensure that your app handles silent authentication errors gracefully and as expected.
-
-Once you have the app running on [http://localhost:8083](http://localhost:8083), open the browser developer tools to the Network tab. Then navigate through the app, keeping an eye on which resources are loaded.
+We can now access our production build at [http://localhost:8083](http://localhost:8083). The app should load and run as expected in the browser. Open your developer tools to the Network tab. Then navigate through the app, keeping an eye on which resources are loaded.
 
 > **Note:** You can change the Network output to `JS` instead of `All` to make it easier to see the bundles that are being loaded.
 
@@ -556,7 +565,7 @@ Let's do a quick summary of the steps we need to take in order to deploy our app
 * Set up a domain name with VPS (either use one you already own or register a new one)
 * Get SSL certificate with [Let's Encrypt](https://letsencrypt.org/)
 * Install [nginx](https://nginx.org/en/) and configure with domain and SSL
-* Update [Auth0 Client](https://manage.auth0.com/#/clients) settings for production
+* Update [Auth0 Application](https://manage.auth0.com/#/applications) settings for production
 
 There are a quite a few steps here and we'll be relying on a few [tutorials from DigitalOcean's community](https://www.digitalocean.com/community/tutorials/) to get going.
 
@@ -900,12 +909,12 @@ You should now be able to access your site in the browser. It should redirect to
 
 ## <span id="prod-settings"></span>Production Auth0 Settings
 
-There's only one step left, and that's to update our app's Auth0 Client settings to accommodate the production environment.
+There's only one step left, and that's to update our app's Auth0 Application settings to accommodate the production environment.
 
-Log into Auth0 and head to your [Auth0 Dashboard Clients](https://manage.auth0.com/#/clients). Select your RSVP app Client and add the production URLs to your settings:
+Log into Auth0 and head to your [Auth0 Dashboard Applications](https://manage.auth0.com/#/applications). Select your RSVP Application and add the production URLs to your settings:
 
-* **Allowed Callback URLs** - `https://[YOUR_DOMAIN]/callback`
-* **Allowed Web Origins** - `https://[YOUR_DOMAIN]`
+* **Allowed Callback URLs** - `https://[YOUR_URL]/callback`
+* **Allowed Web Origins** - `https://[YOUR_URL]`
 
 > **Note:** Take note that these are secure URLs using HTTPS.
 

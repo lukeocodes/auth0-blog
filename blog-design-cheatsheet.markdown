@@ -11,13 +11,6 @@ If adding new logos, upload them to the `logos` directory on the CDN. This will 
   image: https://cdn.auth0.com/blog/logos/angular.png
 ```
 
-### Vue
-
-```
-  bg_color: "#35495E"
-  image: https://cdn.auth0.com/blog/logos/vue.png
-```
-
 ### Firebase
 
 ```
@@ -53,20 +46,6 @@ If adding new logos, upload them to the `logos` directory on the CDN. This will 
   image: https://cdn.auth0.com/blog/logos/node.png
 ```
 
-### React
-
-```
-  bg_color: "#1A1A1A"
-  image: https://cdn.auth0.com/blog/logos/react.png
-```
-
-### Spring Boot
-
-```
-  bg_color: "#222228"
-  image: https://cdn.auth0.com/blog/logos/spring-boot.png
-```
-
 ### PHP
 
 ```
@@ -79,4 +58,32 @@ If adding new logos, upload them to the `logos` directory on the CDN. This will 
 ```
   bg_color: "#303F9F"
   image: https://cdn.auth0.com/blog/logos/polymer-project.png
+```
+
+### React
+
+```
+  bg_color: "#1A1A1A"
+  image: https://cdn.auth0.com/blog/logos/react.png
+```
+
+### Redis
+
+```
+  bg_color: "#4E0F08"
+  image: https://cdn.auth0.com/blog/logos/redis-icon-logo.png
+```
+
+### Spring Boot
+
+```
+  bg_color: "#222228"
+  image: https://cdn.auth0.com/blog/logos/spring-boot.png
+```
+
+### Vue
+
+```
+  bg_color: "#35495E"
+  image: https://cdn.auth0.com/blog/logos/vue.png
 ```

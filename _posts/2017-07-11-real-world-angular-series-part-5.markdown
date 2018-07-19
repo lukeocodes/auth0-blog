@@ -3,7 +3,8 @@ layout: post
 title: "Real-World Angular Series - Part 5: Animation and Template-Driven Forms"
 description: "Build and deploy a real-world app with MongoDB, Express, Angular, and Node (MEAN): animation and template-driven forms."
 date: 2017-07-11 8:30
-category: Technical guide, Angular, Angular 4
+updated: 2018-07-15 8:30
+category: Technical guide, Angular, Angular 6
 banner:
   text: "Auth0 makes it easy to add authentication to your Angular application."
 author:
@@ -28,7 +29,12 @@ related:
 
 ---
 
-**TL;DR:** This 8-part tutorial series covers building and deploying a full-stack JavaScript application from the ground up with hosted [MongoDB](https://www.mongodb.com/), [Express](https://expressjs.com/), [Angular (v2+)](https://angular.io), and [Node.js](https://nodejs.org) (MEAN stack). The completed code is available in the [mean-rsvp-auth0 GitHub repo](https://github.com/auth0-blog/mean-rsvp-auth0/) and a deployed sample app is available at [https://rsvp.kmaida.net](https://rsvp.kmaida.net).  **Part 5 of the tutorial series covers simple animation and using a template-driven form to add and update data.**
+<div class="alert alert-info alert-icon">
+  <i class="icon-budicon-487"></i>
+  <strong>This article was updated June 15, 2018.</strong> This series and associated repository use Angular 6, CLI 6, RxJS 6, and revised recommendations regarding the storage of sensitive data.
+</div>
+
+**TL;DR:** This 8-part tutorial series covers building and deploying a full-stack JavaScript application from the ground up with hosted [MongoDB](https://www.mongodb.com/), [Express](https://expressjs.com/), [Angular](https://angular.io), and [Node.js](https://nodejs.org) (MEAN stack). The completed code is available in the [mean-rsvp-auth0 GitHub repo](https://github.com/auth0-blog/mean-rsvp-auth0/) and a deployed sample app is available at [https://rsvp.kmaida.net](https://rsvp.kmaida.net).  **Part 5 of the tutorial series covers simple animation and using a template-driven form to add and update data.**
 
 ---
 
@@ -64,7 +70,7 @@ The fifth installment in the series covers simple animation and using a template
 
 ## <span id="angular-rsvp"></span>Angular: RSVP Component
 
-Let's pick up right where we left off [last time](https://auth0.com/blog/real-world-angular-series-part-4). We'll add some basic functionality to our RSVP component to display existing RSVPs. Shortly, we'll create the RSVP form, which will be responsible for adding and updating RSVPs. At that time, we'll add quite a bit more logic to this component.
+Let's pick up right where [we left off last time](https://auth0.com/blog/real-world-angular-series-part-4). We'll add some basic functionality to our RSVP component to display existing RSVPs. Shortly, we'll create the RSVP form, which will be responsible for adding and updating RSVPs. At that time, we'll add quite a bit more logic to this component.
 
 ### Add Display Utilities to Service
 
@@ -175,7 +181,7 @@ import { ApiService } from './../../../core/api.service';
 import { UtilsService } from './../../../core/utils.service';
 import { FilterSortService } from './../../../core/filter-sort.service';
 import { RsvpModel } from './../../../core/models/rsvp.model';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-rsvp',
@@ -199,7 +205,8 @@ export class RsvpComponent implements OnInit, OnDestroy {
     public auth: AuthService,
     private api: ApiService,
     public utils: UtilsService,
-    public fs: FilterSortService) { }
+    public fs: FilterSortService
+  ) { }
 
   ngOnInit() {
     this.footerTense = !this.eventPast ? 'plan to attend this event.' : 'attended this event.';
@@ -286,31 +293,33 @@ Let's write the markup for our RSVP component. Open `rsvp.component.html`:
 {% highlight html %}
 {% raw %}
 <!-- src/app/pages/event/rsvp/rsvp.component.html -->
-<div class="card-block">
-  <h2 class="card-title text-center">RSVP</h2>
+<div class="card-body pb-0">
+  <h2 class="card-title text-center mb-0">RSVP</h2>
   <app-loading *ngIf="loading"></app-loading>
 </div>
 
 <ng-template [ngIf]="utils.isLoaded(loading)">
   <!-- Event is over -->
-  <p *ngIf="eventPast" class="card-block lead">
-    You cannot RSVP to an event that has already ended.
-  </p>
+  <div *ngIf="eventPast" class="card-body">
+    <p class="lead card-text">You cannot RSVP to an event that has already ended.</p>
+  </div>
 
   <ng-template [ngIf]="!eventPast && rsvps">
     <!-- User has RSVPed -->
     <ng-template [ngIf]="userRsvp">
-      <p class="card-block lead">You responded to this event with the following information:</p>
+      <div class="card-body">
+        <p class="lead card-text">You responded to this event with the following information:</p>
+      </div>
 
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
-          <strong>Name:</strong>{{userRsvp.name}}
+          <strong>Name:</strong>{{ userRsvp.name }}
         </li>
         <li class="list-group-item">
-          <strong>Attending:</strong>{{utils.booleanToText(userRsvp.attending)}}
+          <strong>Attending:</strong>{{ utils.booleanToText(userRsvp.attending) }}
         </li>
         <li *ngIf="userRsvp.attending && userRsvp.guests" class="list-group-item">
-          <strong>Additional Guests:</strong>{{userRsvp.guests}}
+          <strong>Additional Guests:</strong>{{ userRsvp.guests }}
         </li>
         <li *ngIf="userRsvp.comments" class="list-group-item">
           <strong>Comments:</strong><span [innerHTML]="userRsvp.comments"></span>
@@ -320,44 +329,44 @@ Let's write the markup for our RSVP component. Open `rsvp.component.html`:
     </ng-template>
 
     <!-- No RSVP yet -->
-    <div *ngIf="!userRsvp" class="card-block">
+    <div *ngIf="!userRsvp" class="card-body">
       <p class="lead">Fill out the form below to respond:</p>
       <!-- @TODO: RSVP form (add new RSVP) will go here -->
     </div>
   </ng-template>
 
   <!-- All RSVPs -->
-  <div class="card-block text-right">
-    <button (click)="toggleShowRsvps()" class="btn btn-link btn-sm">{{showRsvpsText}}</button>
+  <div class="card-body text-right">
+    <button (click)="toggleShowRsvps()" class="btn btn-link btn-sm">{{ showRsvpsText }}</button>
   </div>
 
   <section class="allRsvps" *ngIf="showAllRsvps">
-    <div class="card-block">
+    <div class="card-body">
       <h3 class="card-title text-center">All RSVPs</h3>
-      <p *ngIf="!rsvps.length" class="lead">There are currently no RSVPs for this event.</p>
+      <p *ngIf="!rsvps.length" class="lead card-text">There are currently no RSVPs for this event.</p>
     </div>
 
     <ul *ngIf="rsvps.length" class="list-group list-group-flush">
       <li class="list-group-item list-group-item-success justify-content-between">
         <strong>Attending</strong>
-        <span class="badge badge-success badge-pill">{{totalAttending}}</span>
+        <span class="badge badge-success badge-pill">{{ totalAttending }}</span>
       </li>
       <li
         *ngFor="let rsvp of fs.filter(rsvps, 'attending', true)"
         class="list-group-item small">
-        {{rsvp.name}} {{utils.showPlusOnes(rsvp.guests)}}
+        {{ rsvp.name }} {{ utils.showPlusOnes(rsvp.guests) }}
         <p *ngIf="auth.isAdmin && rsvp.comments" class="d-flex w-100">
           <em [innerHTML]="rsvp.comments"></em>
         </p>
       </li>
       <li class="list-group-item list-group-item-danger justify-content-between">
         <strong>Not Attending</strong>
-        <span class="badge badge-danger badge-pill">{{fs.filter(rsvps, 'attending', false).length}}</span>
+        <span class="badge badge-danger badge-pill">{{ fs.filter(rsvps, 'attending', false).length }}</span>
       </li>
       <li
         *ngFor="let rsvp of fs.filter(rsvps, 'attending', false)"
         class="list-group-item small">
-        {{rsvp.name}}
+        {{ rsvp.name }}
         <p *ngIf="auth.isAdmin && rsvp.comments" class="d-flex w-100">
           <em [innerHTML]="rsvp.comments"></em>
         </p>
@@ -366,7 +375,7 @@ Let's write the markup for our RSVP component. Open `rsvp.component.html`:
   </section>
 
   <!-- Error loading RSVPs -->
-  <div *ngIf="error" class="card-block">
+  <div *ngIf="error" class="card-body">
     <p class="alert alert-danger">
       <strong>Oops!</strong> There was an error retrieving RSVPs for this event.
     </p>
@@ -399,12 +408,9 @@ Now open the `rsvp.component.scss` file and we'll add just a few styles to clean
 .list-group-item p:last-child {
   margin-bottom: 0;
 }
-.card-block.lead {
-  margin-bottom: 0;
-}
 ```
 
-Our RSVP tab component should now look like this in the browser:
+Our RSVP tab component should now look something like this in the browser:
 
 ![Angular MEAN app RSVP component](https://cdn.auth0.com/blog/mean-series/event-rsvp-noForm.jpg)
 
@@ -414,15 +420,9 @@ Our RSVP tab component should now look like this in the browser:
 
 This is looking pretty good, but our list of all RSVPs shows and hides quite abruptly. What if we want to animate that section so that it opens and closes more elegantly?
 
-### Install Dependencies
+### Set Up Dependencies
 
-Let's implement a simple animation. We'll start by adding the [Angular animations](https://angular.io/guide/animations) package in the root of our project folder:
-
-```bash
-$ npm install @angular/animations --save
-```
-
-We need to include the `BrowserAnimationsModule` in our `app.module.ts` file like so:
+Let's implement a simple animation. We'll take advantage of [Angular animations](https://angular.io/guide/animations) to do this. We need to include the `BrowserAnimationsModule` in our `app.module.ts` file like so:
 
 ```typescript
 // src/app/app.module.ts
@@ -442,21 +442,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 Import the module and then add it to the `imports` array in the NgModule.
 
-Angular animations use the native [Web Animations API](https://w3c.github.io/web-animations/). To accommodate [browsers that don't support this API yet](http://caniuse.com/#feat=web-animation), we'll also want the [web animations polyfill](https://github.com/web-animations/web-animations-js).
-
-> **Note:** You can test your browser's support for the WAAPI by visiting [this Codepen link](http://codepen.io/danwilson/pen/xGBKVq).
-
-Let's add this to our project via CDN in the `index.html` file like so:
-
-{% highlight html %}
-<!-- src/index.html -->
-...
-<head>
-  ...
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/web-animations/2.2.5/web-animations.min.js"></script>
-</head>
-...
-{% endhighlight %}
+> **Note:** Angular animations use the native [Web Animations API](https://w3c.github.io/web-animations/), or as of Angular 6, fall back to CSS keyframes if the Web Animations API is not supported in the user's browser.
 
 Now we're ready to use Angular animations in our app!
 
@@ -519,8 +505,8 @@ Let's talk briefly about the purpose of each of these methods:
 * `trigger()`: accepts a name for the animation _trigger_ and an array of state and transition methods to configure the animation
 * `state()`: accepts the name of the _state_ of the animation, such as `'active'` or `'inactive'`, and styles that should be applied conditionally when in that state
 * `style()`: sets CSS styles and can be passed in to configure a state, transition, or animation
-* `transition()`: accepts a string explaining which states are being transitioned and which direction the transition is going (i.e., `'active => inactive'`), and any styles or animations to configure the transition
-* `animate()`: accepts a numeric duration in milliseconds, _or_ a CSS string specifying both the duration and easing (i.e., `250` or `'250ms ease-in'`)
+* `transition()`: accepts a string explaining which states are being transitioned and which direction the transition is going (e.g., `'active => inactive'`), and any styles or animations to configure the transition
+* `animate()`: accepts a numeric duration in milliseconds, _or_ a CSS string specifying both the duration and easing (e.g., `250` or `'250ms ease-in'`)
 
 > **Note:** Style, transition, and animation methods passed as arguments can be singular or grouped in an array.
 
@@ -539,13 +525,13 @@ When animating structural directives (such as NgIf), Angular provides the state 
 * Transition `void => *`: element is being added (alias: `:enter`)
 * Transition `* => void`: element is being removed (alias: `:leave`)
 
-Angular animation also now supports [automatic property calculation](https://angular.io/guide/animations#automatic-property-calculation)! Because Angular animations are now backed by JavaScript with the [Web Animations API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API), we no longer have to animate to an arbitrary `max-height` to accomodate animation of elements with dynamic dimensions. If an asterisk is used as a CSS property value, the value is _computed at runtime_ and plugged into the animation automatically.
+Angular animation also supports [automatic property calculation](https://angular.io/guide/animations#automatic-property-calculation)! Because Angular animations are now backed by JavaScript with the [Web Animations API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API), we no longer have to animate to an arbitrary `max-height` to accomodate animation of elements with dynamic dimensions. If an asterisk is used as a CSS property value, the value is _computed at runtime_ and plugged into the animation automatically.
 
 ### Notes on Animation
 
 I personally prefer Option 1 for animations because I find it easier to read the two complete states that are being transitioned. However, Option 2 allows you to see exactly _which_ CSS properties are changing between states and what they're transitioning to and from. Pick an approach that makes the most sense to _you_.
 
-In both approaches, note that `overflow-y: 'hidden'` is included in both states. This style is needed by the animation, so it's included in the animation JS rather than in CSS. Needing to remember to apply it with CSS whenever we add the animation somewhere would prove cumbersome and not very future-proof. It's safer to include all animation-supporting styles with the animation itself.
+In both approaches, note that `overflow-y: 'hidden'` is included in both states. This style is needed by the _animation_ specifically, so it's included in the animation JS rather than in CSS. Needing to remember to apply it with CSS whenever we add the animation somewhere would prove cumbersome and not very future-proof. It's safer to include all animation-supporting styles with the animation itself.
 
 {% include tweet_quote.html quote_text="Animations in Angular are powerful and provide devs with authorship flexibility." %}
 
@@ -692,7 +678,7 @@ Open the `api.service.ts` file and add these two methods:
   // POST new RSVP (login required)
   postRsvp$(rsvp: RsvpModel): Observable<RsvpModel> {
     return this.http
-      .post(`${ENV.BASE_API}rsvp/new`, rsvp, {
+      .post<RsvpModel>(`${ENV.BASE_API}rsvp/new`, rsvp, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(
@@ -709,6 +695,7 @@ Open the `api.service.ts` file and add these two methods:
       .pipe(
         catchError((error) => this._handleError(error))
       );
+  }
 
   ...
 ```
@@ -749,7 +736,7 @@ export class RsvpComponent implements OnInit, OnDestroy {
 
   toggleEditForm(setVal?: boolean) {
     this.showEditForm = setVal !== undefined ? setVal : !this.showEditForm;
-    this.editBtnText = this.showEditForm ? 'Cancel Edit' : 'Edit RSVP';
+    this.editBtnText = this.showEditForm ? 'Cancel Edit' : 'Edit My RSVP';
   }
 
   onSubmitRsvp(e) {
@@ -782,11 +769,11 @@ Next, open the `rsvp.component.html` file:
         ...
       </ul>
 
-      <div class="card-block">
+      <div class="card-body">
         <button
           class="btn btn-info"
-          [ngClass]="{'btn-info': !showEditForm, 'btn-warning': showEditForm}"
-          (click)="toggleEditForm()">{{editBtnText}}</button>
+          [ngClass]="{ 'btn-info': !showEditForm, 'btn-warning': showEditForm }"
+          (click)="toggleEditForm()">{{ editBtnText }}</button>
 
         <app-rsvp-form
           *ngIf="showEditForm"
@@ -797,7 +784,7 @@ Next, open the `rsvp.component.html` file:
     </ng-template>
 
     <!-- No RSVP yet -->
-    <div *ngIf="!userRsvp" class="card-block">
+    <div *ngIf="!userRsvp" class="card-body">
       ...
       <app-rsvp-form
         [eventId]="eventId"
@@ -809,7 +796,7 @@ Next, open the `rsvp.component.html` file:
 {% endraw %}
 {% endhighlight %}
 
-If the user has an existing RSVP, we'll display a new `.card-block` element containing a button to toggle the RSVP form in edit mode. This form will be shown if the `showEditForm` property is `true`. It needs the `eventId` and user's `rsvp` data passed to it as inputs. It also will respond to a `(submitRsvp)` event that the form will emit, using the `onSubmitRsvp($event)` handler method we just created.
+If the user has an existing RSVP, we'll display a new `.card-body` element containing a button to toggle the RSVP form in edit mode. This form will be shown if the `showEditForm` property is `true`. It needs the `eventId` and user's `rsvp` data passed to it as inputs. It also will respond to a `(submitRsvp)` event that the form will emit, using the `onSubmitRsvp($event)` handler method we just created.
 
 If the user does not have an existing RSVP yet, they will be shown the form to create a response. In this case, the only data we need to pass is the event ID. We'll respond to the `(submitRsvp)` event the same way as above.
 
@@ -894,7 +881,7 @@ Now let's add some logic to the `rsvp-form.component.ts` file:
 // src/app/pages/event/rsvp/rsvp-form/rsvp-form.component.ts
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { AuthService } from './../../../../auth/auth.service';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { ApiService } from './../../../../core/api.service';
 import { RsvpModel } from './../../../../core/models/rsvp.model';
 import { GUESTS_REGEX } from './../../../../core/forms/formUtils.factory';
@@ -917,7 +904,8 @@ export class RsvpFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private auth: AuthService,
-    private api: ApiService) { }
+    private api: ApiService
+  ) { }
 
   ngOnInit() {
     this.isEdit = !!this.rsvp;
@@ -1196,19 +1184,12 @@ export class RsvpComponent implements OnInit, OnDestroy {
   ...
   showEditForm: boolean;
   editBtnText: string;
-
+  
   ...
 
   ngOnInit() {
     ...
     this.toggleEditForm(false);
-  }
-
-  ...
-
-  toggleEditForm(setVal?: boolean) {
-    this.showEditForm = setVal !== undefined ? setVal : !this.showEditForm;
-    this.editBtnText = this.showEditForm ? 'Cancel Edit' : 'Edit My RSVP';
   }
 
   ...
@@ -1262,7 +1243,7 @@ export class RsvpComponent implements OnInit, OnDestroy {
 ...
 ```
 
-First, we'll add `showEditForm` and `editBtnText` properties to toggle the edit form when a user has an existing RSVP. We'll create a `toggleEditForm()` method to update these properties and call it in `ngOnInit()` to begin with the form closed.
+We'll now type annotate our `showEditForm` and `editBtnText` properties. Then we'll call the `toggleEditForm()` method in `ngOnInit()` to begin with the edit form closed and populate these properties dynamically on initial load.
 
 Next we'll add a handler for the `submitRsvp` event that the RSVP form component emits. Our `_onSubmitRsvp()` method checks the event object for an `rsvp` property containing the updated RSVP. It sets the `userRsvp` property to the new RSVP. It then calls the `_updateRsvpState()` method, passing a new `changed` parameter that we'll add shortly. It also closes the edit form.
 
@@ -1287,11 +1268,11 @@ Open the `rsvp.component.html` template:
     <!-- User has RSVPed -->
     <ng-template [ngIf]="userRsvp">
       ...
-      <div class="card-block">
+      <div class="card-body">
         <button
           class="btn btn-info"
-          [ngClass]="{'btn-info': !showEditForm, 'btn-warning': showEditForm}"
-          (click)="toggleEditForm()">{{editBtnText}}</button>
+          [ngClass]="{ 'btn-info': !showEditForm, 'btn-warning': showEditForm }"
+          (click)="toggleEditForm()">{{ editBtnText }}</button>
 
         <app-rsvp-form
           *ngIf="showEditForm"
@@ -1302,7 +1283,7 @@ Open the `rsvp.component.html` template:
     </ng-template>
 
     <!-- No RSVP yet -->
-    <div *ngIf="!userRsvp" class="card-block">
+    <div *ngIf="!userRsvp" class="card-body">
       ...
       <app-rsvp-form
         [eventId]="eventId"
@@ -1313,7 +1294,7 @@ Open the `rsvp.component.html` template:
 {% endraw %}
 {% endhighlight %}
 
-First we'll add a new `<div class="card-block">` to contain our editing RSVP form component and toggle. We'll pass the `[eventId]` and user `[rsvp]` and handle the `(submitRsvp)` event that the form component emits on submission.
+First we'll add a new `<div class="card-body">` to contain our editing RSVP form component and toggle. We'll pass the `[eventId]` and user `[rsvp]` and handle the `(submitRsvp)` event that the form component emits on submission.
 
 If the user hasn't RSVPed yet, we'll show the RSVP form component and pass the `[eventId]` and handle the `(submitRsvp)` event. In this case, we don't have an existing RSVP to pass in.
 

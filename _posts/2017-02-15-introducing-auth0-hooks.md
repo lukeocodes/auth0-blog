@@ -56,7 +56,7 @@ While Auth0 Hooks are building on the same underlying [Webtask](https://webtask.
 
 The initial release of Auth0 Hooks supports customizing the behavior of Auth0 at three new extensibility points:  
 
-* [Client Credentials Exchange](https://auth0.com/docs/auth0-hooks/extensibility-points/client-credentials-exchange) allows you to change the scopes and add custom claims to issued access tokens.  
+* [Client Credentials Exchange](https://auth0.com/docs/hooks/extensibility-points/credentials-exchange) allows you to change the scopes and add custom claims to issued access tokens.  
 * [Pre User Registration](https://auth0.com/docs/auth0-hooks/extensibility-points/pre-user-registration) allows you to intercept creation of a new database user to enforce custom password policy, or employ application specific logic to prevent the signup.  
 * [Post User Registration](https://auth0.com/docs/auth0-hooks/extensibility-points/post-user-registration) allows you to perform any actions as a result of a succcessful creation of a new database user, e.g. send a message to Slack, or create a record in your CRM system.  
 

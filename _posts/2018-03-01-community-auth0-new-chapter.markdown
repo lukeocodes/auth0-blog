@@ -9,7 +9,7 @@ author:
   name: "Jeremy Meiss"
   url: "https://twitter.com/IAmJerdog"
   mail: "jeremy.meiss@auth0.com"
-  avatar: "https://twitter.com/IAmJerdog/profile_image?size=original"
+  avatar: "https://cdn.auth0.com/blog/guest-author/jeremy-meiss.jpg"
 design:
   image: https://cdn.auth0.com/blog/logos/auth0.png
   bg_color: "#222228"

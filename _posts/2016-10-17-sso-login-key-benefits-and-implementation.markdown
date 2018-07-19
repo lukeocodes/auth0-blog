@@ -25,6 +25,8 @@ related:
 - 2015-09-23-what-is-and-how-does-single-sign-on-work
 - 2014-08-22-sso-for-legacy-apps-with-auth0-openid-connect-and-apache
 - 2014-07-02-wordpress-single-sign-on
+lang: en
+alternate_locale_ja: jp-sso-login-key-benefits-and-implementation
 ---
 
 <div class="alert alert-info alert-icon">
@@ -76,7 +78,7 @@ Let's look at an ideal scenario before going into the nitty-gritty of how SSO lo
 
 The simple take-away concept is that there is one central domain through which authentication is performed, and then the session is shared with other domains in some secure way e.g., a signed JSON Web Token (JWT).
 
-![A typical SSO example](https://cdn.auth0.com/blog/typical-sso.png)
+![A typical SSO example](https://cdn.auth0.com/blog/sso/typical-sso-v2.png)
 _A typical graphical SSO example_
 
 ## SSO Integrations

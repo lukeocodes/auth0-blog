@@ -3,7 +3,8 @@ layout: post
 title: "Real-World Angular Series - Part 4: Access Management, Admin, and Detail Pages"
 description: "Build and deploy a real-world app with MongoDB, Express, Angular, and Node (MEAN): access management, display admin data, and detail pages."
 date: 2017-07-06 8:30
-category: Technical guide, Angular, Angular 4
+updated: 2018-07-15 8:30
+category: Technical guide, Angular, Angular 6
 banner:
   text: "Auth0 makes it easy to add authentication to your Angular application."
 author:
@@ -28,7 +29,12 @@ related:
 
 ---
 
-**TL;DR:** This 8-part tutorial series covers building and deploying a full-stack JavaScript application from the ground up with hosted [MongoDB](https://www.mongodb.com/), [Express](https://expressjs.com/), [Angular (v2+)](https://angular.io), and [Node.js](https://nodejs.org) (MEAN stack). The completed code is available in the [mean-rsvp-auth0 GitHub repo](https://github.com/auth0-blog/mean-rsvp-auth0/) and a deployed sample app is available at [https://rsvp.kmaida.net](https://rsvp.kmaida.net). **Part 4 of the tutorial series covers access management with Angular, displaying admin data, and setting up detail pages with tabs.**
+<div class="alert alert-info alert-icon">
+  <i class="icon-budicon-487"></i>
+  <strong>This article was updated June 15, 2018.</strong> This series and associated repository use Angular 6, CLI 6, RxJS 6, and revised recommendations regarding the storage of sensitive data.
+</div>
+
+**TL;DR:** This 8-part tutorial series covers building and deploying a full-stack JavaScript application from the ground up with hosted [MongoDB](https://www.mongodb.com/), [Express](https://expressjs.com/), [Angular](https://angular.io), and [Node.js](https://nodejs.org) (MEAN stack). The completed code is available in the [mean-rsvp-auth0 GitHub repo](https://github.com/auth0-blog/mean-rsvp-auth0/) and a deployed sample app is available at [https://rsvp.kmaida.net](https://rsvp.kmaida.net). **Part 4 of the tutorial series covers access management with Angular, displaying admin data, and setting up detail pages with tabs.**
 
 ---
 
@@ -99,7 +105,7 @@ Add the following code to your new `auth.guard.ts` file:
 // src/app/auth/auth.guard.ts
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 
 @Injectable()
@@ -109,13 +115,17 @@ export class AuthGuard implements CanActivate {
 
   canActivate(
     next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    if (this.auth.tokenValid) {
-      return true;
-    } else {
-      // Send guarded route to redirect to after logging in
-      this.auth.login(state.url);
+    state: RouterStateSnapshot
+  ): Observable<boolean> | Promise<boolean> | boolean {
+    if (!this.auth.loggedIn) {
+      localStorage.setItem('authRedirect', state.url);
+    }
+    if (!this.auth.tokenValid && !this.auth.loggedIn) {
+      this.auth.login();
       return false;
+    }
+    if (this.auth.tokenValid && this.auth.loggedIn) {
+      return true;
     }
   }
 
@@ -124,9 +134,13 @@ export class AuthGuard implements CanActivate {
 
 The boilerplate imports the [`CanActivate` interface](https://angular.io/api/router/CanActivate) to implement the logic declaring whether or not the user should be allowed access to the route. We also need both `ActivatedRouteSnapshot` and `RouterStateSnapshot` to gain access to route information for redirection. RxJS provides `Observable` for type annotation and finally, we need to add the `AuthService` to access its methods.
 
-The logic in the `canActivate()` function is pretty straightforward. Route guards operate on returning `true` or `false` based on a condition that has to be fulfilled to permit navigation. Our condition is `auth.tokenValid` from our `AuthService`. If the user is authenticated with an unexpired token, we can return `true` and navigation continues.
+The logic in the `canActivate()` function is pretty straightforward. Route guards operate on returning `true` or `false` based on a condition that has to be fulfilled to permit navigation.
 
-However, if the user is not authenticated, we'll send the guarded route to the `auth.login()` method. This will allow us to redirect _after_ returning from the hosted Auth0 login, which is outside the application. We'll prompt the user to log in to continue with navigation and return `false` to ensure navigation cannot complete.
+There are three cases we need to consider here:
+
+1. Is the user not logged in? If not, we need to simply store the protected URL they are attempting to access so we can redirect them back there once they've authenticated.
+2. Does the user _not_ have an unexpired token from a previous visit to our app, and are they also _not_ logged in? In this case, they are trying to access a protected route, but must first log in from the Auth0 login page, which is outside the application. They'll then be redirected back to our app.
+3. Does the user have an unexpired token and are they also logged in with the Angular application? If so, they should be allowed to access the requested route.
 
 ### Update Authentication Service to Manage Redirects
 
@@ -137,18 +151,10 @@ The route guard contains a URL to redirect to on successful authentication, so o
 ...
 export class AuthService {
   ...
-  login(redirect?: string) {
-    // Set redirect after login
-    const _redirect = redirect ? redirect : this.router.url;
-    localStorage.setItem('authRedirect', _redirect);
-    // Auth0 authorize request
-    ...
-  }
-
   handleAuth() {
     // When Auth0 hash parsed, get profile
-    this._auth0.parseHash((err, authResult) => {
-        ...
+    this._auth0.parseHash(window.location.href, (err, authResult) => {
+      ...
       } else if (err) {
         this._clearRedirect();
         this.router.navigate(['/']);
@@ -158,18 +164,25 @@ export class AuthService {
   }
 
   private _getProfile(authResult) {
-    // Use access token to retrieve user's profile and set session
-    this._auth0.client.userInfo(authResult.accessToken, (err, profile) => {
+    ...
       if (profile) {
         ...
-        this.router.navigate([localStorage.getItem('authRedirect') || '/']);
-        this._clearRedirect();
+        this._redirect();
       } else if (err) {
       ...
     });
   }
 
   ...
+  
+  private _redirect() {
+    const redirect = decodeURI(localStorage.getItem('authRedirect'));
+    const navArr = [redirect || '/'];
+
+    this.router.navigate(navArr);
+    // Redirection completed; clear redirect from storage
+    this._clearRedirect();
+  }
 
   private _clearRedirect() {
     // Remove redirect from localStorage
@@ -177,27 +190,24 @@ export class AuthService {
   }
 
   logout() {
-    // Ensure all auth items removed from localStorage
+    // Remove data from localStorage
     ...
     this._clearRedirect();
-    // Reset local properties, update loggedIn$ stream
     ...
-    // Return to homepage
-    this.router.navigate(['/']);
   }
 
   ...
 ```
 
-In the `login()` method, we'll now check for a `redirect` parameter. If there isn't one, this means the user initialized the `login()` method from the header link and not from the route guard. In this case, we'll set `_redirect` to the current URL so the user returns here after authenticating. We'll then set the `_redirect` in local storage.
-
 If the hash is successfully parsed with the appropriate tokens in the `handleAuth()` function, we'll redirect the user in the `_getProfile()` method. If an error occurs, we'll clear the redirect (method declared further down in code), navigate to the homepage, and display the error in the console.
 
-As mentioned above, the `_getProfile()` method will now navigate to the stored redirect URL (or as a failsafe, to the homepage). It will then clear the redirect from local storage to ensure no lingering data is left behind.
+As mentioned above, the `_getProfile()` method will now call a private method called `_redirect()`. This method navigates to the stored redirect URL (or as a failsafe, to the homepage). It will then clear the redirect from local storage to ensure no lingering data is left behind.
+
+> **Note:** Later on, we'll be adding tab navigation to our app, and at that time, we'll add some additional functionality to our redirect method.
 
 The `_clearRedirect()` method is simply a shortcut that removes the `authRedirect` item from local storage, since we do this several times throughout the service.
 
-Finally, on `logout()` we'll clear the redirect. Since Home is the only component that does not require authentication to view, we'll navigate to the homepage.
+Finally, on `logout()` we'll clear the redirect. Logging out of the Auth0 authentication server will automatically return the user to the homepage, so there's no need to do more navigation here.
 
 ### Create an Admin Route Guard
 
@@ -213,7 +223,7 @@ Add the following code to the generated `admin.guard.ts` file:
 // src/app/auth/admin.guard.ts
 import { Injectable } from '@angular/core';
 import { Router, CanActivate } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 
 @Injectable()
@@ -221,7 +231,8 @@ export class AdminGuard implements CanActivate {
 
   constructor(
     private auth: AuthService,
-    private router: Router) { }
+    private router: Router
+  ) { }
 
   canActivate(): Observable<boolean> | Promise<boolean> | boolean {
     if (this.auth.isAdmin) {
@@ -234,7 +245,7 @@ export class AdminGuard implements CanActivate {
 }
 ```
 
-The admin guard will run _after_ the authentication guard, so we'll get all the benefits of the authentication guard too (such as auth checking and redirection). All the admin guard needs to do is check if the authenticated user is an admin and if not, navigate to the homepage.
+The admin guard will run _after_ the authentication guard, so we'll get all the benefits of the authentication guard too (such as authentication checking and redirection). All the admin guard needs to do is check if the authenticated user is an admin and if not, navigate to the homepage.
 
 ### Import Guards in Routing Module
 
@@ -335,7 +346,7 @@ Let's add a link to the Admin page in our off-canvas navigation. To do this, ope
 </header>
 {% endhighlight %}
 
-We'll add an "Admin" link that only shows if the user is `auth.loggedIn` and `auth.isAdmin`. Because our `admin` route has children, we'll also add `exact: true` to the `[routerLinkActiveOptions]` directive to prevent the parent "Admin" link from being marked as active when any of its _children_ are active.
+We'll add an "Admin" link that only shows if the user is `auth.loggedIn` and `auth.isAdmin`. Because our `admin` route has children, we'll also add `exact: true` to the `[routerLinkActiveOptions]` directive to prevent the parent "Admin" link from being marked as active when any of its _children_ are active instead.
 
 This link should now appear in the navigation when an admin user is logged in.
 
@@ -351,7 +362,7 @@ import { AuthService } from './../../auth/auth.service';
 import { ApiService } from './../../core/api.service';
 import { UtilsService } from './../../core/utils.service';
 import { FilterSortService } from './../../core/filter-sort.service';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { EventModel } from './../../core/models/event.model';
 
 @Component({
@@ -373,7 +384,8 @@ export class AdminComponent implements OnInit, OnDestroy {
     public auth: AuthService,
     private api: ApiService,
     public utils: UtilsService,
-    public fs: FilterSortService) { }
+    public fs: FilterSortService
+  ) { }
 
   ngOnInit() {
     this.title.setTitle(this.pageTitle);
@@ -426,35 +438,38 @@ Now let's open our `admin.component.html` template:
 {% highlight html %}
 {% raw %}
 <!-- src/app/pages/admin/admin.component.html -->
-<h1 class="text-center">{{pageTitle}}</h1>
+<h1 class="text-center">{{ pageTitle }}</h1>
 <app-loading *ngIf="loading"></app-loading>
 
 <ng-template [ngIf]="utils.isLoaded(loading)">
-  <p class="lead">Welcome, {{auth.userProfile?.name}}! You can create and administer events below.</p>
+  <p class="lead">Welcome, {{ auth.userProfile?.name }}! You can create and administer events below.</p>
 
   <!-- Events -->
   <ng-template [ngIf]="eventList">
     <ng-template [ngIf]="eventList.length">
       <!-- Search events -->
-      <section class="search input-group mb-3">
-        <label class="input-group-addon" for="search">Search</label>
+      <label class="sr-only" for="search">Search</label>
+      <div class="search input-group mb-3">
+        <div class="input-group-prepend">
+          <div class="input-group-text">Search</div>
+        </div>
         <input
           id="search"
           type="text"
           class="form-control"
           [(ngModel)]="query"
           (keyup)="searchEvents()" />
-        <span class="input-group-btn">
+        <span class="input-group-append">
           <button
             class="btn btn-danger"
             (click)="resetQuery()"
             [disabled]="!query">&times;</button>
         </span>
-      </section>
+      </div>
 
       <!-- No search results -->
       <p *ngIf="fs.noSearchResults(filteredEvents, query)" class="alert alert-warning">
-        No events found for <em class="text-danger">{{query}}</em>, sorry!
+        No events found for <em class="text-danger">{{ query }}</em>, sorry!
       </p>
 
       <!-- Events listing -->
@@ -480,7 +495,7 @@ Now let's open our `admin.component.html` template:
             </div>
           </div>
           <p class="mb-1">
-            <strong>Date:</strong> {{utils.eventDates(event.startDatetime, event.endDatetime)}}
+            <strong>Date:</strong> {{ utils.eventDates(event.startDatetime, event.endDatetime) }}
           </p>
         </div>
       </section>
@@ -602,7 +617,7 @@ import { AuthService } from './../../auth/auth.service';
 import { ApiService } from './../../core/api.service';
 import { UtilsService } from './../../core/utils.service';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { EventModel } from './../../core/models/event.model';
 
 @Component({
@@ -613,6 +628,7 @@ import { EventModel } from './../../core/models/event.model';
 export class EventComponent implements OnInit, OnDestroy {
   pageTitle: string;
   id: string;
+  loggedInSub: Subscription;
   routeSub: Subscription;
   tabSub: Subscription;
   eventSub: Subscription;
@@ -627,9 +643,21 @@ export class EventComponent implements OnInit, OnDestroy {
     public auth: AuthService,
     private api: ApiService,
     public utils: UtilsService,
-    private title: Title) { }
+    private title: Title
+  ) { }
 
   ngOnInit() {
+    this.loggedInSub = this.auth.loggedIn$.subscribe(
+      loggedIn => {
+        this.loading = true;
+        if (loggedIn) {
+          this._routeSubs();
+        }
+      }
+    );
+  }
+  
+  private _routeSubs() {
     // Set event ID from route params and subscribe
     this.routeSub = this.route.params
       .subscribe(params => {
@@ -681,11 +709,15 @@ export class EventComponent implements OnInit, OnDestroy {
 
 As always, first we'll add our imports. Let's dive right into the class, covering the imports as we go through the code.
 
-This time, we won't set a `pageTitle` immediately. We first need to retrieve the event data from the API. We'll also grab the event's `id` by subscribing to the [`ActivatedRoute`](https://angular.io/api/router/ActivatedRoute) route parameters observable. We'll subscribe to the route's query parameters observable to set the `tab`. As usual, we'll get our event data from the API service, annotating results with the `EventModel` type. For this component and its children, we also want to know if the event is has already ended so we'll use an `eventPast` property to track this with the `eventPast()` method we added to our `UtilsService` in the <a href="https://auth0.com/blog/real-world-angular-series-part-3#angular-utility-service" target="_self">Angular: Create a Utility Service</a> section of Part 3.
+The first thing we'll do in our `ngOnInit()` method is subscribe to our `auth.loggedIn$` subject so that we can make the appropriate requests once the user has a valid token and is fully authenticated in the Angular app. We'll run a private `_routeSubs()` method to then set up our necessary subscriptions.
+
+This time, we won't set a `pageTitle` immediately. We first need to retrieve the event data from the API. We'll also grab the event's `id` by subscribing to the [`ActivatedRoute`](https://angular.io/api/router/ActivatedRoute) route parameters observable. In this way, we can get the ID of the event we need to request from the API with `_getEvent()`. 
+
+We'll subscribe to the route's query parameters observable to set the `tab`, defaulting to the `details` tab if no tab is specified in the route. 
+
+Then, as usual, we'll get our event data from the API service, annotating results with the `EventModel` type. For this component and its children, we also want to know if the event is has already ended so we'll use an `eventPast` property to track this with the `eventPast()` method we added to our `UtilsService` in the <a href="https://auth0.com/blog/real-world-angular-series-part-3#angular-utility-service" target="_self">Angular: Create a Utility Service</a> section of Part 3.
 
 > **Note:** Users should not RSVP to events in the past.
-
-In our `ngOnInit()` method, we'll subscribe to the route params, set the local `id` property, and execute the method that fetches the event from the API (`_getEvent()`). Then we'll subscribe to the query params to set the `tab`. If there is no query parameter present, we'll default to the `details` tab.
 
 In our `_getEvent()` method, we'll also set the `pageTitle` with the title of the retrieved event using a `_setPageTitle()` method. We'll also check to see if the event is in the past. If an error occurs, we'll set the page title to `Event Details`.
 
@@ -701,7 +733,7 @@ Next, let's build out the `event.component.html` template file:
 <app-loading *ngIf="loading"></app-loading>
 
 <ng-template [ngIf]="utils.isLoaded(loading)">
-  <h1 class="text-center">{{pageTitle}}</h1>
+  <h1 class="text-center">{{ pageTitle }}</h1>
   <!-- Event -->
   <ng-template [ngIf]="event">
     <!-- Event is over -->
@@ -717,15 +749,15 @@ Next, let's build out the `event.component.html` template file:
             <a
               class="nav-link"
               [routerLink]="[]"
-              [queryParams]="{tab: 'details'}"
-              [ngClass]="{'active': utils.tabIs(tab, 'details')}">Details</a>
+              [queryParams]="{ tab: 'details' }"
+              [ngClass]="{ 'active': utils.tabIs(tab, 'details') }">Details</a>
           </li>
           <li class="nav-item">
             <a
               class="nav-link"
               [routerLink]="[]"
-              [queryParams]="{tab: 'rsvp'}"
-              [ngClass]="{'active': utils.tabIs(tab, 'rsvp')}">RSVP</a>
+              [queryParams]="{ tab: 'rsvp' }"
+              [ngClass]="{ 'active': utils.tabIs(tab, 'rsvp') }">RSVP</a>
           </li>
         </ul>
       </div>
@@ -749,15 +781,15 @@ Next, let's build out the `event.component.html` template file:
 {% endraw %}
 {% endhighlight %}
 
-Once the API call has been made and an event has been retrieved, we'll show an alert if the event is in the past. We'll then display our tabs in a [Bootstrap card component](https://v4-alpha.getbootstrap.com/components/card/). We'll use the [RouterLink directive](https://angular.io/api/router/RouterLink) with `[queryParams]` to set the tab, and update the `active` class accordingly.
+Once the API call has been made and an event has been retrieved, we'll show an alert if the event is in the past. We'll then display our tabs in a [Bootstrap card component](https://getbootstrap.com/docs/4.0/components/card/). We'll use the [RouterLink directive](https://angular.io/api/router/RouterLink) with `[queryParams]` to set the tab, and update the `active` class accordingly.
 
 Below the tab navigation, we'll load the Event Detail or RSVP component conditionally, passing in necessary data: the full `[event]` for Event Detail and `[eventId]` and `[eventPast]` for Rsvp.
 
 ### Aside: "Private" Events
 
-Some of our events are set to `viewPublic: false`. If you recall, all this means is that these events don't show up in a public listing. They still appear in the Admin component listing and can also be direct-linked. If you're an admin and you have an event you'd like to share only with specific people, you can access the page through the Admin listing and email invitees the direct link, which might look something like this: `/event/590a642ef36d281a3dc29522`.
+Some of our events are set to `viewPublic: false`. If you recall, all this means is that these events don't show up in a _public listing_. They still appear in the Admin component listing and can also be direct-linked. If you're an admin and you have an event you'd like to share only with specific people, you can access the page through the Admin listing and the direct link with invitees, which might look something like this: `/event/590a642ef36d281a3dc29522`.
 
-> **Note:** It's important to understand there is _no security_ conferred here. All events are still accessible to any authenticated user, we're just making it slightly more difficult for people to _discover_ certain events without a direct link. If you'd like to implement security to ensure that users need a real invitation code in order to view and/or RSVP to events, that would be a great feature to work through on your own after completing this tutorial series. Keep in mind this must be implemented both on the client _and_ server for proper security.
+> **Note:** It's important to understand there is _no security_ conferred here. All events are still accessible to any authenticated user, we're just making it more difficult for people to organically _discover_ certain events without a direct link. If you'd like to implement security to ensure that users need a real invitation code in order to view and/or RSVP to events, that would be a great feature to work through on your own after completing this tutorial series. Keep in mind this must be implemented both on the client _and_ server for proper security.
 
 ### Add Tab Support to Auth Redirection
 
@@ -769,16 +801,6 @@ Let's update the `auth.service.ts` file to do so now:
 // src/app/core/auth/auth.service.ts
 ...
 export class AuthService {
-  ...
-  private _getProfile(authResult) {
-    // Use access token to retrieve user's profile and set session
-    this._auth0.client.userInfo(authResult.accessToken, (err, profile) => {
-      ...
-      this._redirect();
-      this._clearRedirect();
-    });
-  }
-
   ...
 
   private _redirect() {
@@ -794,12 +816,16 @@ export class AuthService {
     } else {
       this.router.navigate(navArr, tabObj);
     }
+    // Redirection completed; clear redirect from storage
+    this._clearRedirect();
   }
 
 ...
 ```
 
-Let's create a private function called `_redirect()`. This will assess the `authRedirect` string stored in local storage and split it into the appropriate Angular path and query parameters, if necessary. Then it will navigate to the route.
+Let's flesh out our `_redirect()` method. This will now assess the `authRedirect` string stored in local storage and split it into the appropriate Angular path and query parameters, if necessary. Then it will navigate to the route.
+
+> **Note:** Angular also supports a route method called [`navigateByUrl()`](https://angular.io/api/router/Router#navigateByUrl). Using this method would allow us to forego all the logic to split the tab from the redirect array. However, this _navigation is always absolute_. We don't want to refresh our entire single page app when navigating in this fashion, so we'll manage the URL this way instead.
 
 Now we're ready to implement our Event Detail and RSVP child components.
 
@@ -830,7 +856,8 @@ export class EventDetailComponent {
 
   constructor(
     public utils: UtilsService,
-    public auth: AuthService) { }
+    public auth: AuthService
+  ) { }
 
 }
 ```
@@ -844,23 +871,22 @@ Let's add our template now in `event-detail.component.html`:
 {% highlight html %}
 {% raw %}
 <!-- src/app/pages/event/event-detail/event-detail.component.html -->
-<div class="card-block">
-  <h2 class="card-title text-center">Event Details</h2>
+<div class="card-body">
+  <h2 class="card-title text-center mb-0">Event Details</h2>
 </div>
 
 <ul class="list-group list-group-flush">
   <li class="list-group-item">
-    <strong>When:</strong>{{utils.eventDatesTimes(event.startDatetime, event.endDatetime)}}
+    <strong>When:</strong>{{ utils.eventDatesTimes(event.startDatetime, event.endDatetime) }}
   </li>
   <li class="list-group-item">
-    <strong>Where:</strong>{{event.location}} (<a href="https://www.google.com/maps/dir//{{event.location}}" target="_blank">get directions</a>)
+    <strong>Where:</strong>{{ event.location }} (<a href="https://www.google.com/maps/dir//{{ event.location }}" target="_blank">get directions</a>)
   </li>
 </ul>
 
-<p
-  *ngIf="event.description"
-  class="card-block lead"
-  [innerHTML]="event.description"></p>
+<div class="card-body" *ngIf="event.description">
+  <p class="card-text lead" [innerHTML]="event.description"></p>
+</div>
 
 <div *ngIf="auth.isAdmin" class="card-footer text-right small">
   <a [routerLink]="['/admin/event/update', event._id]">Edit</a>
@@ -874,7 +900,7 @@ The event `description` is set with the `[innerHTML]` DOM property directive so 
 
 Last, we'll add a link to edit the event if the user is an admin.
 
-> **Note:** Right now, this "Edit" link won't go anywhere since we haven't created the Update Event component or route. We'll add the component later and then the link will function.
+> **Note:** Right now, this "Edit" link won't go anywhere since we haven't created the Update Event component or route. We'll add the component later and then this link will function.
 
 We're now finished with our Event Detail tab component! It should look something like this in the browser:
 
