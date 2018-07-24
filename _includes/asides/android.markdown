@@ -158,4 +158,4 @@ The `AndroidManifest.xml` file should look like this:
 </manifest>
 ```
 
-That's it, we now have an Android application secured with Auth0. To learn more about this, we can check the [official documentation](https://auth0.com/docs/quickstart/native/android/). There, we will find more topics like [Session Handling](https://auth0.com/docs/quickstart/native/android/03-session-handling) and [Fetching User Profile](User Profile).
+That's it, we now have an Android application secured with Auth0. To learn more about this, we can check the [official documentation](https://auth0.com/docs/quickstart/native/android/). There, we will find more topics like [Session Handling](https://auth0.com/docs/quickstart/native/android/03-session-handling) and [Fetching User Profile](https://auth0.com/docs/quickstart/native/android/04-user-profile).

@@ -101,7 +101,7 @@ Auth0 makes passwordless SMS easy and powerful in three key ways:
 
 
 * **Cross Platform Compatibility: **Because passwordless SMS authentication is a built-in feature of Auth0 Lock, it will adapt to whatever platform a user accesses it from, whether it be iOS, Android, or a desktop.
-* **Easy Customizability: **Combining passwordless SMS authentication with email or TouchID authentication is as easy as toggling a button inside Auth0’s Passwordless Connections dashboard:
+* **Easy Customizability: **Combining passwordless SMS authentication with email is as easy as toggling a button inside Auth0’s Passwordless Connections dashboard:
 
 ![Passwordless Connections Dashboard](https://cdn.auth0.com/blog/sms-authentication/passwordless-connections.png)
 

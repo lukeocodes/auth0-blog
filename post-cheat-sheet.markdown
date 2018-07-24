@@ -50,6 +50,12 @@ Center an image:
 [Link text](http://url.goes.here)
 ```
 
+> **Note:** Sometimes it's necessary to use HTML markup for links if the hyperlink contains a closing parentheses.
+
+```html
+<a href="http://url.goes.here">Link text</a>
+``` 
+
 ### Blockquote (Quote)
 
 ```
@@ -110,6 +116,15 @@ $ bash
 text
 ```
 
+### Diff
+
+```diff
+  line
+- removed
++ added
+```
+
+
 ## Warnings
 
 ```html
@@ -123,7 +138,8 @@ text
 
 ### Characters
 
-* Em dash: `—` (don't use hyphens for this) - Mac shortcut: `Shift`+`Alt`+`-`
+* Em dash: `—` (don't use hyphens for this) - Mac shortcut: `Shift`+`Option/Alt`+`-`
+* En dash: `–` (don't use hyphens for this) - Mac shortcut: `Option/Alt`+`-`
 * Lambda: `λ`
 
 ### Within-article Target Links

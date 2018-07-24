@@ -77,7 +77,6 @@ Other forms of passwordless authentication are:
 
 * Authentication with a magic link via email
 * Authentication with a onetime code via e-mail
-* Authentication with fingerprint. Auth0 supports [TouchID](https://auth0.com/docs/libraries/lock-ios/v1/touchid-authentication)
 
 Check out this [excellent article](https://auth0.com/blog/how-passwordless-authentication-works/) to have an in-depth understanding of how these other forms of passwordless authentication work!
 
@@ -226,6 +225,6 @@ You can go further and use the token to determine the `logged-in` and `logged-ou
 
 ## Conclusion
 
-There is no doubt that passwords have become more susceptible to being compromised in recent years. [Passwordless](https://auth0.com/passwordless/) authentication aims to eliminate authentication vulnerabilities. This recent [analysis of passwordless connections](https://auth0.com/blog/analysis-of-passwordless-connections/) shows that passwordless adoption is increasing. Passwordless authentication is also very useful and gaining ground in the IoT world. It's easier, friendlier, and faster to be authenticated into an IoT device via Touch ID, push notification, or even a onetime passcode than with traditional means. If you really care about security, you should look into passwordless authentication!
+There is no doubt that passwords have become more susceptible to being compromised in recent years. [Passwordless](https://auth0.com/passwordless/) authentication aims to eliminate authentication vulnerabilities. This recent [analysis of passwordless connections](https://auth0.com/blog/analysis-of-passwordless-connections/) shows that passwordless adoption is increasing. If you really care about security, you should look into passwordless authentication!
 
 {% include tweet_quote.html quote_text="If you care about security, you should look into passwordless authentication" %}

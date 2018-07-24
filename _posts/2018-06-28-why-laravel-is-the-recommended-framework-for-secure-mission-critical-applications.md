@@ -68,7 +68,7 @@ The cookie class uses the Application key to generate secure encrypted strings a
 
 ## Cross-Site Request Forgery (CSRF) Protection on Laravel
 
-To protect your application from a [CSRF attack](https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)), Laravel uses the Form Classes Token method, which creates a unique token in a form. So, if you look at the source code of a target form, you will see a hidden form field called CSRF token.
+To protect your application from a <a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)">CSRF attack</a>, Laravel uses the Form Classes Token method, which creates a unique token in a form. So, if you look at the source code of a target form, you will see a hidden form field called CSRF token.
 
 {% highlight html %}
 {% raw %}
@@ -92,7 +92,7 @@ Route::filter('csrf', function() {
 });
 ```
 
-The CSRF filter allows you to check for a forged request and if it has been forged, it's going to return an HTTP 500 error. You can use Form Classes Token method and CSRF filter together to protect your application routes.
+The CSRF filter allows you to check for a forged request and if it has been forged, it's going to return an HTTP 500 error. You can use the Form Classes Token method and CSRF filter together to protect your application routes.
 
 ## Mass Assignment Vulnerabilities on Laravel
 
@@ -139,7 +139,7 @@ My list <script>alert("spam spam spam!")</script>
 
 ![Avoiding cross-site scripting attacks on Laravel applications.](https://cdn.auth0.com/blog/laravel-mission-critical/xss.png)
 
-Without [cross-site scripting](https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)) protection, a view variable like the one above would be presented in a web page in the form of an annoying alert window, causing this form of attack called cross-site scripting. This may sound like a minor exasperation associated with more erudite attacks which might hasten the user to supply some bank information via a JavaScript model which are afterward sent to third-party websites.
+Without <a href="https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)">cross-site scripting</a> protection, a view variable like the one above would be presented in a web page in the form of an annoying alert window, causing this form of attack called cross-site scripting. This may sound like a minor exasperation associated with more erudite attacks which might hasten the user to supply some bank information via a JavaScript model which are afterward sent to third-party websites.
 
 Fortunately, when a variable is rendered within the `{% raw %}@{{}}{% endraw %}` escape tags, Laravel will render in its place a string as the following one:
 
@@ -153,14 +153,12 @@ This makes Laravel applications immune to this type of attack.
 
 ![Laravel applications are immune to cross-site scripting attacks.](https://cdn.auth0.com/blog/laravel-mission-critical/no-xss.png)
 
-{% include tweet_quote.html quote_text="With Laravel you can rest assured that the most common attacks will be handled by default." %}
+{% include tweet_quote.html quote_text="With Laravel, you can rest assured that the most common attacks will be handled by default." %}
 
 {% include asides/laravel-backend.markdown %}
 
 ## Conclusion
 
-As you may know, there are many other things you must do to protect your Laravel applications to make them apt for mission-critical scenarios (such as disabling web browser-based error reporting to stop sensitive application details being visible to a possibly malevolent party). Nevertheless, Laravel ensures a much more secure application by disregarding these five everyday-attack vectors.
+As you may know, there are other things you must do to protect your mission-critical applications, such as disabling verbose error reporting to stop sensitive details about your application being made visible to a bad actor. Nevertheless, Laravel ensures a much more secure application by protecting again these common attack vectors, reducing the attack surface out-of-the-box.
 
-Indeed, Laravel is the reason behind the renewed interest of developer community in PHP development. As a free, open-source PHP web framework, created by Taylor Otwell and intended for the development of web applications following the model–view–controller (MVC) architectural pattern and based on Symfony, Laravel took over Zend, CakePHP, Yii and CodeIgniter in terms of popularity within a few years of its introduction.
-
-A major reason is this that it is much securer than other frameworks and more apt for mission-article applications.
+Laravel is one of the reasons behind the renewed interest in the PHP developer community. Using a more secure base application and following the familiar model–view–controller (MVC) architectural pattern, it's popularity grew fast. As a free, open-source framework, created by [Taylor Otwell](https://twitter.com/taylorotwell) and based on Symfony, Laravel took over as the defacto framework within a few years of its introduction.

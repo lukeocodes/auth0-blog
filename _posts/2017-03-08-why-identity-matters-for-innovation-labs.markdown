@@ -52,7 +52,7 @@ Innovations in identity technology have led us to more secure and more dynamic t
 
 ### Frictionless Authentication with Passwordless
 
-The evolution of [Passwordless authentication](https://auth0.com/passwordless) has allowed users to leave memorizing complicated passwords behind while enjoying improved security. Companies like [Slack](https://slack.com) and [Medium](https://medium.com) utilize Passwordless authentication to [increase engagement and enhance security](https://aws.amazon.com/blogs/startups/increase-engagement-and-enhance-security-with-passwordless-authentication/). [Fingerprint Authentication](https://auth0.com/learn/fingerprint-authentication/) in mobile apps is also a form of Passwordless login that greatly improves the user experience.
+The evolution of [Passwordless authentication](https://auth0.com/passwordless) has allowed users to leave memorizing complicated passwords behind while enjoying improved security. Companies like [Slack](https://slack.com) and [Medium](https://medium.com) utilize Passwordless authentication to [increase engagement and enhance security](https://aws.amazon.com/blogs/startups/increase-engagement-and-enhance-security-with-passwordless-authentication/). Fingerprint Authentication in mobile apps is also a form of Passwordless login that greatly improves the user experience.
 
 In fact, Passwordless biometric security is steadily gaining traction with identity innovations such as the [Biometric Wallet from Hammacher Schlemmer](http://www.hammacher.com/Product/81863) and [biometric credit card technology](http://www.sdcexec.com/news/12214482/new-biometric-credit-card-technology-is-an-important-advance-in-fraud-prevention).
 

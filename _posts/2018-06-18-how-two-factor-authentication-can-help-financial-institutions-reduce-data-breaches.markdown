@@ -35,7 +35,7 @@ One concrete step that these institutions, along with smaller firms, can take is
 
 ## Breaking Down Common 2FA Approaches
 
-In general there are [three factors](https://preview.pcmag.com/feature/358289/two-factor-authentication-who-has-it-and-how-to-set-it-up) in authentication:
+In general, there are [three factors](https://preview.pcmag.com/feature/358289/two-factor-authentication-who-has-it-and-how-to-set-it-up) in authentication:
 
 1. Something you know (such as a password you created)
 2. Something you have (such as a cell phone or other piece of hardware)

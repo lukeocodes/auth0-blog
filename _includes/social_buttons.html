@@ -4,11 +4,7 @@
   {% assign current = page %}
 {% endif %}
 
-{% if current.alias %}
-  {% assign url = current.alias %}
-{% else %}
-  {% assign url = current.url %}
-{% endif %}
+{% assign url = current.url %}
 
 <div class="social-stats">
   <a href="#" data-url="https://auth0.com/blog{{url}}" data-type="twitter" data-txt="{{current.title}}" data-via="auth0" class="network">

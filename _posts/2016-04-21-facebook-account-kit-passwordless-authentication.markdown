@@ -341,7 +341,7 @@ Let's walk through the steps of how passwordless authentication works with the F
 
 At Auth0, we are huge proponents of making the authentication experience the best it can be. Passwordless authentication is something we believe in and offer in all of our packages. Get a taste for how passwordless authentication works with Auth0 at the [Playground](https://auth0.github.io/lock-passwordless/). Some of the benefits of integrating passwordless authentication with Auth0 include:
 
-* Email, SMS and [Apple Touch ID](https://auth0.com/docs/connections/passwordless/ios-touch-id-swift) support
+* Email and SMS support
 * Integrate with your own [SMS gateway](https://auth0.com/docs/connections/passwordless/sms-gateway) and email providers
 * Cloud and Self-hosted options
 * 20+ Social [identity providers](https://auth0.com/docs/identityproviders) including Facebook, Twitter and Google
@@ -382,9 +382,7 @@ app.get('/callback', function(request, response){
 app.listen(3000);
 ```
 
-Additionally, we'll need to configure passwordless authentication in our Auth0 [dashboard](https://manage.auth0.com). To do this, in the dashboard, navigate to the the **Connections** then **Passwordless** tab. As we are building a web app, we won't be able to implement Touch ID, so just flip the switch to on for Email and SMS.
-
-![Auth0 Passwordless Options](https://cdn.auth0.com/blog/account-kit-passwordless/auth0-passwordless.png) 
+Additionally, we'll need to configure passwordless authentication in our Auth0 [dashboard](https://manage.auth0.com). To do this, in the dashboard, navigate to the the **Connections** then **Passwordless** tab. As we are building a web app, just flip the switch to on for Email and SMS.
 
 For the **SMS** integration, we'll need need a [Twilio](https://www.twilio.com/) account. You can sign up for a free Twilio trial account [here](https://www.twilio.com/try-twilio). From our Twilio dashboard, we're going to want to get our **SID**, **AuthToken** and the **Phone Number** that Twilio will give us. We'll add these credentials in the SMS settings in our Auth0 dashboard.
 

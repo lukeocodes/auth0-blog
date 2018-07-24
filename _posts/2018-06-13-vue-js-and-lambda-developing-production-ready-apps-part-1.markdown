@@ -370,7 +370,7 @@ git cm 'integrating Express and Mongo'
 
 ### Consuming Express Endpoints with Vue.js
 
-Now, you can focus on upgrading your Vue.js app to communicate with these two new endpoints. So, first, you will need a new service that will interface this communication. To define this service, create a new file called `MicroPostsService.js` inside the `./client/src/` directory and add the following code to it:
+Now, you can focus on upgrading your Vue.js app to communicate with these two new endpoints. So, first, you will need a new service that will interface with this communication. To define this service, create a new file called `MicroPostsService.js` inside the `./client/src/` directory and add the following code to it:
 
 ```javascript
 import axios from 'axios'
@@ -634,8 +634,8 @@ export default {
     Auth0.configure({
       domain: '<YOUR-AUTH0-DOMAIN>',
       clientID: '<AN-AUTH0-CLIENT-ID>',
-      audience: '<AN-AUTH0-AUDIENCE>',
-      redirectUri: 'http://localhost:8080/#/callback',
+      audience: 'https://<YOUR-AUTH0-DOMAIN>/userinfo',
+      redirectUri: 'http://localhost:8080/callback',
       responseType: 'token id_token',
       scope: 'openid profile'
     })
@@ -645,11 +645,9 @@ export default {
 {% endraw %}
 {% endhighlight %}
 
-As you can imagine, you will have to replace the `<YOUR-AUTH0-DOMAIN>`, `<AN-AUTH0-CLIENT-ID>`, and `<AN-AUTH0-AUDIENCE>` placeholders with details from your Auth0 account. So, back in [the Auth0 management dashboard](https://manage.auth0.com/#/applications) (hopefully, you have left it open), you can copy the value from the _Domain_ field (e.g. `bk-tmp.auth0.com`) and use it to replace `<YOUR-AUTH0-DOMAIN>` and copy the value from the _Client ID_ field (e.g. `KsX...GPy`) and use it to replace `<AN-AUTH0-CLIENT-ID>`.
+As you can imagine, you will have to replace both `<YOUR-AUTH0-DOMAIN>` and the `<AN-AUTH0-CLIENT-ID>` placeholders with details from your Auth0 account. So, back in [the Auth0 management dashboard](https://manage.auth0.com/#/applications) (hopefully, you have left it open), you can copy the value from the _Domain_ field (e.g. `bk-tmp.auth0.com`) and use it to replace `<YOUR-AUTH0-DOMAIN>` and copy the value from the _Client ID_ field (e.g. `KsX...GPy`) and use it to replace `<AN-AUTH0-CLIENT-ID>`.
 
-After that, you will have only one placeholder left to replace: `<AN-AUTH0-AUDIENCE>`. Although this placeholder refers to a value that you will define in the next section (while creating an Auth0 API for your endpoints), you can go ahead and replace this placeholder with the following value: `https://micro-blog-app`. Don't worry about this value being an URL that you do not own, Auth0 will never call this URL, it is just a value to represent your backend.
-
-After configuring the `auth0-web` package in the `App` component, you can open the `HelloWorld` component (its file resides in the `./client/src/components/` directory) and add refactor the `<template></template>` section as follows:
+After configuring the `auth0-web` package in the `App` component, you can open the `HelloWorld` component (its file resides in the `./client/src/components/` directory) and refactor the `<template></template>` section as follows:
 
 {% highlight html %}
 {% raw %}
@@ -779,7 +777,7 @@ export default {
     }
   },
   methods: {
-    async shareThouths () {
+    async shareThoughts () {
       await MicroPostsService.insertMicroPost(this.text)
       this.$router.push('/')
     }
@@ -789,9 +787,23 @@ export default {
 {% endraw %}
 {% endhighlight %}
 
-As you can see, the idea of this component is to let authenticated users to share their thoughts through the `shareThouths` method. This method simply delegates the communication process with the backend to the `insertMicroPost` function of the `MicroPostsService` that you defined before. After this service finishes inserting the new micro-post in your backend, the `ShareThoughts` component forwards users to the public page where they can see all micro-posts (including what they just shared).
+As you can see, the idea of this component is to let authenticated users share their thoughts through the `shareThoughts` method. This method simply delegates the communication process with the backend to the `insertMicroPost` function of the `MicroPostsService` that you defined before. After this service finishes inserting the new micro-post in your backend, the `ShareThoughts` component forwards users to the public page where they can see all micro-posts (including what they just shared).
 
-To make this new component available in your app, you need to register it under your routes. So, open the `./client/src/router/index.js` file add update it as follows:
+For now, the layout of this component can be as simple as possible. Adding to it a label, an input, and a button will suffice to get the work done. So, still in the `ShareThoughts.vue` file, add the following template:
+
+{% highlight html %}
+{% raw %}
+<template>
+<div class="share-thoughts">
+  <label for="share-thoughts">What do you want to share?</label>
+  <input id="share-thoughts" v-model="text" placeholder="Be nice!"/>
+  <button v-on:click="shareThoughts">Share!</button>
+</div>
+</template>
+{% endraw %}
+{% endhighlight %}
+
+Then, to make this new component available in your app, you will need to register it under your routes. To do so, open the `./client/src/router/index.js` file add update it as follows:
 
 ```js
 // ... other import statements ...
@@ -812,7 +824,7 @@ export default new Router({
         if (Auth0.isAuthenticated()) {
           return next()
         }
-        this.$router.push('/')
+        next('/')
       }
     }
   ]
@@ -823,7 +835,7 @@ If you run both your frontend app (by running `npm run dev` from the `client` di
 
 ![Vue.js route secured with Auth0](https://cdn.auth0.com/blog/vuejs-lambda/vuejs-secured-area.png)
 
-**Note:** If you don't authenticate yourself before trying to access this route, you will get redirected to the main route. This happens because you defined a guard condition on the `beforeEnter` hook that calls `this.$router.push('/')` for unauthenticated users. 
+**Note:** If you don't authenticate yourself before trying to access this route, you will get redirected to the main route. This happens because you defined a guard condition on the `beforeEnter` hook that calls `next('/')` for unauthenticated users. 
 
 Ok, then. From the frontend perspective, you have enough features. So, now it's time to focus on refactoring your backend application to integrate it with Auth0. But, as always, not before saving your progress:
 
@@ -837,7 +849,7 @@ As you have finished integrating your frontend application with Auth0, the only 
 
 ```bash
 # make sure you are in the backend directory
-cd ./backend
+cd ../backend
 
 # install dependencies
 npm i express-jwt jwks-rsa auth0
@@ -848,7 +860,7 @@ Together, these dependencies will allow you to validate `access_tokens` sent by 
 Now, to use these packages, you will have to update only a single file: `./backend/src/routes.js`. Inside this file, update the code as follows:
 
 ```js
-// ... other import statements ...
+// ... other require statements ...
 const auth0 = require('auth0');
 const jwt = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
@@ -880,7 +892,7 @@ router.post('/', checkJwt, async (req, res) => {
 
   const authClient = new auth0.AuthenticationClient({
     domain: '<YOUR-AUTH0-DOMAIN>',
-    clientId: 'KsXpF1d1L0vYdwiBG10VNOjw1lJmBGPy',
+    clientId: '<YOUR-AUTH0-CLIENT-ID>',
   });
 
   authClient.getProfile(token, async (err, userInfo) => {
@@ -907,9 +919,9 @@ router.post('/', checkJwt, async (req, res) => {
 
 As you can see, this new version simply defines a middleware called `checkJwt` to validate any `access_token` sent on request headers. Then, it uses the new middleware to secure the function responsible for handling `POST` HTTP requests (`router.post('/', checkJwt, async (req, res) => { ... });`). After that, inside this function, you are fetching the `access_token` from `req.headers.authorization` so you can use it to get profile details about the user calling your API (for this, you are using `auth0.AuthenticationClient` and `authClient.getProfile`). Lastly, when your backend finishes fetching users' profiles, it uses them to add more info into micro-posts saved in your MongoDB instance.
 
-> **Note:** You have to replace the three occurrences of `<YOUR-AUTH0-DOMAIN>` with your own Auth0 domain and `<AN_AUTH0_AUDIENCE>` with the audience of an Auth0 API. You will create this API now.
+> **Note:** You have to replace the three occurrences of `<YOUR-AUTH0-DOMAIN>` with your own Auth0 domain, `<YOUR-AUTH0-CLIENT-ID>` with the client ID created before, and `<AN_AUTH0_AUDIENCE>` with the audience of an Auth0 API. You will create this API now.
 
-To create an [Auth0 API](https://auth0.com/docs/api/info) to represent your backend, [head to the APIs page in your Auth0 management dashboard](https://manage.auth0.com/#/apis) and hit the _Create API_ button. This will bring up a form where you will set a name for your API (e.g. _Micro-Blog API_), an identifier which is also known as audience (in this case you can use `https://micro-blog-app`), and a signing algorithm (you can leave it as `RS256`). Then, after filling in this form, you can click on the _Create_ button and that's it.
+To create an [Auth0 API](https://auth0.com/docs/api/info) to represent your backend, [head to the APIs page in your Auth0 management dashboard](https://manage.auth0.com/#/apis) and hit the _Create API_ button. This will bring up a form where you will set a name for your API (e.g. _Micro-Blog API_), an identifier which is also known as audience (in this case you can use `https://micro-blog-app`), and a signing algorithm (you can leave it as `RS256`). Then, after filling in this form, you can click on the _Create_ button and replace `<AN_AUTH0_AUDIENCE>` in the file above with `https://micro-blog-app`.
 
 ![Creating a representation of your Express API on Auth0](https://cdn.auth0.com/blog/vuejs-lambda/create-express-api-on-auth0.png)
 
@@ -946,7 +958,7 @@ Then, you can update the `<template>` tag inside the `HelloWorld.vue` file as fo
   <div class="micro-posts-container">
     <div class="micro-post" ...>
       <!-- and simply replace p.author with this: -->
-      <p class="author">- {{ microPost.author.name || 'Unknown' }}</p>
+      <p class="author">- {{ microPost.author ? microPost.author.name : 'Unknown' }}</p>
     </div>
   </div>
 </div>
@@ -954,7 +966,33 @@ Then, you can update the `<template>` tag inside the `HelloWorld.vue` file as fo
 {% endraw %}
 {% endhighlight %}
 
-Now, for any new micro-post submitted by an authorized user, your Vue.js app with show their names. To see this in action, issue the following commands:
+The last thing you will need to do in your app is to replace the `audience` property in the object passed to `Auth0.configure` in the `./client/src/App.vue`. Now, instead of passing `<YOUR-AUTH0-DOMAIN>/userinfo` to it, you will need to pass the identifier of the Auth0 API that you created before (i.e. `https://micro-blog-app`). In the end, you will have the `<script>` section of this file looking like this:
+
+{% highlight html %}
+{% raw %}
+<script>
+import * as Auth0 from 'auth0-web'
+
+export default {
+  name: 'App',
+  created () {
+    Auth0.configure({
+      domain: '<YOUR-AUTH0-DOMAIN>',
+      clientID: '<AN-AUTH0-CLIENT-ID>',
+      audience: '<AN-AUTH0-API-IDENTIFIER>',
+      redirectUri: 'http://localhost:8080/callback',
+      responseType: 'token id_token',
+      scope: 'openid profile'
+    })
+  }
+}
+</script>
+{% endraw %}
+{% endhighlight %}
+
+Just don't forget to replace the `<YOUR-AUTH0-DOMAIN>`, `<AN-AUTH0-CLIENT-ID>`, `<AN-AUTH0-API-IDENTIFIER>` placeholders accordingly.
+
+After that, for any new micro-post submitted by an authorized user, your Vue.js app with show their names. To see this in action, issue the following commands:
 
 ```bash
 # go to the backend directory

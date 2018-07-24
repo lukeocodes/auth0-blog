@@ -92,12 +92,6 @@ If the phone number matches an existing user, Auth0 just authenticates the user 
 
 ![Authenticates user](https://cdn.auth0.com/docs/media/articles/connections/passwordless/passwordless-authenticated-flow.png)
 
-* **Authentication with Fingerprint:** With this form of authentication, the user is asked to place their finger on a mobile device. A unique key pair is generated on the device and a new user is created on the server that maps to the key. A session is initiated and the user is logged in.
-
-Let's take a look at Auth0's fingerprint implementation. Auth0 supports **Touch ID** for iOs. This is the authentication flow:
-
-![Authentication with Fingerprint](https://cdn.auth0.com/docs/media/articles/connections/passwordless/passwordless-touchid-flow.png)
-
 ## Aside: Passwordless Authentication with Auth0
 
 With Auth0, passwordless authentication is dead simple to implement. There are diagrams earlier in this post that already show the passwordless authentication flow using Auth0. You must have noticed `Passwordless API` in those diagrams. This is a battle-tested and efficient [API implementation](https://auth0.com/docs/api/authentication#passwordless) of passwordless authentication. You can check out how it works under the hood or simply build your own implementation on top of it.
@@ -148,7 +142,7 @@ If you don't want to go through the process of creating an app, there is an onli
 
 ## Conclusion
 
-There is no doubt that passwords have become more susceptible to being compromised in recent years. [Passwordless](https://auth0.com/passwordless/) authentication aims to eliminate authentication vulnerabilities. This recent [analysis of passwordless connections](https://auth0.com/blog/analysis-of-passwordless-connections/) shows that passwordless adoption is increasing. Passwordless authentication is also very useful and gaining ground in the IoT world. It's easier, friendlier, and faster to be authenticated into an IoT device via Touch ID, push notification, or even a onetime passcode than with traditional means. If you really care about security, you should look into passwordless authentication!
+There is no doubt that passwords have become more susceptible to being compromised in recent years. [Passwordless](https://auth0.com/passwordless/) authentication aims to eliminate authentication vulnerabilities. This recent [analysis of passwordless connections](https://auth0.com/blog/analysis-of-passwordless-connections/) shows that passwordless adoption is increasing. If you really care about security, you should look into passwordless authentication!
 
 We have covered how to implement practical passwordless authentication in an application using magic links. You can follow a similar process to achieve the same objective using a onetime code via SMS. <a href="https://auth0.com/signup" data-amp-replace="CLIENT_ID" data-amp-addparams="anonId=CLIENT_ID(cid-scope-cookie-fallback-name)">Sign up for Auth0</a> and implement passwordless authentication today!
 

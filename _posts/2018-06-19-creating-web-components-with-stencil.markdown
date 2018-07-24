@@ -33,7 +33,7 @@ related:
 
 Have you ever struggled with integrating UI components implemented for different JavaScript frameworks or libraries, say for example *Angular* or *React* or *Vue* or whatever? Are you tired to reimplement the same UI component for each new framework or library? Do you know that a solution to this problem has already existed for some years? It is called [Web Components](https://www.webcomponents.org/).
 
-Web Components are a set of [standard specifications](https://www.webcomponents.org/specs) that allow you to create custom and reusable components by simply using HTML, CSS, and JavaScript. In other words, Web Components allow you to define new custom HTML tags and behaviors by using standard technologies. These custom components should be natively supported by any Web browser, regardless the framework you are using to build your Web pages or your Web application. This should be the end of any JavaScript library interoperability nightmare, but... but there are still a few problems: mainly [the browser support for all the features](https://caniuse.com/#search=web%20component) and the low level of Web Components APIs.
+Web Components are a set of [standard specifications](https://www.webcomponents.org/specs) that allow you to create custom and reusable components by simply using HTML, CSS, and JavaScript. In other words, Web Components allow you to define new custom HTML tags and behaviors by using standard technologies. These custom components should be natively supported by any Web browser, regardless of the framework, you are using to build your Web pages or your Web application. This should be the end of any JavaScript library interoperability nightmare, but... but there are still a few problems: mainly [the browser support for all the features](https://caniuse.com/#search=web%20component) and the low level of Web Components APIs.
 
 ## How Stencil Fits in the Web Components World
 
@@ -41,7 +41,7 @@ In past years a few libraries tried to remedy these Web Component problems provi
 
 In [August 2017 the Ionic team announced](https://www.youtube.com/watch?v=UfD-k7aHkQE) [Stencil.js](https://stenciljs.com), a performant compiler that generates Web Components by combining the best concepts of the most popular UI JavaScript frameworks and libraries. Unlike *Polymer* and *X-Tag*, *Stencil* is not another library that allows you to use Web Components in your project. It is a building tool that allows you to use a high-level abstraction to define your UI components and to generate pure JavaScript code implementing standard-based Web Components. The compiled code runs in all major browsers since Stencil uses a small polyfill only on browsers that lack some needed features.
 
-{% include tweet_quote.html quote_text="The @stenciljs library is building tool that facilitates the creation of web components that you can use with @reactjs and @angular." %}
+{% include tweet_quote.html quote_text="The @stenciljs library is a building tool that facilitates the creation of web components that you can use with @reactjs and @angular." %}
 
 So, let's give Stencil a try and see how to build and use a Web Component.
 
@@ -177,7 +177,7 @@ export  class  MyRatingComponent  {
 }
 ```
 
-As a first difference with respect to the previous version, you can see that we imported the `@Prop()` decorator. This decorator allows you to map the properties of the component class to attributes in the markup side of the component. We added the `maxValue` property, that represents the maximum number of stars to show, and the `value` property, that indicates the current rating value and so the number of full stars to be shown. As you can see, each property has a default value. These properties decorated with `@Prop()` allows you to use the component's markup as follows:
+As the first difference with respect to the previous version, you can see that we imported the `@Prop()` decorator. This decorator allows you to map the properties of the component class to attributes in the markup side of the component. We added the `maxValue` property, that represents the maximum number of stars to show, and the `value` property, that indicates the current rating value and so the number of full stars to be shown. As you can see, each property has a default value. These properties decorated with `@Prop()` allows you to use the component's markup as follows:
 
 ```html
 <my-rating max-value="6" value="2"></my-rating>
@@ -228,7 +228,7 @@ In addition, we want to set a new value when the user clicks on one of the compo
 
 In order to manage this dynamic change of stars, you can assign an internal state to your component. The state of a component is a set of data internally managed by the component itself. This data cannot be directly changed by the user, but the component can modify it accordingly to its internal logic. Any change to the state causes the execution of the `render()` method.
 
-Stencil allows to define the component state through the `@State()` decorator, so we can add a new property to internally track the stars to display in a given moment. The following is a first change to your code toward the dynamic behavior of the rating component:
+Stencil allows to define the component state through the `@State()` decorator, so we can add a new property to internally track the stars to display in a given moment. The following is the first change to your code toward the dynamic behavior of the rating component:
 
 ```typescript
 import  { Component, Prop, State } from  '@stencil/core';
@@ -321,7 +321,7 @@ export  class  MyRatingComponent  {
 
 We added a few attributes to the JSX definition of the single star: `onMouseOver`, to capture the presence of the mouse over the component, `onMouseOut`, to capture the mouse exit from the component area, and `onClick`, to capture the click event on a star of the component. As per JSX semantics, these attributes are mapped to the corresponding HTML attributes `onmouseover`, `onmouseout` and `onclick`. Each attribute has an arrow function assigned that invokes the component's methods `createStarList()` and `setValue()`.
 
-The first one is a slightly changed version of previous `createStarList()` method. Now it accepts an argument that defines the number of stars to display, and this parameter is used instead of the fixed `value` property.
+The first one is a slightly changed version of the previous `createStarList()` method. Now it accepts an argument that defines the number of stars to display, and this parameter is used instead of the fixed `value` property.
 
 The `setValue()` method takes the new value, assigns it to the `value` property and calls the `createStarList()` method to generate the new list of stars.
 
@@ -418,11 +418,11 @@ export  class  MyRatingComponent  {
 }
 ```
 
-This small change solves our issue, but another problem still remains: when a user clicks a star, the number of full stars doesn't change. Why the `setValue()` method does not work?
+This small change solves our issue, but another problem still remains: when a user clicks a star, the number of full stars doesn't change. Why does the `setValue()` method not work?
 
 ## Managing Mutable Properties on Stencil
 
-We said above that a component property decorated with `@Prop()` acquires a reactive nature. This means that if a change to the property occurs from the external of the component, this immediately fires the re-rendering of the component itself. However, the property change can only occur by an external action. Props are immutable from inside the component. This means that an internal attempt change the value of a prop doesn't work. This is the reason why the `setValue()` method doesn't work as expected.
+We said above that a component property decorated with `@Prop()` acquires a reactive nature. This means that if a change to the property occurs from the external of the component, this immediately fires the re-rendering of the component itself. However, the property change can only occur through an external action. Props are immutable from inside the component. This means that an internal attempt change the value of a prop doesn't work. This is the reason why the `setValue()` method doesn't work as expected.
 
 There are a couple of solutions to this issue.
 
@@ -758,7 +758,7 @@ class App extends Component {
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
-		<my-rating id="myRatingComponent" max-value="6" value="2"></my-rating>
+        <my-rating id="myRatingComponent" max-value="6" value="2"></my-rating>
       </div>
     );
   }
@@ -785,7 +785,7 @@ import { AppComponent } from './app.component';
 export class AppModule { }
 ```
 
-The `CUSTOM_ELEMENTS_SCHEMA` allows Angular to ignore unknown tags, since they are Web Components. This prevents the compiler raises errors because of the presence of `<my-rating>` tag in the application's markup. In fact, now you can use this tag in any HTML template.
+The `CUSTOM_ELEMENTS_SCHEMA` allows Angular to ignore unknown tags since they are Web Components. This prevents the compiler raises errors because of the presence of `<my-rating>` tag in the application's markup. In fact, now you can use this tag in any HTML template.
 
 {% include tweet_quote.html quote_text="Using @stenciljs web components with @reactjs and @angular is easy." %}
 

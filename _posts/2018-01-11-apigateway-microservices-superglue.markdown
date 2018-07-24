@@ -26,8 +26,9 @@ tags:
 - apigateway
 related:
 - 2017-07-14-getting-a-competitive-edge-with-a-microservices-based-architecture
-- 2017-11-15-api-less-scary-approach
-- 2017-10-13-how-do-i-modernize-my-legacy-system
+- 2018-03-26-application-metrics-with-express-gateway
+- 2018-04-20-express-gateway-kubernetes
+
 ---
 
 **TL;DR:** In this tutorial, I'll show you how an API Gateway can be a great tool when you have multiple

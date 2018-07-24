@@ -24,7 +24,7 @@ tags:
 - apigateway
 related:
 - 2018-01-11-apigateway-microservices-superglue
-- 2017-07-14-getting-a-competitive-edge-with-a-microservices-based-architecture
+- 2018-08-01-api-compatibility-express-gateway
 - 2017-11-15-api-less-scary-approach
 ---
 
@@ -144,7 +144,7 @@ const statusCodeCounter = new metrics.Counter({
 ```
 
 Here we're declaring a new Prometheus Counter called `status_code` that will track all the responses and categorize
-them based on the declared labels (`['type', 'status_code', 'consumer', 'apiendpoint']`): 
+them based on the declared labels (`['type', 'status_code', 'consumer', 'apiendpoint']`):
 
 ```javascript
 pluginContext.registerAdminRoute((app) => {

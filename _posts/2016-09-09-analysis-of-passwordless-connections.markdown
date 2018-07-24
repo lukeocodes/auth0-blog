@@ -23,7 +23,7 @@ related:
 - 2016-04-21-want-skyrocketing-growth-you-need-to-offer-a-free-trial
 ---
 
-Last year we launched [Auth0 Passwordless](https://auth0.com/passwordless) and since then, we've seen increasing success. Passwordless is a method of removing passwords from the login process completely. Instead, it uses one-time codes or “magic links” sent to your user's SMS or email, or uses the iPhone's TouchID as a method of authentication. 
+Last year we launched [Auth0 Passwordless](https://auth0.com/passwordless) and since then, we've seen increasing success. Passwordless is a method of removing passwords from the login process completely. Instead, it uses one-time codes or “magic links” sent to your user's SMS or email as a method of authentication. 
 
 With [59% of users](https://www.passwordboss.com/password-habits-survey-part-1/) admitting to reusing passwords to avoid having to remember multiple, and the process of recovering a lost password being unnecessarily unpleasant, Passwordless offers a much simpler and more streamlined user experience.
 
@@ -68,7 +68,7 @@ So which of these is the “real” estimate? The truth likely lies somewhere in
 
 Developing your own in-house SMS API for passwordless login is both [difficult and costly](https://auth0.com/blog/how-passwordless-sms-authentication-can-improve-your-app/). Luckily, implementation of Auth0’s Passwordless Logins is quick and easy to achieve. 
 
-Within the Auth0 Dashboard, you can choose to configure SMS, Email, TouchID or all three Passwordless options. Using SMS and Email will send a magic code or link that your user can type in or click to login. TouchID is a biometric authentication method storing the user's fingerprint and when detected, using that to log them in.
+Within the Auth0 Dashboard, you can choose to configure SMS, Email, or both Passwordless options. Using SMS and Email will send a magic code or link that your user can type in or click to login.
 
 ![Passwordless Connections](https://cdn.auth0.com/blog/analyzing-passwordless/passwordless-connections.png)
 

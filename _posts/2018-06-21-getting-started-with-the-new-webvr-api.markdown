@@ -49,7 +49,7 @@ To authenticate your users with Google, you are going to use [Auth0](https://aut
 
 ### Creating an Auth0 Application
 
-After signing up for your Auth0 account, you will have to create a new [Auth0 Application](https://auth0.com/docs/applications) to represent your WebVR app. To do this, [head to the Applications section of your management dashboard](https://manage.auth0.com/#/applications) and click on the _Create Application_ button. Then, fill the form presented as follows:
+After signing up for your Auth0 account, you will have to create a new [Auth0 Application](https://auth0.com/docs/applications) to represent your WebVR app. To do this, [head to the Applications section of your management dashboard](https://manage.auth0.com/#/applications) and click on the _Create Application_ button. Then, fill out the form presented as follows:
 
 - _Name_: Any name to identify your application. Something like "WebVR Tutorial" will do.
 - _Choose an application type_: Select _Single Page Web Applications_ here.
@@ -163,7 +163,7 @@ So, now, create the `stage.html` file and add the following code:
       overflow: hidden;
     }
 
-    /* Position the button on the bottom of the page. */
+    /* Position the button at the bottom of the page. */
 
     #ui {
       position: absolute;
@@ -393,7 +393,7 @@ Below is the complete code with the variable declaration and the three functions
 {% endraw %}
 {% endhighlight %}
 
-To have a better understand of what is going on, the following section will provide a better explanation of different parts of this code.
+To have a better understanding of what is going on, the following section will provide a better explanation of different parts of this code.
 
 #### **The `onLoad` Function**
 
@@ -463,14 +463,14 @@ console.log(desert);
 scene.add(desert);
 ```
 
-Then, you add lighting to your scene. For this scene, all you need is the ambient light. So you create a white coloured light and add it to your scene.
+Then, you add lighting to your scene. For this scene, all you need is the ambient light. So you create a white colored light and add it to your scene.
 
 ```javascript
 const ambientLight = new THREE.AmbientLight(0xffffff);
 scene.add(ambientLight);
 ```
 
-Then, you add users' name in space using a `TextGeometry` after loading your desired font and add it to the scene. Note that you get users' name from the profile data stored in `localStorage`.
+Then, you add the users' name in space using a `TextGeometry` after loading your desired font and add it to the scene. Note that you get users' name from the profile data stored in `localStorage`.
 
 ```javascript
 //Add name text

@@ -7,7 +7,7 @@ date: "2018-06-12 08:30"
 category: Technical Guide, Angular
 author:
   name: "Ravi Kiran"
-  url: "sravi_kiran"
+  url: "#"
   mail: "yuvakiran2009@gmail.com"
   avatar: "https://cdn.auth0.com/blog/guest-author/ravi_kiran.jpeg"
 design:
@@ -26,11 +26,11 @@ related:
 - 2016-09-29-angular-2-authentication
 ---
 
-**TL;DR:** Charts create some of the most catchy sections on any business applications. A chart that updates in real time is even more catchy/useful and adds huge value for users. Here, you will see how to create real-time charts using [Angular](https://angular.io/), [D3](https://d3js.org/), and [Socket.IO](https://socket.io/). You can find the final code produced throughout this article in [this GitHub repository](https://github.com/auth0-blog/angular-d3-socketio).
+**TL;DR:** Charts create some of the most catchy sections on any business applications. A chart that updates in real time is even more catchy/useful and adds huge value to users. Here, you will see how to create real-time charts using [Angular](https://angular.io/), [D3](https://d3js.org/), and [Socket.IO](https://socket.io/). You can find the final code produced throughout this article in [this GitHub repository](https://github.com/auth0-blog/angular-d3-socketio).
 
 ## Introduction
 
-With the evolution of the web, needs of users are also increasing. The capabilities of the web in the present era can be used to build very rich interfaces. The interfaces may include widgets in the dashboards, huge tables with incrementally loading data, different types of charts and anything that you can think of. Thanks to the technologies like WebSockets, users want to see the UI updated as early as possible. This is a good problem for you to know how to deal with.
+With the evolution of the web, the needs of users are also increasing. The capabilities of the web in the present era can be used to build very rich interfaces. The interfaces may include widgets in the dashboards, huge tables with incrementally loading data, different types of charts and anything that you can think of. Thanks to the technologies like WebSockets, users want to see the UI updated as early as possible. This is a good problem for you to know how to deal with.
 
 In this article, you will build a virtual market application that shows a D3 multi-line chart. That chart will consume data from a Node.js backend consisting of an Express API and a SocketIO instance to get this data in real time.
 
@@ -46,11 +46,11 @@ So, to create this server and this Angular application, you will a directory to 
 # move into the server directory
 cd virtual-market/server/
 
-# initialise it as an NPM project
+# initialize it as an NPM project
 npm init -y
 ```
 
-This command will generate the `package.json` file with some default properties. After initialising this directory as a NPM project, run the following command to install some dependencies of the server:
+This command will generate the `package.json` file with some default properties. After initializing this directory as an NPM project, run the following command to install some dependencies of the server:
 
 ```bash
 npm install express moment socket.io
@@ -122,9 +122,9 @@ After saving this file, you can check if everything is going well. Run the follo
 node index.js
 ```
 
-As this command starts your Node.js server on port `3000`, you can visit the [`http://localhost:3000/api/market`](http://localhost:3000/api/market) URL to see the market updates on last few days.
+As this command starts your Node.js server on port `3000`, you can visit the [`http://localhost:3000/api/market`](http://localhost:3000/api/market) URL to see the market updates on the last few days.
 
-![Fake market data to show on real-time Angular application.](https://cdn.auth0.com/blog/angular-d3-socketio/market-data-v2.png)
+![Fake market data to show on the real-time Angular application.](https://cdn.auth0.com/blog/angular-d3-socketio/market-data-v2.png)
 
 ### Adding Socket.IO to Serve Data in Real Time
 
@@ -558,7 +558,7 @@ constructor(private marketStatusSvc: MarketStatusService) {
 
 In the above snippet, the statements marked with the numbers are the new lines added to the constructor. Observe the statement labeled with 3. This statement creates a new array instead of updating the field `marketStatus`. This is done to let the consuming `app-market-chart` component know about the change when you have an update.
 
-The last change you will need to do to see the chart working in real time is to make the flowing data hit the chart. To do this, open the `market-chart.component.ts` file and add the following method the `MarketChartComponent` class:
+The last change you will need to do to see the chart working in real time is to make the flowing data hit the chart. To do this, open the `market-chart.component.ts` file and add the following method to the `MarketChartComponent` class:
 
 ```typescript
 updateChart() {

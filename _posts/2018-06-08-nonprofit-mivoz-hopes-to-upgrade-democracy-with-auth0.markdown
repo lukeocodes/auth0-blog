@@ -33,7 +33,7 @@ Trusting elections is tough when more than [two-thirds of Uruguayans surveyed](h
 
 Social media has programmed people to trust information found via their social networks for both good and bad outcomes. What if that interaction, trust, and energy could be harnessed in a way that allowed each voter to have a say in each political decision, instead of waiting years to weigh in during the election of a representative?
 
-MiVoz is hoping to prove that direct democracy doesn’t have to be unwieldy or even time consuming. By creating an effective and secure digital platform, taking part in democracy could become a more seamless part of modern lives.
+MiVoz is hoping to prove that direct democracy doesn’t have to be unwieldy or even time-consuming. By creating an effective and secure digital platform, taking part in democracy could become a more seamless part of modern lives.
 
 ## Mending Trust with Digital Values like Transparency
 
@@ -45,13 +45,13 @@ For the initial phase, MiVoz is targeting Uruguay’s National Elections of 2019
 
 As a nonprofit, MiVoz needed the most efficient and low-cost method of securely authenticating voters. But the big issue was trust. Based on past experience with political parties, citizens in Uruguay were reluctant to place their trust in yet another political party.
 
-“We really want to let people know that they can use the tool that we're providing because it's really safe, because one vote needs to correspond to one person. Auth0 was really a blessing from my perspective because it's really the best way to go,” says Giovanetti.
+“We really want to let people know that they can use the tool that we're providing because it's really safe because one vote needs to correspond to one person. Auth0 was really a blessing from my perspective because it's really the best way to go,” says Giovanetti.
 
 While MiVoz is still exploring fully digital means of uploading and validating voter credentials, currently, government-issued identification will be used to validate each voter in person via various locations throughout Uruguay. After that initial effort, Auth0 will securely authenticate voters as they sign in to access MiVoz’s platform.
 
 ## Encouraging Participation through Collaboration and Delegation
 
-The initial rollout is focused on the 2019 elections, but later plans include the ability for voters to weigh in on each decision their representative faces — including the possibility of delegating votes on topics like energy or education to close friends. “No one knows everything about every single topic,” says Giovanetti. “We're trying to provide the right tools for people to really represent themselves, sometimes through a trustee who can make a better decision that ourselves because of their background.”
+The initial rollout is focused on the 2019 elections, but later plans include the ability for voters to weigh in on each decision their representative faces — including the possibility of delegating votes on topics like energy or education to close friends. “No one knows everything about every single topic,” says Giovanetti. “We're trying to provide the right tools for people to really represent themselves, sometimes through a trustee who can make a better decision than ourselves because of their background.”
 
 Originally, MiVoz tried DemocracyOS for collecting votes, but after exploring their voting process, they shifted to Sovereign’s decentralized platform. In addition to encouraging collaboration and discussion through tools like Discourse, MiVoz plans to store credentials using blockchain accessed via an Auth0 plug-in.
  

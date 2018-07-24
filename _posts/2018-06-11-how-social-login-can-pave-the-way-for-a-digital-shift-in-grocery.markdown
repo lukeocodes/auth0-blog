@@ -28,7 +28,7 @@ related:
 
 With its 2017 acquisition of [Whole Foods](https://auth0.com/blog/why-amazon-and-whole-foods-will-change-how-you-shop/), Amazon is changing the competitive landscape in grocery. Now backed by the latest technology, Whole Foods recently announced an overhaul of [90%](https://diginomica.com/2016/06/24/whole-foods-is-replacing-up-to-90-of-its-systems-strong-focus-on-cloud-and-data/) of its operations, replacing legacy systems with digital ones. In order to remain competitive, other grocers must follow suit.
 
-For small or medium-sized grocers, undergoing a [digital transformation](https://auth0.com/blog/3-iam-examples-to-support-digital-transformation/) can be daunting. In essence it is a renewal of everything from back-office operations to how you engage with your customers. Particularly in an industry that relies on physical goods, this change might seem overly complicated and impersonal; however, with a clear set of steps in place, any team can make the change efficiently, remain relevant, and even deepen interactions with shoppers. 
+For small or medium-sized grocers, undergoing a [digital transformation](https://auth0.com/blog/3-iam-examples-to-support-digital-transformation/) can be daunting. In essence, it is a renewal of everything from back-office operations to how you engage with your customers. Particularly in an industry that relies on physical goods, this change might seem overly complicated and impersonal; however, with a clear set of steps in place, any team can make the change efficiently, remain relevant, and even deepen interactions with shoppers. 
 
 The first step in making the shift to a digital business is implementing a solid [customer identity and access management](https://auth0.com/b2c-customer-identity-management) (CIAM) system. This is the lynchpin of any digital strategy: accounting for and having a clear view at any time of all of your customers will lay the foundation for creating a more secure and personalized shopping experience. 
 
@@ -36,7 +36,7 @@ While many tools are at your fingertips to craft a CIAM system, a [Social Login 
 
 ## Streamline Your Registration Process with Social Login
 
-[86 percent of this survey's users](http://www.webhostingbuzz.com/blog/2013/03/21/whos-sharing-what/) have historically reported being bothered by having to create new accounts on websites. It's easy to click out of a site when the registration process is taking more than a couple of minutes. Social Login can therefore be key to avoid losing potential customers.
+[86 percent of this survey's users](http://www.webhostingbuzz.com/blog/2013/03/21/whos-sharing-what/) have historically reported being bothered by having to create new accounts on websites. It's easy to click out of a site when the registration process is taking more than a couple of minutes. Social Login can, therefore, be key to avoid losing potential customers.
 
 Social Login is also a more secure method for your shoppers to engage online. Studies show that [65% of internet users](http://www.pewinternet.org/2017/01/26/americans-and-cybersecurity/) do not practice safe password management techniques, preferring to memorize or write down a password instead. This can lead to having to constantly re-create passwords and making your sensitive data more vulnerable to hackers. 
 
