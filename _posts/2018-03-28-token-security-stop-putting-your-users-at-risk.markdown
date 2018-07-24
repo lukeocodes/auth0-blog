@@ -26,7 +26,6 @@ related:
 - 2018-03-22-cambridge-analytica-and-facebook
 ---
 
-
 persona: SPA/frontend developers who works with React (but is familiar with Angular and/or Vue). They have used Google Sign-in and similar offerings using identity provider's own SDKs such as Google Platform, but have no specific experience with OIDC
 goals (after reading this article, the reader will understand):
   - what is OIDC is and what is implicit grant
@@ -42,7 +41,7 @@ goals (after reading this article, the reader will understand):
 
 
 
-**TL;DR:** Single-Page Applications (SPAs) aren't always the easiest thing to keep secure. But if you're developing an SPA, there are some best practices that you should know. After reading this article, I hope to have given you the tools you need to keep your SPAs as secure as they can be.
+**TL;DR:** Single-Page Applications (SPA)s are not the easiest thing to keep secure. But if you're developing an SPA, there are some best practices that you should know. After reading this article, I hope to have given you the tools you need to keep your SPAs as secure as they can be.
 
 ## What is OIDC and how can it help me?
 
@@ -58,8 +57,16 @@ You'll hear the term **Flow** mentioned a lot in identity posts, and this one is
 
 **Flows** are an underpinning of the OAuth 2.0 specification and they describe different methods to securely identify a user from different client types. The limitations and needs of a website (with a backend server) and a mobile app are quite different. They both have the requirement to identify a user, but they might not be able to do it in quite the same way. **Flows** address our different requirements and we have a great article to help explain [which OAuth flow to use](https://auth0.com/docs/api-auth/which-oauth-flow-to-use).
 
-When you're building an SPA and you don't have a backend server, you're requirements are different again. Auth0 provides a [nifty SDK for JavaScript](https://auth0.com/docs/libraries/auth0js/v9) that allows you log in a user, gain an access token and use it for authorized requests to you
+When building an SPA that doesn't have a backend server, the requirements are different again. Auth0 provides a nifty [SDK for JavaScript](https://auth0.com/docs/libraries/auth0js/v9) that allows the log in of a user, gets an access token, and uses the access token it for authorized requests to the resources it needs.
 
-![Single-Page Applications (SPAs) aren't always the easiest thing to keep secure](https://i.redd.it/5zm413x9m7c01.png)
+![Picking the right flow](https://cdn2.auth0.com/docs/media/articles/api-auth/oauth2-grants-flow.png)
 
-## Implicit
+It's not always plain sailing though. SPAs are not the easiest thing to keep secure and most of the recommended flows require a certain amount of privacy on the client. JavaScript can't keep a secret—literally. The code is open and accessible to anyone who knows their way around a developer console, among other methods.
+
+Enter the Implicit Grant
+
+
+
+![Single-Page Applications are not the easiest thing to keep secure](https://i.redd.it/5zm413x9m7c01.png)
+
+## Implicit 
