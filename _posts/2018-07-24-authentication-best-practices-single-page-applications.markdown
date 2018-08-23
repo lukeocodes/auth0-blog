@@ -45,28 +45,22 @@ goals (after reading this article, the reader will understand):
 
 ## What is OIDC and how can it help me?
 
-OpenID Connect (OIDC) is an identity layer that sits on top of [OAuth 2.0](https://auth0.com/blog/oauth2-the-complete-guide/), which is an authorization framework. It's was designed to allow a [**client**](https://auth0.com/identity-glossary#client) to identify an already authenticated user. 
+OpenID Connect (OIDC) is an identity layer that sits on top of [OAuth 2.0](https://auth0.com/blog/oauth2-the-complete-guide/), which is an authorization framework. It's was designed to allow a **client** to identify an already authenticated user. 
 
 The first time the user authenticates with an authorization server that conforms to OIDC, they are prompted to authorize the clients claim to certain resources. This part of the process is defined by OIDC. It’s the client (e.g. auth0.com) claiming access to information from a resource, which in this case includes an identity provider (e.g. linkedin.com)
  
 ![Auth0 requesting access to my LinkedIn profile using OIDC](/Users/olaf/Desktop/auth0-requesting-access-to-linkedin-profile-via-oidc.png)
  
-Once authorized the client receives an `access_token` that holds its claim to the resource. The `access_token` can be used to make requests to a protected endpoint on the resource to fetch this data, and nothing else. Tokens ***generally*** expire quick enough, so that if a bad-actor were to gain a copy of the `access_token`, the damage will be limited to a smaller window. 
+Once authorized the client receives a token that holds its claim to the resource. The token can be used to make requests to a protected endpoint on the resource to fetch this data, and nothing else. Tokens ***generally*** expire quick enough, so that if a bad-actor were to gain a copy of the token, the damage will be limited to a smaller window.
 
-You'll hear the term **Flow** mentioned a lot in identity posts, and this one is no different—***sorry***.
+You'll hear the term *flow* mentioned a lot in identity posts, and this one is no different–**sorry**.
 
-**Flows** are an underpinning of the OAuth 2.0 specification and they describe different methods to securely identify a user from different client types. The limitations and needs of a website (with a backend server) and a mobile app are quite different. They both have the requirement to identify a user, but they might not be able to do it in quite the same way. **Flows** address our different requirements and we have a great article to help explain [which OAuth flow to use](https://auth0.com/docs/api-auth/which-oauth-flow-to-use).
+> **Note:** *Flows* are part of the OAuth 2.0 specification and they describe the interaction between different roles in the authorization process.
+ 
+The limitations and needs of a website with a backend server and a native application are quite different. They both have the requirement to identify a user, but they might not be able to do it in quite the same way. There are more types of client with more *flows*, and we have a great documentation to help explain [which OAuth 2.0 flow to use](https://auth0.com/docs/api-auth/which-oauth-flow-to-use).
 
-When building an SPA that doesn't have a backend server, the requirements are different again. Auth0 provides a nifty [SDK for JavaScript](https://auth0.com/docs/libraries/auth0js/v9) that allows the log in of a user, gets an access token, and uses the access token it for authorized requests to the resources it needs.
+Another example is a website without a backend server—or Single-Page Application (SPA), which can't use the same *flow* as a regular site that has access to a server. Auth0 provides a nifty [JavaScript library](https://auth0.com/docs/libraries/auth0js/v9) that allows SPAs to safely authorize a user. The *flow* we use for an SPA is the implicit grant flow. 
 
-![Picking the right flow](https://cdn2.auth0.com/docs/media/articles/api-auth/oauth2-grants-flow.png)
+![Picking the right grant flow](https://cdn2.auth0.com/docs/media/articles/api-auth/oauth2-grants-flow.png)
 
-It's not always plain sailing though. SPAs are not the easiest thing to keep secure and most of the recommended flows require a certain amount of privacy on the client. JavaScript can't keep a secret—literally. The code is open and accessible to anyone who knows their way around a developer console, among other methods.
-
-Enter the Implicit Grant
-
-
-
-![Single-Page Applications are not the easiest thing to keep secure](https://i.redd.it/5zm413x9m7c01.png)
-
-## Implicit 
+## The strengths and weaknesses of the Implicit Grant flow
