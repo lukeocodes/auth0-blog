@@ -32,7 +32,7 @@ related:
 - 2016-01-27-setting-up-passwordless-authentication-with-the-auth0-dashboard
 ---
 
-**tl;dr**: Auth0 Passwordless is a drop-in authentication system based on Email, SMS, or Apple's TouchID that improves security and user experience. Check it out [auth0.com/passwordless](https://auth0.com/passwordless).
+**tl;dr**: Auth0 Passwordless is a drop-in authentication system based on Email or SMS, that improves security and user experience. Check it out [auth0.com/passwordless](https://auth0.com/passwordless).
 
 ---
 
@@ -52,9 +52,7 @@ A third trend we've started to see is to **remove the password input from the lo
 ![trend to remove password input from login box](https://cdn.auth0.com/blog/passwordless/pwdless1.png)
 
 
-We’ve been experimenting over the past few months, and we’re ready to release our first version today. With [Auth0 Passwordless](https://auth0.com/passwordless) you can use one time codes or “magic links” delivered via SMS or e-mail, or use the iPhone’s TouchID without having to worry about the implementation details.
-
-![SMS authentication, email authentication and TouchID authentication](https://cdn.auth0.com/blog/passwordless/pwdless-locks.png)
+We’ve been experimenting over the past few months, and we’re ready to release our first version today. With [Auth0 Passwordless](https://auth0.com/passwordless) you can use one time codes or “magic links” delivered via SMS or e-mail without having to worry about the implementation details.
 
 ## Log in via e-mail or SMS, simplified
 

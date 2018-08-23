@@ -11,8 +11,8 @@ design:
 author:
   name: Dan Arias
   url: http://twitter.com/getDanArias
-  mail: dan.arias@auth.com
-  avatar: https://pbs.twimg.com/profile_images/918124318076256256/wMFapJ1C_400x400.jpg
+  mail: dan.arias@auth0.com
+  avatar: https://pbs.twimg.com/profile_images/1002301567490449408/1-tPrAG__400x400.jpg
 tags:
   - reactive-programming
   - javascript
@@ -126,39 +126,48 @@ The recommendation for TypeScript developers is to use [`rxjs-tslint`](https://g
 
 The following rules have been designed by the RxJS team to help JavaScript developers refactor `import` paths:
 
-* `rxjs`: Contains creation methods, types, schedulers, and utilities.
+- `rxjs`: Contains creation methods, types, schedulers, and utilities.
 
 ```javascript
-import { Observable, Subject, asapScheduler, pipe, of, from, interval, merge, fromEvent } from 'rxjs';
+import {
+  Observable,
+  Subject,
+  asapScheduler,
+  pipe,
+  of,
+  from,
+  interval,
+  merge,
+  fromEvent
+} from "rxjs";
 ```
 
-* `rxjs/operators`: Contains all pipeable operators.
+- `rxjs/operators`: Contains all pipeable operators.
 
 ```javascript
-import { map, filter, scan } from 'rxjs/operators';
+import { map, filter, scan } from "rxjs/operators";
 ```
 
-* `rxjs/webSocket`: Contains the web socket subject implementation.
+- `rxjs/webSocket`: Contains the web socket subject implementation.
 
 ```javascript
-import { webSocket } from 'rxjs/webSocket';
+import { webSocket } from "rxjs/webSocket";
 ```
 
-* `rxjs/ajax`: Contains the Rx ajax implementation.
+- `rxjs/ajax`: Contains the Rx ajax implementation.
 
 ```javascript
-import { ajax } from 'rxjs/ajax';
+import { ajax } from "rxjs/ajax";
 ```
 
-* `rxjs/testing`: Contains the testing utilities for RxJS.
+- `rxjs/testing`: Contains the testing utilities for RxJS.
 
 ```javascript
-import { TestScheduler } from 'rxjs/testing';
+import { TestScheduler } from "rxjs/testing";
 ```
 
 <blockquote class="twitter-tweet" data-conversation="none" data-lang="en"><p lang="en" dir="ltr">Have you tried updating your app using rxjs-tslint?</p>&mdash; Ben Lesh 🛋️👑🔥 (@BenLesh) <a href="https://twitter.com/BenLesh/status/989268922556862464?ref_src=twsrc%5Etfw">April 25, 2018</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-
 
 ### Use Piping Instead of Chaining
 
@@ -174,15 +183,15 @@ During [ng-conf 2018](https://www.ng-conf.org/sessions/introducing-rxjs6/), Ben 
 
 Follow these steps to reactor your operator chains into pipes:
 
-* Install all operators used from `rxjs/operators`.
+- Install all operators used from `rxjs/operators`.
 
- > **Note** Some operators have a name change due to name collisions with JavaScript reserved words! These include: `do` -> `tap`, `catch` -> `catchError`, `switch` -> `switchAll`, `finally` -> `finalize`.
+> **Note** Some operators have a name change due to name collisions with JavaScript reserved words! These include: `do` -> `tap`, `catch` -> `catchError`, `switch` -> `switchAll`, `finally` -> `finalize`.
 
 ```javascript
-import { map, filter, catchError, mergeMap } from 'rxjs/operators';
+import { map, filter, catchError, mergeMap } from "rxjs/operators";
 ```
 
-* Attach a [`pipe()`](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-pipe) method to the source and wrap all the operators within it. Ensure that the `.` is removed from each operator name and that they are comma-delimited. Remember that some operators need to change their names.
+- Attach a [`pipe()`](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-pipe) method to the source and wrap all the operators within it. Ensure that the `.` is removed from each operator name and that they are comma-delimited. Remember that some operators need to change their names.
 
 The following is an example of a pipeable refactoring from the release notes:
 
@@ -190,23 +199,28 @@ The following is an example of a pipeable refactoring from the release notes:
 // an operator chain
 source
   .map(x => x + x)
-  .mergeMap(n => of(n + 1, n + 2)
-    .filter(x => x % 1 == 0)
-    .scan((acc, x) => acc + x, 0)
+  .mergeMap(n =>
+    of(n + 1, n + 2)
+      .filter(x => x % 1 == 0)
+      .scan((acc, x) => acc + x, 0)
   )
-  .catch(err => of('error found'))
+  .catch(err => of("error found"))
   .subscribe(printResult);
 
 // must be updated to a pipe flow
 
-source.pipe(
-  map(x => x + x),
-  mergeMap(n => of(n + 1, n + 2).pipe(
-    filter(x => x % 1 == 0),
-    scan((acc, x) => acc + x, 0),
-  )),
-  catchError(err => of('error found')),
-).subscribe(printResult);
+source
+  .pipe(
+    map(x => x + x),
+    mergeMap(n =>
+      of(n + 1, n + 2).pipe(
+        filter(x => x % 1 == 0),
+        scan((acc, x) => acc + x, 0)
+      )
+    ),
+    catchError(err => of("error found"))
+  )
+  .subscribe(printResult);
 ```
 
 Notice how we use `pipe()` twice in the above code as internal sources are also piped.
@@ -234,9 +248,8 @@ For a complete list of the `v6` creation functions that replace `v5` classes, pl
 
 **Special case:**
 
-* [`ConnectableObservable`](https://github.com/ReactiveX/rxjs/blob/master/src/internal/observable/ConnectableObservable.ts) is hidden from direct use in `v6`. To access it, use the operators [`multicast`](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-multicast), [`publish`](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-publish), [`publishReplay`](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-publishReplay), [`publishLast`](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-publishLast).
-* [`SubscribeOnObservable`](https://github.com/ReactiveX/rxjs/blob/master/spec/observables/SubscribeOnObservable-spec.ts) is hidden from direct use in `v6`. To access it, use the operator [`subscribeOn`](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-subscribeOn).
-
+- [`ConnectableObservable`](https://github.com/ReactiveX/rxjs/blob/master/src/internal/observable/ConnectableObservable.ts) is hidden from direct use in `v6`. To access it, use the operators [`multicast`](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-multicast), [`publish`](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-publish), [`publishReplay`](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-publishReplay), [`publishLast`](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-publishLast).
+- [`SubscribeOnObservable`](https://github.com/ReactiveX/rxjs/blob/master/spec/observables/SubscribeOnObservable-spec.ts) is hidden from direct use in `v6`. To access it, use the operator [`subscribeOn`](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-subscribeOn).
 
 ### Removing resultSelector
 
@@ -250,10 +263,9 @@ For other functions that have `resultSelector` as a parameter, such as mapping o
 
 For more details on this rare implementation, please visit the [RxJS documentation](https://github.com/ReactiveX/rxjs).
 
-
 ## Other RxJS 6 Deprecations
 
-### `Observable.if`  and `Observable.throw`.
+### `Observable.if` and `Observable.throw`.
 
 [`Observable.if`](http://reactivex.io/rxjs/file/es6/observable/if.js.html) has been replaced by [`iif()`](https://github.com/ReactiveX/rxjs/blob/master/src/internal/observable/iif.ts) and [`Observable.throw`](http://reactivex.io/rxjs/file/es6/observable/throw.js.html) is now [`throwError()`](https://github.com/ReactiveX/rxjs/blob/master/src/internal/observable/throwError.ts). You can use `rxjs-tslint` to convert these deprecated `Observable` method calls into function calls.
 
@@ -285,64 +297,63 @@ throwError(new Error());
 
 According to the migration guide, other methods have been deprecated and refactored:
 
-
 **merge**
 
 ```javascript
-import { merge } from 'rxjs/operators';
+import { merge } from "rxjs/operators";
 a$.pipe(merge(b$, c$));
 
 // becomes
 
-import { merge } from 'rxjs';
+import { merge } from "rxjs";
 merge(a$, b$, c$);
 ```
 
 **concat**
 
 ```javascript
-import { concat } from 'rxjs/operators';
+import { concat } from "rxjs/operators";
 a$.pipe(concat(b$, c$));
 
 // becomes
 
-import { concat } from 'rxjs';
+import { concat } from "rxjs";
 concat(a$, b$, c$);
 ```
 
 **combineLatest**
 
 ```javascript
-import { combineLatest } from 'rxjs/operators';
+import { combineLatest } from "rxjs/operators";
 a$.pipe(combineLatest(b$, c$));
 
 // becomes
 
-import { combineLatest } from 'rxjs';
+import { combineLatest } from "rxjs";
 combineLatest(a$, b$, c$);
 ```
 
 **race**
 
 ```javascript
-import { race } from 'rxjs/operators';
+import { race } from "rxjs/operators";
 a$.pipe(race(b$, c$));
 
 // becomes
 
-import { race } from 'rxjs';
+import { race } from "rxjs";
 race(a$, b$, c$);
 ```
 
 **zip**
 
 ```javascript
-import { zip } from 'rxjs/operators';
+import { zip } from "rxjs/operators";
 a$.pipe(zip(b$, c$));
 
 // becomes
 
-import { zip } from 'rxjs';
+import { zip } from "rxjs";
 zip(a$, b$, c$);
 ```
 
@@ -357,6 +368,5 @@ Watch the complete introduction to RxJS 6 by Ben Lesh:
 <p style="text-align: center;">
   <iframe width="560" height="315" src="https://www.youtube.com/embed/JCXZhe6KsxQ?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 </p>
-
 
 {% include asides/about-auth0.markdown %}

@@ -599,6 +599,8 @@ Log into your Auth0 [management dashboard](https://manage.auth0.com) and let's m
 
 Change the **Application Type** to `Single Page Application`. Then add `http://localhost:4200/callback` to the **Allowed Callback URLs** field.
 
+Next add `http://localhost:4200` to the **Allowed Logout URLs** field.
+
 Finally, click on the **Advanced Settings** link at the bottom and select the **OAuth** tab. Make sure that the **JsonWebToken Signature Algorithm** is set to `RS256`.
 
 Make note of the **Client ID**; we will need this to set up the configuration for our Angular app's authentication.
@@ -717,11 +719,9 @@ export class AuthService {
   }
 
   logout() {
-    // Remove auth data and update login status
-    this.expiresAt = undefined;
-    this.userProfile = undefined;
-    this.accessToken = undefined;
-    this.authenticated = false;
+    // Log out of Auth0 session
+    // Ensure that returnTo URL is specified in Auth0
+    // Application settings for Allowed Logout URLs
     this.auth0.logout({
       returnTo: 'http://localhost:4200',
       clientID: environment.auth.clientID

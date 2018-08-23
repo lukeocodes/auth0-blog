@@ -25,7 +25,7 @@ tags:
 related:
 - jp-reactjs-authentication
 - jp-vuejs2-authentication
-lang: jp
+lang: ja
 alternate_locale_en: refresh-tokens-what-are-they-and-when-to-use-them
 
 ---

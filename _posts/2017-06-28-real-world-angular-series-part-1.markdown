@@ -3,7 +3,8 @@ layout: post
 title: "Real-World Angular Series - Part 1: MEAN Setup & Angular Architecture"
 description: "Build and deploy a real-world app with MongoDB, Express, Angular, and Node (MEAN): MEAN setup and Angular architecture."
 date: 2017-06-28 8:30
-category: Technical guide, Angular, Angular 4
+updated: 2018-07-15 8:30
+category: Technical guide, Angular, Angular 6
 banner:
   text: "Auth0 makes it easy to add authentication to your Angular application."
 author:
@@ -27,12 +28,12 @@ related:
 
 ---
 
-<div class="alert alert-danger alert-icon">
+<div class="alert alert-info alert-icon">
   <i class="icon-budicon-487"></i>
-  <strong>WARNING: This series of articles uses Angular 5 and RxJS 5.</strong> Please be aware that code changes are necessary to use Angular 6 and RxJS 6 with this tutorial. We are in the process of upgrading the series to latest versions. In the meantime, you can <a href="https://update.angular.io/">follow the update instructions here</a> for more information. Thank you for your patience!
+  <strong>This article was updated June 15, 2018.</strong> This series and associated repository use Angular 6, CLI 6, RxJS 6, and revised recommendations regarding the storage of sensitive data.
 </div>
 
-**TL;DR:** This 8-part tutorial series covers building and deploying a full-stack JavaScript application from the ground up with hosted [MongoDB](https://www.mongodb.com/), [Express](https://expressjs.com/), [Angular (v2+)](https://angular.io), and [Node.js](https://nodejs.org) (MEAN stack). The completed code is available in the [mean-rsvp-auth0 GitHub repo](https://github.com/auth0-blog/mean-rsvp-auth0/) and a deployed sample app is available at [https://rsvp.kmaida.net](https://rsvp.kmaida.net).  **Part 1 of the tutorial series covers MEAN setup and the architecture for our Angular app.**
+**TL;DR:** This 8-part tutorial series covers building and deploying a full-stack JavaScript application from the ground up with hosted [MongoDB](https://www.mongodb.com/), [Express](https://expressjs.com/), [Angular](https://angular.io), and [Node.js](https://nodejs.org) (MEAN stack). The completed code is available in the [mean-rsvp-auth0 GitHub repo](https://github.com/auth0-blog/mean-rsvp-auth0/) and a deployed sample app is available at [https://rsvp.kmaida.net](https://rsvp.kmaida.net).  **Part 1 of the tutorial series covers MEAN setup and the architecture for our Angular app.**
 
 ---
 
@@ -144,14 +145,12 @@ Now open the `src/index.html` file and add a link to the [Bootstrap](https://v4-
   ...
   <link
     rel="stylesheet"
-    href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
-    integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
     crossorigin="anonymous">
 </head>
 ...
 {% endhighlight %}
-
-> **Note:** At the time of writing, we're using the v4 alpha version of Bootstrap to take advantage of newer features such as the flex grid. As with any pre-release tool, there may be bugs. If a later release is available, please upgrade. If you choose to downgrade to v3, be aware that many of the classes in the provided HTML templates _will not work_ and will need to be replaced.
 
 ### Global SCSS
 
@@ -159,7 +158,7 @@ We'll now add some SCSS to manage global styling for our application. This will 
 
 First, open your `src/assets` folder and create a new `scss` folder. Now find the `src/styles.scss` file and move it into `src/assets/scss`.
 
-Next, open the `.angular-cli.json` file. Find the `styles` property and change it to the following:
+Next, open the `angular-cli.json` file. Find the `styles` property and change it to the following:
 
 ```js
 ...
@@ -171,7 +170,7 @@ Next, open the `.angular-cli.json` file. Find the `styles` property and change i
 
 Now our project will look for this file in the `assets` folder rather than in the root.
 
-> **Note:** If you have the Angular CLI server running, you'll need to stop and restart it after making changes to the `.angular-cli.json` configuration file.
+> **Note:** If you have the Angular CLI server running, you'll need to stop and restart it after making changes to the `angular-cli.json` configuration file.
 
 Next, let's create a few SCSS files.
 
@@ -249,9 +248,6 @@ input:-ms-input-placeholder { /* IE 10+ */
 
 /*-- Helpers --*/
 
-.opacity-half {
-  opacity: .5;
-}
 .list-group-item > strong {
   padding-right: 5px;
 }
@@ -312,6 +308,16 @@ Finally, we need to import all the files we just created. Open the `styles.scss`
 @import 'base';
 ```
 
+### Global  Polyfill
+
+The last setup step we'll take is to add a global window polyfill to our `src/polyfills.ts` file. Open this file and add the following:
+
+```typescript
+// src/polyfills.ts
+(window as any).global = window;
+...
+```
+
 Now our Angular app has everything we need to get started developing features. However, before we move forward with any more client side development, let's set up MongoDB and our Node.js API!
 
 ---
@@ -348,7 +354,7 @@ We now need to add a user in order to connect to our database. Click on the data
 
 Now we're ready to use our MongoDB database.
 
-> **Note:** If you prefer, you can host MongoDB locally. [Follow these instructions](https://docs.mongodb.com/manual/installation/) to install MongoDB on your operating system.
+> **Note:** If you prefer, you can host MongoDB locally. [Follow these instructions to install MongoDB](https://docs.mongodb.com/manual/installation/) on your operating system.
 
 ### Set Up MongoBooster
 
@@ -387,20 +393,22 @@ Our Angular application and Node API will use the IDaaS (Identity-as-a-Service) 
 
 ### Sign Up for a Free Auth0 Account
 
-You'll need an [Auth0](https://auth0.com) account to manage authentication. You can sign up for a <a href="https://auth0.com/signup" data-amp-replace="CLIENT_ID" data-amp-addparams="anonId=CLIENT_ID(cid-scope-cookie-fallback-name)">free account here</a>. Next, set up an Auth0 client app and API so Auth0 can interface with an Angular app and Node API.
+You'll need an [Auth0](https://auth0.com) account to manage authentication. You can sign up for a <a href="https://auth0.com/signup" data-amp-replace="CLIENT_ID" data-amp-addparams="anonId=CLIENT_ID(cid-scope-cookie-fallback-name)">free account here</a>. Next, set up an Auth0 application and API so Auth0 can interface with an Angular app and Node API.
 
 > Auth0 provides the simplest and easiest to use [user interface tools to help administrators manage user identities](https://auth0.com/user-management) including password resets, creating and provisioning, blocking and deleting users. [A generous **free tier**](https://auth0.com/pricing) is offered so you can get started with modern authentication.
 
-### Set Up a Client App
+### Set Up an Application
 
-1. Go to your [**Auth0 Dashboard**](https://manage.auth0.com/#/) and click the "[create a new client](https://manage.auth0.com/#/clients/create)" button.
+1. Go to your [**Auth0 Dashboard**](https://manage.auth0.com/#/) and click the "[create a new application](https://manage.auth0.com/#/applications/create)" button.
 2. Give your new app a name (for example: `RSVP MEAN App`) and select "Single Page Web Applications".
-3. In the **Settings** for your new Auth0 client app, add `http://localhost:8083/callback` and `http://localhost:4200/callback` to the **Allowed Callback URLs**.
+3. In the **Settings** for your new Auth0 application, add `http://localhost:8083/callback` and `http://localhost:4200/callback` to the **Allowed Callback URLs**.
 4. In **Allowed Web Origins**, add `http://localhost:8083` and `http://localhost:4200`.
-5. Scroll down to the bottom of the **Settings** section and click "Show Advanced Settings". Choose the **OAuth** tab and make sure the **JsonWebToken Signature Algorithm** is set to "RS256".
-6. If you'd like, you can [set up some social connections](https://manage.auth0.com/#/connections/social). You can then enable them for your app in the **Client** options under the **Connections** tab. The example shown in the screenshot above utilizes username/password database, Facebook, Google, and Twitter.
+5. In **Allowed Logout URLs**, add `http://localhost:4200`.
+6. Make sure the **Use Auth0 instead of the IdP to do Single Sign On** toggle is enabled.
+7. Scroll down to the bottom of the **Settings** section and click "Show Advanced Settings". Choose the **OAuth** tab and make sure the **JsonWebToken Signature Algorithm** is set to "RS256".
+8. If you'd like, you can [set up some social connections](https://manage.auth0.com/#/connections/social). You can then enable them for your app in the **Connections** settings tab for your `RSVP Mean App` application. The example shown in the screenshot above utilizes username/password database, Facebook, Google, and Twitter.
 
-We added two ports to the callback URLs and allowed web origins because we'll be running and testing the app from both during development. Port `4200` is the port the Angular CLI serves the Angular app from. Port `8083` is the port our Node API and server uses: this will be necessary in order to test the production build. When we launch to a production URL, we can either create a new production Auth0 Client or add our production URL to the client as well.
+We added two ports to the callback URLs and allowed web origins because we'll be running and testing the app from both during development. Port `4200` is the port the Angular CLI serves the Angular app from. Port `8083` is the port our Node API and server uses: this will be necessary in order to test the production build. When we launch to a production URL, we can either create a new production Auth0 Application or add our production URL to the app as well.
 
 > **Note:** If you set up social connections, enter App/Client IDs as per the instructions for each connection instead of leaving those fields blank and using Auth0 dev keys. This will be important for token renewal and deployment later.
 
@@ -449,7 +457,7 @@ Open the `server/config.js` file and add the following to it:
 module.exports = {
   AUTH0_DOMAIN: '[YOUR_AUTH0_DOMAIN]', // e.g., kmaida.auth0.com
   AUTH0_API_AUDIENCE: '[YOUR_AUTH0_API_NAME]', // e.g., 'http://localhost:8083/api/'
-  MONGO_URI: process.env.MONGO_URI || 'mongodb://[USER]:[PASSWORD]@[DS######].mlab.com:[PORT]/[DB_NAME]'
+  MONGO_URI: 'mongodb://[USER]:[PASSWORD]@[DS######].mlab.com:[PORT]/[DB_NAME]'
 };
 ```
 
@@ -542,7 +550,7 @@ if (process.env.NODE_ENV !== 'dev') {
 app.listen(port, () => console.log(`Server running on localhost:${port}`));
 ```
 
-Notice that there are a few sections that are environment-dependent. For development, we want to be able to take advantage of the Angular CLI's ability to serve and watch files with [JIT](https://auth0.com/blog/glossary-of-modern-javascript-concepts-part-2#jit) without requiring an entire project build each time we want to check our work. In order to facilitate this, we'll start by separating our Node.js server from our Angular front end in development.
+Notice that there are a few sections that are environment-dependent. For development, we want to be able to take advantage of the Angular CLI's ability to serve and watch files without requiring an entire project build each time we want to check our work. In order to facilitate this, we'll start by separating our Node.js server from our Angular front end in development.
 
 This way, we can run the Node API on [localhost:8083](http://localhost:8083) while the Angular app runs on [localhost:4200](http://localhost:4200). For _production_, we want the Node server to run the API _and_ use a static path to serve the front end. Our MEAN stack should pass routing to the compiled Angular app for deployment.
 
@@ -609,7 +617,7 @@ $ npm install nodemon -g
 
 We should now be able to access both the Angular application and the API in the browser on `localhost`. We can do so by running each of the following commands from the root of our project in separate terminal windows ([VS Code is great at this](https://code.visualstudio.com/docs/editor/integrated-terminal#_managing-multiple-terminals)).
 
-> **Note:** We'll be using separate terminal windows a lot so we can keep watching the app and API while adding components with the Angular CLI.
+> **Note:** We'll be using separate terminal windows a lot so we can keep watching the app and API while adding components with the Angular CLI. Alternatively, you could install [`concurrently`](https://www.npmjs.com/package/concurrently) to simultaneously run commands in the same window using an npm script. For this tutorial, we won't do this since we will need to restart `ng serve` periodically while generating new files, and this is more easily done if we have the CLI command running _separately_ from our Node server.
 
 We can use this command to serve the Angular app:
 
@@ -626,8 +634,6 @@ $ nodemon server
 # OR Mac:
 $ NODE_ENV=dev nodemon server
 ```
-
-> **Note:** On Mac, these commands can be combined: `NODE_ENV=dev nodemon server`.
 
 If we've done everything correctly, the Angular app will compile and show a success message in its terminal. We should also see a message in the Node server terminal confirming that the server is running and that we've successfully connected to MongoDB.
 
@@ -704,7 +710,7 @@ Open `home.component.html` and add:
 {% highlight html %}
 {% raw %}
 <!-- src/app/pages/home/home.component.html -->
-<h1 class="text-center">{{pageTitle}}</h1>
+<h1 class="text-center">{{ pageTitle }}</h1>
 {% endraw %}
 {% endhighlight %}
 
@@ -733,7 +739,7 @@ Let's start with the Header component we just generated. Open the `header.compon
 // src/app/header/header.component.ts
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
-import 'rxjs/add/operator/filter';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-header',
@@ -749,7 +755,9 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     // If nav is open after routing, close it
     this.router.events
-      .filter(event => event instanceof NavigationStart && this.navOpen)
+      .pipe(
+        filter(event => event instanceof NavigationStart && this.navOpen)
+      )
       .subscribe(event => this.toggleNav());
   }
 
@@ -935,7 +943,7 @@ Our Footer component is very simple: just a static paragraph with a link to the 
 {% highlight html %}
 <!-- src/app/footer/footer.component.html -->
 <p class="text-center">
-  MIT 2017
+  MIT 2018
 </p>
 {% endhighlight %}
 
@@ -970,9 +978,8 @@ Open the `app.component.ts` file:
 ```typescript
 // src/app/app.component.ts
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/operator/debounceTime';
+import { fromEvent } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -987,8 +994,10 @@ export class AppComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    Observable.fromEvent(window, 'resize')
-      .debounceTime(200)
+    fromEvent(window, 'resize')
+      .pipe(
+        debounceTime(200)
+      )
       .subscribe((event) => this._resizeFn(event));
 
     this._initWinHeight = window.innerHeight;
@@ -1019,7 +1028,7 @@ Open the `app.component.html` file and add:
 <div class="layout-overflow">
   <div
     class="layout-canvas"
-    [ngClass]="{'nav-open': navOpen, 'nav-closed': !navOpen}"
+    [ngClass]="{ 'nav-open': navOpen, 'nav-closed': !navOpen }"
     [style.min-height]="minHeight">
 
     <!-- HEADER -->

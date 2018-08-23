@@ -78,7 +78,7 @@ The last two things you will need to do is to copy the values from the *Domain* 
 For starters, you will need to issue the following command in the root directory of your game to install the `auth0-web` package:
 
 ```bash
-npm i auth0-web
+npm i auth0-web@1.7.0
 ```
 
 As you will see, this package facilitates the integration between Auth0 and SPAs.

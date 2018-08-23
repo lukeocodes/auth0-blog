@@ -1,0 +1,52 @@
+<div>
+    <style>
+        @media (max-width: 576px) {
+            .profile_card_tech {
+                flex-direction: column;
+                justify-content: center !important;
+                align-items: center !important;
+                padding: 32px !important;
+            }
+
+            .profile_card_tech_info {
+                margin-left: 0px !important;
+                margin-top: 20px;
+            }
+
+            .profile_card_tech_name,
+            .profile_card_tech_title,
+            .profile_card_tech_team {
+                text-align: center;
+            }
+
+            .profile_card_tech_location {
+                justify-content: center !important;
+            }
+
+        }
+    </style>
+    <div class="profile_card_tech" style="display: flex; justify-content: center; align-items: flex-start; width: 100%; min-height: 300px; padding: 35px; background: #F5F7F9; margin: 35px 0; font-family: fakt-web,Helvetica Neue,Hevetica,sans-serif;">
+        <img src="{{ include.picture }}" style="background: #222328; border-radius: 50%; width: 150px; height: 150px; margin: 0;"/>
+        <div class="profile_card_tech_info" style="flex: 1; display: flex; flex-direction: column; height: 100%; margin-left: 30px;">
+            <div class="profile_card_tech_name" style="color: #222328; font-size: 22px;">{{ include.name }}</div>
+            <div class="profile_card_tech_title" style="color: #EB5325; font-size: 16px;">{{ include.title }}</div>
+            <div class="profile_card_tech_team" style="color: #EB5325; font-size: 16px;">{{ include.team }}</div>
+            <div class="profile_card_tech_location" style="display: flex; align-items: center; margin: 10px 0;">
+                <svg width="10px" height="20px" viewBox="0 0 19 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.5">
+                        <g id="Template" transform="translate(-471.000000, -225.000000)" fill="#5C666E" fill-rule="nonzero">
+                            <g id="Location" transform="translate(471.000000, 221.000000)">
+                                <path d="M9.39130435,28 C3.13043478,21.7186523 0,16.8490871 0,13.3913043 C0,8.20463018 4.20463018,4 9.39130435,4 C14.5779785,4 18.7826087,8.20463018 18.7826087,13.3913043 C18.7826087,16.8490871 15.6521739,21.7186523 9.39130435,28 Z M9.39130435,16.5217391 C11.1201957,16.5217391 12.5217391,15.1201957 12.5217391,13.3913043 C12.5217391,11.662413 11.1201957,10.2608696 9.39130435,10.2608696 C7.66241296,10.2608696 6.26086957,11.662413 6.26086957,13.3913043 C6.26086957,15.1201957 7.66241296,16.5217391 9.39130435,16.5217391 Z" id="Combined-Shape"></path>
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+                <div style="color: #4A4A4A; font-size: 16px; margin-left: 8px;">
+                    {{ include.location }}
+                </div>
+            </div>
+            <div style="color: #5C666E; font-size: 18px; line-height: 28px; font-family: 'minion-pro',serif;">“{{ include.body }}”</div>
+        </div>
+    </div>
+</div>
+

@@ -72,7 +72,7 @@ If [username and password](https://auth0.com/docs/connections/database) authenti
 
 ### Passwordless Authentication
 
-[Passwordless authentication](https://auth0.com/passwordless) allows your users to log in without having to enter or remember a password. Instead, when the user wants to log in, they provide their email address or phone number and receive a one time passcode that they use to authenticate instead. Auth0 provides various options for passwordless authentication including [TouchID](https://auth0.com/docs/libraries/lock-ios/touchid-authentication). 
+[Passwordless authentication](https://auth0.com/passwordless) allows your users to log in without having to enter or remember a password. Instead, when the user wants to log in, they provide their email address or phone number and receive a one time passcode that they use to authenticate instead. Auth0 provides various options for passwordless authentication including SMS and Email. 
 
 ## Auth0 Partners Program
 

@@ -438,8 +438,10 @@ Having filled out this form, click on the *Create* button. When finished creatin
 Now, you can go back to your Angular project and integrate it with Auth0. To do so, you will have to install the [`auth0-web` NPM package](https://github.com/brunokrebs/auth0-web). So, open a terminal, move to the `frontend` directory, and issue the following command:
 
 ```bash
-npm i auth0-web
+npm i auth0-web@1.7.0
 ```
+
+> **Note:** You have to use version `1.7.0` of this library as the latest version (`2.X`) includes breaking changes.
 
 After installing this package, you will have to create the component responsible for [handling the callback URL called by Auth0](https://auth0.com/docs/client-auth/current/client-side-web#handle-the-callback). As such, create a new file called `callback.component.ts` in the `src/app/` directory and add the following code to it:
 

@@ -716,3 +716,5 @@ We have worked on a lot of database and code deployments. It's time for you to t
 There is no way we can cover all the different options available for deploying database and JavaScript backend/API applications or services. Here, we have covered deploying databases and Node.js backends to the cloud. 
 
 In the next post, we'll connect everything together by covering the deployment of JavaScript Single Page Applications and static websites. Stay tuned!
+
+{% include asides/about-auth0.markdown %}

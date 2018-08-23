@@ -42,7 +42,7 @@ Adding security services to your app becomes as easy as adding an app to your ph
 
 ### How Rules work
 
-Rules in Auth0 are code snippets written in Javascript that are executed as part of the authentication process. They essentially allow you to extend the Auth0 API with your own customizations, and without having to write any additional code on your end.
+Rules in Auth0 are code snippets written in JavaScript that are executed as part of the authentication process. They essentially allow you to extend the Auth0 API with your own customizations, and without having to write any additional code on your end.
 ![Auth0 Rules](https://cdn.auth0.com/blog/5-ways-to-make-your-app-more-secure/auth0-rules.png)
 When a user signs up, logs in, or authenticates in general, an authentication request is made to Auth0 (Step 1). After the user authenticates in step 3, the rules are run on step 4 and the result is passed back to the App.
 
@@ -105,40 +105,29 @@ You can set up the Rule in fewer than 10 minutes and it will trigger multifactor
 
 Setting up the Rule is as easy as flipping a switch, selecting your MFA provider, and then configuring the associated Rule.
 ![Choosing MFA provider](https://cdn.auth0.com/blog/5-ways-to-make-your-app-more-secure/choosing-mfa-provider.png)
-What’s especially powerful about the Rule is that you can easily configure MFA to get triggered on different conditions, like:
+What’s especially powerful about the Rule is that you can easily configure MFA to get triggered on different conditions, like, the type of network used.
 
-* Geographic location or change in location
-* Type of network used
-* Device used to login or change in device
+And to do that, all you need to do is write a bit of extra conditional logic in JavaScript for your Rule. This helps you tailor how onerous the MFA burden is. You can have MFA triggered every time the user logs in, or only under abnormal conditions.
 
-And to do that, all you need to do is write a bit of extra conditional logic in Javascript for your Rule. This helps you tailor how onerous the MFA burden is. You can have MFA triggered every time the user logs in, or only under abnormal conditions.
+In the following example, we only trigger MFA when the user is logging in from a non-whitelisted IP:
 
-Here’s an example of a modified Rule that triggers MFA when the user accesses the app from a different device or location.
+```javascript
+function (user, context, callback) {
+    var whitelist = ['1.2.3.4', '2.3.4.5']; //authorized IPs
+    var userDirectAccess = whitelist.some(
+      function (ip) {
+        return context.request.ip === ip;
+      });
 
-```
-`function (user, context, callback) {
+    if (!userDirectAccess) {
+      context.multifactor = {
+        allowRememberBrowser: false,
+        provider: 'duo'
+      };
+    }
 
-  var deviceFingerPrint = getDeviceFingerPrint();
-
-  if( user.lastLoginDeviceFingerPrint !== deviceFingerPrint ){
-
-    user.persistent.lasLoginDeviceFingerPrint = deviceFingerPrint;
-
-    context.multifactor = {
-      ignoreCookie: true,
-      provider: 'duo'
-    };
-  }
-
-  callback(null, user, context);
-
-  function getDeviceFingerPrint(){
-    var shasum = crypto.createHash('sha1');
-    shasum.update(context.request.userAgent);
-    shasum.update(context.request.ip);
-    return shasum.digest('hex');
-  }
-}`
+    return callback(null, user, context);
+}
 ```
 
 ### 2. SMS when there’s a log in from a different IP
@@ -246,8 +235,8 @@ function (user, context, callback) {
     user.app_metadata = user.app_metadata || {};
     user.app_metadata.socure_fraudscore = socure_response.data.fraudscore;
     user.app_metadata.socure_confidence = socure_response.data.confidence;
-    // "details":[  
-    //     "blacklisted":{  
+    // "details":[
+    //     "blacklisted":{
     //        "industry":"Banking and Finance",
     //        "reporteddate":"2014-07-02",
     //        "reason":"ChargeBack Fraud"

@@ -10,8 +10,8 @@ banner:
 author:
   name: "Dan Arias"
   url: "https://twitter.com/getDanArias"
-  mail: ""
-  avatar: "https://pbs.twimg.com/profile_images/918124318076256256/wMFapJ1C_400x400.jpg"
+  mail: "dan.arias@auth0.com"
+  avatar: "https://pbs.twimg.com/profile_images/1002301567490449408/1-tPrAG__400x400.jpg"
 design:
   image: https://cdn.auth0.com/blog/mithril/logo.png
   bg_color: "#222228"

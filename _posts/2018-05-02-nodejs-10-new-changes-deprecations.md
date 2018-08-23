@@ -11,8 +11,8 @@ design:
 author:
   name: Dan Arias
   url: http://twitter.com/getDanArias
-  mail: dan.arias@auth.com
-  avatar: https://pbs.twimg.com/profile_images/918124318076256256/wMFapJ1C_400x400.jpg
+  mail: dan.arias@auth0.com
+  avatar: https://pbs.twimg.com/profile_images/1002301567490449408/1-tPrAG__400x400.jpg
 tags:
   - backend
   - node
@@ -43,8 +43,8 @@ With Node v10.0.0 installed and selected, create a NodeJS project anywhere you'd
 
 On the project directory, create the following files:
 
-* `temp.txt`: a file that we are going to read.
-* `app.js`: the Node application that we are going to use for demonstration. The application reads a file and truncates its content to the first 4 characters.
+- `temp.txt`: a file that we are going to read.
+- `app.js`: the Node application that we are going to use for demonstration. The application reads a file and truncates its content to the first 4 characters.
 
 Open `temp.txt` and type "Node.js" inside and save it.
 
@@ -53,8 +53,8 @@ Then, open `app.js` and include the following headings:
 ```javascript
 // app.js
 
-const fs = require('fs');
-const fsPromises = require('fs/promises');
+const fs = require("fs");
+const fsPromises = require("fs/promises");
 ```
 
 `fs` is the usual module we are used to working with. `fs/promises` brings the new API into our application.
@@ -62,27 +62,27 @@ const fsPromises = require('fs/promises');
 Next, let's read `temp.txt` and print its current content in the console:
 
 ```javascript
-const fs = require('fs');
-const fsPromises = require('fs/promises');
+const fs = require("fs");
+const fsPromises = require("fs/promises");
 
-console.log(fs.readFileSync('temp.txt', 'utf8'));
+console.log(fs.readFileSync("temp.txt", "utf8"));
 // Prints: Node.js
 ```
 
 Now, we are going to create a function called `doTruncate` that asynchronously opens the file using `open()` and truncates the content of the file using `ftruncate`, both methods of the `fs/promises` library. We are going to manage the promises through the [`async/await`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function) pattern and print the resulting truncation to the console:
 
 ```javascript
-const fs = require('fs');
-const fsPromises = require('fs/promises');
+const fs = require("fs");
+const fsPromises = require("fs/promises");
 
-console.log(fs.readFileSync('temp.txt', 'utf8'));
+console.log(fs.readFileSync("temp.txt", "utf8"));
 // Prints: Node.js
 
 async function doTruncate() {
-    const fd = await fsPromises.open('temp.txt', 'r+');
-    await fsPromises.ftruncate(fd, 4);
-    console.log(fs.readFileSync('temp.txt', 'utf8'));  
-    // Prints: Node
+  const fd = await fsPromises.open("temp.txt", "r+");
+  await fsPromises.ftruncate(fd, 4);
+  console.log(fs.readFileSync("temp.txt", "utf8"));
+  // Prints: Node
 }
 
 doTruncate().catch(console.error);
@@ -94,14 +94,14 @@ The absence of callbacks makes the code clean, elegant and readable. In just thr
 
 These are the highlights of the [features included in the V8 v6.6 release](https://v8project.blogspot.com/) that ships with Node v10.0.0:
 
-* `Function.prototype.toString()`
+- `Function.prototype.toString()`
 
 This method now returns exact slices of source text which include whitespace and comments.
 
 ```javascript
-function /* This is a comment */ f   () {
-    const num = 10;
-    console.log(num);
+function /* This is a comment */ f() {
+  const num = 10;
+  console.log(num);
 }
 
 console.log(f.toString());
@@ -125,7 +125,7 @@ function f() {
 }
 ```
 
-* The `catch` clause of `try` statements no longer requires a parameter. Here's an example from the release notes:
+- The `catch` clause of `try` statements no longer requires a parameter. Here's an example from the release notes:
 
 ```javascript
 try {
@@ -135,10 +135,10 @@ try {
 }
 ```
 
-* Non-standard methods `trimLeft()` and `trimRight()` becomes aliases for the newly implemented `String.prototype.trimStart()` and `String.prototype.trimEnd()` to ensure backward compatibility:
+- Non-standard methods `trimLeft()` and `trimRight()` becomes aliases for the newly implemented `String.prototype.trimStart()` and `String.prototype.trimEnd()` to ensure backward compatibility:
 
 ```javascript
-const string = '  Node rocks!  ';
+const string = "  Node rocks!  ";
 
 console.log(string.trimStart());
 console.log(string.trimEnd());
@@ -148,7 +148,7 @@ console.log(string.trim());
 Output:
 
 ```text
-Node rocks!  
+Node rocks!
   Node rocks!
 Node rocks!
 ```
@@ -157,21 +157,21 @@ Read more details on the changes in the JavaScript languages features in the [V8
 
 ## Performance Improvements
 
-* Promises and async functions get a performance boost. The V8 Engineering team has been able to close the gap between async functions and raw promise chains.
+- Promises and async functions get a performance boost. The V8 Engineering team has been able to close the gap between async functions and raw promise chains.
 
 <p style="text-align: center;">
   <img src="https://cdn.auth0.com/blog/nodejs-10-new-changes-deprecations/promise.png" alt="Promise performance improvements">
   <figcaption>Source: <a href="https://v8project.blogspot.com/2018/03/v8-release-66.html">V8 Project Blog</a></figcaption>
 </p>
 
-* The performance of async generators along with async iterations was largely improved. 
+- The performance of async generators along with async iterations was largely improved.
 
 <p style="text-align: center;">
   <img src="https://cdn.auth0.com/blog/nodejs-10-new-changes-deprecations/async-generator.png" alt="Async generators performance improvements">
   <figcaption>Source: <a href="https://v8project.blogspot.com/2018/03/v8-release-66.html">V8 Project Blog</a></figcaption>
 </p>
 
-* For [holey double arrays](https://v8project.blogspot.com/2017/09/elements-kinds-in-v8.html), the throughput performance of `Array#reduce` increased by more than 10x.
+- For [holey double arrays](https://v8project.blogspot.com/2017/09/elements-kinds-in-v8.html), the throughput performance of `Array#reduce` increased by more than 10x.
 
 <p style="text-align: center;">
   <img src="https://cdn.auth0.com/blog/nodejs-10-new-changes-deprecations/array-reduce.png" alt="Array#reduce performance improvements">
@@ -216,18 +216,17 @@ Node Addons are a very advanced concept of the ecosystem. However, if you are lo
 
 The following are highlights of the API's that have been deprecated in this release:
 
-* Using non-string values for `process.env` has been deprecated in documentation.
-* Previously deprecated legacy async_hooks APIs have reached end-of-life and have been removed.
-* Previously deprecated internal getters/setters on net.Server have reached end-of-life and have been removed.
-* Using `require()` to access several of Node.js' own internal dependencies will emit a runtime deprecation. 
-
+- Using non-string values for `process.env` has been deprecated in documentation.
+- Previously deprecated legacy async_hooks APIs have reached end-of-life and have been removed.
+- Previously deprecated internal getters/setters on net.Server have reached end-of-life and have been removed.
+- Using `require()` to access several of Node.js' own internal dependencies will emit a runtime deprecation.
 
 For a full list of the deprecated APIs in this release, please visit the [v10.0.0 release notes](https://nodejs.org/en/blog/release/v10.0.0/#deprecations).
 
 ## Recap
 
-Node.js continues to grow and evolve into a solid, flexible and diverse platform for developers to deliver reliable and scalable code. I am pretty excited about the future integration with TLS 1.3 and `@npm6`. Node.js will also continue to gain traction in the IoT area. What do you think about this release? If you have used it already, have you been able to experience any of the performance enhancements? Please let me know in the comments below! 
+Node.js continues to grow and evolve into a solid, flexible and diverse platform for developers to deliver reliable and scalable code. I am pretty excited about the future integration with TLS 1.3 and `@npm6`. Node.js will also continue to gain traction in the IoT area. What do you think about this release? If you have used it already, have you been able to experience any of the performance enhancements? Please let me know in the comments below!
 
-Happy coding! 
+Happy coding!
 
 {% include asides/about-auth0.markdown %}

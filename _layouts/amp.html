@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ⚡ lang="en">
+<html ⚡ lang="{% if page.lang == null %}en{% elsif page.lang %}{{page.lang}}{% endif %}">
 <head>
 
 <link href="https://fonts.googleapis.com/css?family=Inconsolata|Montserrat" rel="stylesheet">
@@ -20,7 +20,7 @@
 {%else %}
 <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url | replace: '/amp',''}}">
 {%endif%}
-<link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ "/feed.xml" | prepend: site.baseurl | prepend: site.url }}">
+<link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ "/rss.xml" | prepend: site.baseurl | prepend: site.url }}">
 
 
     {% if page.meta-robots %}
@@ -74,6 +74,21 @@
       {{content}}
     </div>
   </body>
+  <amp-analytics type="googleanalytics">
+    <script type="application/json">
+      {
+        "vars": {
+          "account": "UA-37952868-1"
+        },
+        "triggers": {
+          "trackPageview": {
+            "on": "visible",
+            "request": "pageview"
+          }
+        }
+      }
+    </script>
+  </amp-analytics>
   <amp-analytics>
     <script type="application/json">
       {

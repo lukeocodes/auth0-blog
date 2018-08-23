@@ -113,6 +113,8 @@ Google announced a new [Machine Learning Kit](https://firebase.google.com/produc
 
 The Machine Learning Kit allows developers to easily add powerful machine learning features to Android and iOS apps.
 
+*Updated*: Auth0 wrote more about ML Kit. Take a deeper look and [learn about the different APIs available in Google's ML Kit](https://auth0.com/blog/a-look-at-android-ml-kit-the-machine-learning-sdk/). As well, follow the tutorial in that article to develop a demo app that uses one of ML Kit's APIs.
+
 ## Material Theme
 
 <blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Material theming ❤️ <a href="https://twitter.com/hashtag/io18?src=hash&amp;ref_src=twsrc%5Etfw">#io18</a> <br><br>1. It’s extensible<br>2. It puts you in charge.<br>3. Hundreds of new examples<br>4. Very flexible. Debunks the theory of apps looking similar <a href="https://t.co/QNfJcfGE0R">pic.twitter.com/QNfJcfGE0R</a></p>&mdash; Prosper @ Google I/O 18 🔥🚀 (@unicodeveloper) <a href="https://twitter.com/unicodeveloper/status/993950735841701888?ref_src=twsrc%5Etfw">May 8, 2018</a></blockquote>

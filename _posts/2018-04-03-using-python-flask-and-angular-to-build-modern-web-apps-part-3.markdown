@@ -472,7 +472,10 @@ To use this decorator, you will create a new endpoint that allows administrators
 ```python
 # coding=utf-8
 
-# ... import statements, app definition, and other endpoints ...
+# ... other import statements ...
+from auth import requires_auth, requires_role
+
+# ... app definition and other endpoints ...
 
 @app.route('/exams/<examId>', methods=['DELETE'])
 @requires_role('admin')

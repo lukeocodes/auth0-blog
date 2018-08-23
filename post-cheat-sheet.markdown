@@ -1,12 +1,14 @@
 ---
 layout: post
-title: "Title Should be Less Than 56 characters"
-description: "Description goes here and must be less than 156 characters."
-longdescription: "Long description is used for meta tags, particularly for Google, and should be between 230-320 characters."
-date: 2018-01-01 8:30
+title: "Title displayed on the post itself, blog search, and on blog feed."
+metatitle: "Title displayed in search engines and social - less than 60 characters"
+description: "Shorter shown underneath the title on the post itself and on blog feed - must be less than 110 characters."
+metadescription: "Richer, longer description that shows in search engines - must be less than 160 characters."
+date: 2018-mm-dd 8:30
 category: Technical guide, Thing, Thing2, PR, Press
 (!CanRemoveIfFalse)press_release: true
 (!CanRemoveIfFalse)is_non-tech: true
+(!If post has technical Auth0 Aside)auth0_aside: true
 banner:
   text: "Auth0 makes it easy to add authentication to your ___ application."
 author:
@@ -50,6 +52,12 @@ Center an image:
 ```
 [Link text](http://url.goes.here)
 ```
+
+> **Note:** Sometimes it's necessary to use HTML markup for links if the hyperlink contains a closing parentheses.
+
+```html
+<a href="http://url.goes.here">Link text</a>
+``` 
 
 ### Blockquote (Quote)
 
@@ -111,6 +119,15 @@ $ bash
 text
 ```
 
+### Diff
+
+```diff
+  line
+- removed
++ added
+```
+
+
 ## Warnings
 
 ```html
@@ -124,7 +141,8 @@ text
 
 ### Characters
 
-* Em dash: `—` (don't use hyphens for this) - Mac shortcut: `Shift`+`Alt`+`-`
+* Em dash: `—` (don't use hyphens for this) - Mac shortcut: `Shift`+`Option/Alt`+`-`
+* En dash: `–` (don't use hyphens for this) - Mac shortcut: `Option/Alt`+`-`
 * Lambda: `λ`
 
 ### Within-article Target Links
@@ -157,11 +175,12 @@ You'll need an [Auth0](https://auth0.com) account to manage authentication. You 
 
 1. Go to your [**Auth0 Dashboard**](https://manage.auth0.com/#/) and click the "[create a new application](https://manage.auth0.com/#/applications/create)" button. 
 2. Name your new app, select "Single Page Web Applications," and click the "Create" button. 
-3. In the **Settings** for your new Auth0 app, add `http://localhost:[PORT]` to the **Allowed Callback URLs**.
-4. Click the "Save Changes" button.
-5. If you'd like, you can [set up some social connections](https://manage.auth0.com/#/connections/social). You can then enable them for your app in the **Application** options under the **Connections** tab. The example shown in the screenshot above utilizes username/password database, Facebook, Google, and Twitter.
+3. In the **Settings** for your new Auth0 app, add `http://localhost:[PORT]/callback` to the **Allowed Callback URLs**.
+4. Add `http://localhost:[PORT]` to the **Allowed Logout URLs**.
+5. Click the "Save Changes" button.
+6. If you'd like, you can [set up some social connections](https://manage.auth0.com/#/connections/social). You can then enable them for your app in the **Application** options under the **Connections** tab. The example shown in the screenshot above utilizes username/password database, Facebook, Google, and Twitter.
 
-> **Note:** Under the **OAuth** tab of **Advanced Settings** (at the bottom of the **Settings** section) you should see that the **JsonWebToken Signature Algorithm** is set to `RS256`. This is  the default for new clients. If it is set to `HS256`, please change it to `RS256`. You can [read more about RS256 vs. HS256 JWT signing algorithms here](https://community.auth0.com/questions/6942/jwt-signing-algorithms-rs256-vs-hs256).
+> **Note:** Under the **OAuth** tab of **Advanced Settings** (at the bottom of the **Settings** section) you should see that the **JsonWebToken Signature Algorithm** is set to `RS256`. This is  the default for new applications. If it is set to `HS256`, please change it to `RS256`. You can [read more about RS256 vs. HS256 JWT signing algorithms here](https://community.auth0.com/questions/6942/jwt-signing-algorithms-rs256-vs-hs256).
 
 ### Set Up an API
 

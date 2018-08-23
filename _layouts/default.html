@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="header-dark">
+<html class="header-dark" lang="{% if page.lang == null %}en{% elsif page.lang %}{{page.lang}}{% endif %}">
 
   {% include head.html %}
 
@@ -488,7 +488,7 @@
 
               $.ajax({
                 type: "POST",
-                url: 'https://webtask.it.auth0.com/api/run/wt-martin-gon_to-0/auth0-blog-user?webtask_no_cache=1',
+                url: 'https://wt-139739a316b9b05b2ef2d61c5ed80be7-0.sandbox.auth0-extend.com/create-blog-user',
                 data: {
                   email: value
                 },

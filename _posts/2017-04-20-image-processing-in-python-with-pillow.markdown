@@ -396,6 +396,7 @@ Back in your project, create a file labelled `.env` and save it at the root of t
 
 ```
 AUTH0_CLIENT_ID = 'YOUR_AUTH0_CLIENT_ID'
+AUTH0_CLIENT_SECRET = 'YOUR_AUTH0_CLIENT_SECRET'
 AUTH0_CALLBACK_URL = 'http://localhost:3000/callback'
 AUTH0_DOMAIN = 'YOUR_AUTH0_DOMAIN'
 SECRET_KEY = 'F12ZMr47j\3yXgR~X@H!jmM]6Lwf/,4?KT'
@@ -407,10 +408,12 @@ Add another file named `constants.py` to the root directory of the project and a
 ACCESS_TOKEN_KEY = 'access_token'
 APP_JSON_KEY = 'application/json'
 AUTH0_CLIENT_ID = 'AUTH0_CLIENT_ID'
+AUTH0_CLIENT_SECRET = 'AUTH0_CLIENT_SECRET'
 AUTH0_CALLBACK_URL = 'AUTH0_CALLBACK_URL'
 AUTH0_DOMAIN = 'AUTH0_DOMAIN'
 AUTHORIZATION_CODE_KEY = 'authorization_code'
 CLIENT_ID_KEY = 'client_id'
+CLIENT_SECRET_KEY = 'client_secret'
 CODE_KEY = 'code'
 CONTENT_TYPE_KEY = 'content-type'
 GRANT_TYPE_KEY = 'grant_type'
@@ -425,28 +428,25 @@ from flask import Flask, render_template, redirect, url_for, send_from_directory
 from flask_bootstrap import Bootstrap
 from PIL import Image
 from werkzeug.utils import secure_filename
-from dotenv import Dotenv
+from dotenv import load_dotenv, find_dotenv
 from functools import wraps
 import os
 import constants
 import requests
 
 # Load Env variables
-env = None
-
-try:
-    env = Dotenv('./.env')
-except IOError:
-    env = os.environ
+ENV_FILE = find_dotenv()
+if ENV_FILE:
+    load_dotenv(ENV_FILE)
 
 app = Flask(__name__)
-app.secret_key = env['SECRET_KEY']
+app.secret_key = os.environ.get('SECRET_KEY')
 Bootstrap(app)
 ```
 
-Here we've imported the `session`, `dotenv`, `functools`, `constants` and `requests` modules. There is no need to install any new package. These had already been installed when you ran` pip install` previously.
+Here we've imported the `session`, `python-dotenv`, `functools`, `constants` and `requests` modules. There is no need to install any new package. These had already been installed when you ran` pip install` previously.
 
-We use `Dotenv` to load environment variables into the file from either the `.env` file or from the variables set on the System.
+We use `dotenv` to load environment variables into the file from either the `.env` file or from the variables set on the System.
 
 We then set the app's `secret_key`. The application will make use of sessions, which allows storing information specific to a user from one request to the next. This is implemented on top of cookies and signs the cookies cryptographically. What this means is that someone could look at the contents of your cookie but not be able to make out the underlying credentials or to successfully modify it, unless they know the secret key used for signing.
 
@@ -473,7 +473,7 @@ modify the `index()` and `upload()` functions as shown.
 ```python
 @app.route('/')
 def index():
-    return render_template('index.html', env=env, logged_in=is_logged_in())
+    return render_template('index.html', env=os.environ, logged_in=is_logged_in())
 
 @app.route('/upload', methods=['GET', 'POST'])
 @requires_auth
@@ -514,10 +514,11 @@ def callback_handling():
     code = request.args.get(constants.CODE_KEY)
     json_header = {constants.CONTENT_TYPE_KEY: constants.APP_JSON_KEY}
     token_url = 'https://{auth0_domain}/oauth/token'.format(
-        auth0_domain=env[constants.AUTH0_DOMAIN])
+        auth0_domain=os.environ.get(constants.AUTH0_DOMAIN))
     token_payload = {
-        constants.CLIENT_ID_KEY: env[constants.AUTH0_CLIENT_ID],
-        constants.REDIRECT_URI_KEY: env[constants.AUTH0_CALLBACK_URL],
+        constants.CLIENT_ID_KEY: os.environ.get(constants.AUTH0_CLIENT_ID),
+        constants.CLIENT_SECRET_KEY: os.environ.get(constants.AUTH0_CLIENT_SECRET),
+        constants.REDIRECT_URI_KEY: os.environ.get(constants.AUTH0_CALLBACK_URL),
         constants.CODE_KEY: code,
         constants.GRANT_TYPE_KEY: constants.AUTHORIZATION_CODE_KEY
     }
@@ -526,7 +527,7 @@ def callback_handling():
         headers=json_header).json()
 
     user_url = 'https://{auth0_domain}/userinfo?access_token={access_token}'\
-        .format(auth0_domain=env[constants.AUTH0_DOMAIN],
+        .format(auth0_domain=os.environ.get(constants.AUTH0_DOMAIN),
             access_token=token_info[constants.ACCESS_TOKEN_KEY])
 
     user_info = requests.get(user_url).json()
@@ -549,49 +550,40 @@ Modify `templates/index.html` as shown below.
           {% if logged_in %}
           <p>You can <a href="{{ url_for('upload') }}">upload images</a> or head over to the <a href="{{ url_for('gallery') }}">gallery</a></p>
           {% else %}
-          <p><a href="#" class="login">Login</a> to upload images or head over to the <a href="{{ url_for('gallery') }}">gallery</a></p>
+          <p><a href="{{authorize_url}}" class="login">Login</a> to upload images or head over to the <a href="{{ url_for('gallery') }}">gallery</a></p>
           {% endif %}
 
         </div>
     </div>
     {% endblock %}
-
-    {% block scripts %}
-    {{super()}}
-    <script src="https://cdn.auth0.com/js/auth0/9.0.0/auth0.min.js"></script>
-    <script>
-      var AUTH0_CLIENT_ID = '{{env.AUTH0_CLIENT_ID}}';
-      var AUTH0_DOMAIN = '{{env.AUTH0_DOMAIN}}';
-      var AUTH0_CALLBACK_URL = '{{env.AUTH0_CALLBACK_URL if env.AUTH0_CALLBACK_URL else "http://localhost:3000/callback" }}';
-    </script>
-    <script src="{{url_for('static_files', filename='auth.js')}}"> </script>
-    {% endblock %}
     {% endraw %}
 
-In the above, we check for the user's logged in status and display a different message accordingly. At the end of the file, we add a Flask-Bootstrap `block` for scripts. This is used to add JavaScript to the file. Calling `{% raw %}{{super()}}{% endraw %}` before adding your own scripts will add Bootstrap and its dependencies (jQuery) before your scripts. If you added this later, then the app will fail as we'll soon add a JavaScript file that depends on jQuery, so this needs to be loaded for the code to work.
+In the above, we check for the user's logged in status and display a different message accordingly.
 
-For authentication, the app will use Auth0's [Auth0.js library](https://github.com/auth0/auth0.js). This will present a ready made, but [customizable](https://auth0.com/docs/hosted-pages/login), login/signup form. We then create some variables that will be used by the widget.
+For authentication, the app will use Auth0's [universal login](https://auth0.com/docs/hosted-pages/login). This will present a ready made, but [customizable](https://auth0.com/docs/hosted-pages/login), login/signup form.
 
 At the end of the code, we link to an `auth.js` file. Let's create this. Create a file named `auth.js` and save it to the `public` folder. Add the following to it.
 
-```javascript
-$(document).ready(function() {
-  var auth0 = new window.auth0.WebAuth({
-    clientID: AUTH0_CLIENT_ID,
-    domain: AUTH0_DOMAIN,
-    scope: "openid email profile",
-    responseType: "code",
-    redirectUri: AUTH0_CALLBACK_URL
-  });
+Modify the `index()` function as shown.
 
-  $('.login').click(function(e) {
-    e.preventDefault();
-    auth0.authorize();
-  });
-});
+```python
+@app.route('/')
+def index():
+    authorize_url = 'https://{auth0_domain}/authorize?client_id={client_id}&response_type=code&redirect_uri={redirect_uri}'\
+        .format(
+            auth0_domain=os.environ.get(constants.AUTH0_DOMAIN),
+            client_id=os.environ.get(constants.AUTH0_CLIENT_ID),
+            redirect_uri=os.environ.get(constants.AUTH0_CALLBACK_URL))
+    return render_template('index.html', env=os.environ, logged_in=is_logged_in(), authorize_url=authorize_url)
 ```
 
-The above instantiates an `auth0.WebAuth` object, passing it the variables we set previously. We also add a click listener to the Login link that will display the login widget.
+In the code above we create the [authorization URL](https://auth0.com/docs/application-auth/current/server-side-web#call-the-authorization-url) and pass it in a variable to the view.
+
+In the `templates/index.html` update the view to add the authorization URL in the log in link.
+
+    {% raw %}
+    <p><a href="{{authorize_url}}" class="login">Log In</a> to upload images or head over to the <a href="{{ url_for('gallery') }}">gallery</a></p>
+    {% endraw %}
 
 In `templates/upload.html`, you can add the following before the `form` tag.
 

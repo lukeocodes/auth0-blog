@@ -3,12 +3,13 @@ layout: post
 title: "Creating Beautiful Apps with Angular Material"
 description: "In this article, you will learn how to take advantage of Angular Material to create beautiful and modern Angular applications."
 date: 2018-05-29 8:30
+updated: 2018-06-05 14:30
 category: Technical Guide, Angular, Angular2
 author:
   name: "Oliver Mensah"
   url: "https://twitter.com/Oliver_Mensah"
   mail: "olivermensah96@gmail.com"
-  avatar: "https://twitter.com/Oliver_Mensah/profile_image?size=original"
+  avatar: "https://cdn.auth0.com/blog/guest-authors/oliver-mensah.jpeg"
 design:
   image: https://cdn.auth0.com/blog/angular/logo3.png
   bg_color: "#072858"
@@ -149,6 +150,7 @@ The idea of creating a new Angular module (`@NgModule`) is to centralize what yo
 
 ```typescript
 // ... other import statements ...
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MaterialModule} from './material.module';
 
 @NgModule({
@@ -167,7 +169,7 @@ export class AppModule {}
 
 ### Angular Material Sidenav
 
-After defining a centralized place to import Angular Material components, you can focus on adding a navigation bar to your app. For this, you will update the `./src/app/app.module.ts` to look like this:
+After defining a centralized place to import Angular Material components, you can focus on adding a navigation bar to your app. For this, you will update the `./src/app/material.module.ts` to look like this:
 
 ```typescript
 import {NgModule} from '@angular/core';
@@ -278,8 +280,10 @@ To make your life easier when defining the layout of your Angular application, y
 To use it, install the Flex layout package with the following command:
 
 ```bash
-npm install @angular/flex-layout
+npm install @angular/flex-layout rxjs-compat
 ```
+
+> Note that after the major upgrade to Angular 6, you will need to install `rxjs-compat` alongside with `@angular/flex-layout`. The command above already include this library. So, it is just a matter of copying and pasting the command in your terminal (while being in the `@ROOT_DIR` set above, of course).
 
 Then, import and configure it into `src/app.module.ts` as shown here:
 
@@ -520,8 +524,8 @@ export interface Post {
   title: string;
   category: string;
   date_posted: Date;
-  position: number,
-  body: string
+  position: number;
+  body: string;
 }
 ```
 
@@ -583,6 +587,20 @@ export class DataService {
 
 In your data service, you have two different arrays: one for storing categories of posts and the other one for storing blog posts.
 
+You will also have to guarantee that the `app.module.ts` file includes your new `DataService` class in its `providers` property:
+
+```ts
+// ... other imports ...
+import {DataService} from './data/data.service';
+
+@NgModule({
+  // ... declarations and imports ...
+  providers: [DataService],
+  // ... bootstrap ...
+})
+export class AppModule { }
+```
+
 Now, you can update your dashboard to make use of the data service to render some data. So, open the `dashboard.component.ts` file and replace its code with this:
 
 ```ts
@@ -627,7 +645,7 @@ Then, open the `dashboard.component.html` file and replace everything with:
   <br>
     <div class="container">
         <div class="container">
-          <div  fxLayout="column" fxLayout="column" fxLayoutGap="20px" fxLayout.gt-md="row"  fxLayoutAlign="space-around center" class="content">
+          <div fxLayout="column" fxLayoutGap="20px" fxLayout.gt-md="row"  fxLayoutAlign="space-around center" class="content">
               <div class="blocks" >
                   <button button="submit" mat-raised-button color="primary">
                       <mat-icon>add</mat-icon> Add Post
@@ -732,7 +750,7 @@ a {
 }
 ```
 
-Now, running your app (`ng serve`) and heading to [`http://localhost:4200/bashboard`](http://localhost:4200/bashboard), you will see the following screen:
+Now, running your app (`ng serve`) and heading to [`http://localhost:4200/dashboard`](http://localhost:4200/bashboard), you will see the following screen:
 
 ![Angular Material dashboard](https://cdn.auth0.com/blog/angular-material/dashboard.png)
 
@@ -755,6 +773,10 @@ Now, create a new file called `auth.service.ts` in the `./src/app` directory and
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import * as auth0 from 'auth0-js';
+
+// why do you need defining window as any?
+// check this: https://github.com/aws/aws-amplify/issues/678#issuecomment-389106098
+(window as any).global = window;
 
 @Injectable()
 export class AuthService {
@@ -817,10 +839,11 @@ The code in this service, although lengthy, is quite simple. You are just defini
 
 > **Important!** You will need to replace `<APPLICATION_CLIENT_ID>` and `<YOUR_AUTH0_DOMAIN>` in the code with the values from your Auth0 application. For example, the client id will look like `lU4PgkBaogkZP13Mv1gSkHK6VIH6xIkq` and the domain will look like `bk-tmp.auth0.com`.
 
-Also, before proceeding, you will have to install [the `auth0-js` library](https://github.com/auth0/auth0.js):
+Also, before proceeding, you will have to install [the `auth0-js` library](https://github.com/auth0/auth0.js) and its types definition (`@types/auth0-js`):
 
 ```bash
 npm install auth0-js
+npm i -D @types/auth0-js
 ```
 
 Now, you can update the `app.component.html` to integrate it with your new service:
@@ -1023,7 +1046,7 @@ Now, to enable users to create new blog posts, you will create a new component c
 ng g c post-dialog --module app.module
 ```
 
-Then, open the `post-dialog-component.html` file and put the following HTML code inside it:
+Then, open the `post-dialog.component.html` file and put the following HTML code inside it:
 
 {% highlight html %}
 {% raw %}
@@ -1098,7 +1121,7 @@ import {FormsModule} from '@angular/forms';
 export class AppModule {}
 ```
 
-Also, to make your dialog look nice, you can insert the following rules in the `post-dialog-component.css` file:
+Also, to make your dialog look nice, you can insert the following rules in the `post-dialog.component.css` file:
 
 ```css 
 .example-form {
@@ -1115,7 +1138,7 @@ Also, to make your dialog look nice, you can insert the following rules in the `
 }
 ```
 
-Then, you can open the `post-dialog-component.ts` file and replace its code with the following; 
+Then, you can open the `post-dialog.component.ts` file and replace its code with the following; 
 
 ```ts 
 import {Component, EventEmitter, Inject} from '@angular/core';
@@ -1160,15 +1183,17 @@ export class PostDialogComponent {
 
 To make a button open up this dialog box, you need to tell it to do so by binding a click event to the button. So, open the `dashboard.component.html` and modify the button you created before to look like this:
 
-```ts
+{% highlight html %}
+{% raw %}
 <div class="blocks" *ngIf="auth.isAuthenticated()">
   <button button="submit" mat-raised-button color="primary" (click)="openDialog()">
     <mat-icon>add</mat-icon> Add Post
   </button>
 </div>
-```
+{% endraw %}
+{% endhighlight %}
 
-Then, in the TypeScript file of the `dashboard.component`, you will have update the code as:
+Then, in the TypeScript file of the `dashboard.component.ts`, you will have update the code as:
 
 ```ts 
 // ... other import statements ...

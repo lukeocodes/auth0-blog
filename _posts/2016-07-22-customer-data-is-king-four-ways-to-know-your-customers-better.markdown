@@ -116,4 +116,4 @@ Sending user information to a service such as Lytics can be cumbersome, and in m
 
 Rich customer identity data is becoming one of the most important ways for B2C businesses to market and sell effectively. Not only is this data important for marketing purposes, but it’s also key to knowing your customers better in general. 
 
-If you’re not yet using social data to enrich your customer’s profiles then you’re missing out on some important opportunities. The good news is that Auth0 can make this process very easy and also solve many important authentication problems in your apps at the same time. If you’re interested in knowing more about how customer identity can benefit your company, [get in touch](contact form)--we’d love to chat.
+If you’re not yet using social data to enrich your customer’s profiles then you’re missing out on some important opportunities. The good news is that Auth0 can make this process very easy and also solve many important authentication problems in your apps at the same time. If you’re interested in knowing more about how customer identity can benefit your company, [get in touch](https://support.auth0.com)--we’d love to chat.

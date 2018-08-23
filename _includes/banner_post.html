@@ -13,11 +13,16 @@
 
         {% include entry_image.html %}
 
-        <h1 class="entry-title"><a href="{{ site.baseurl }}{{current.url}}" title="Published: {{ current.date | date: "%B %d, %Y" }}"><span itemprop="headline">{{ current.title }}</span></a></h1>
+        <h1 class="entry-title"><a href="{{ site.baseurl }}{{current.url}}" title="{{ page.title }} - Published: {{ current.date | date: "%B %d, %Y" }}"><span itemprop="headline">{{ current.title }}</span></a></h1>
 
         {% if current.description %}
-        <div class="entry-content" itemprop="description">
+        <div class="entry-content">
           {{ current.description | markdownify }}
+        </div>
+
+        {% elsif current.metadescription %}
+        <div class="entry-content" itemprop="description">
+          {{ current.metadescription | markdownify }}
         </div>
         {% endif %}
 

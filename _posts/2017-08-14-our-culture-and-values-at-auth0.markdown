@@ -59,11 +59,11 @@ Our values on trust and respect also include a "No BAP" policy. To put it simply
 
 * No Bull$hit
 * No A$$holes
-* No Politics
+* No internal work Politics
 
 In an anonymous culture survey of current Auth0 employees, people overwhelmingly expressed positive feedback. They most commonly mentioned respectfulness and no BS when asked how they would describe Auth0's culture.
 
-{% include tweet_quote.html quote_text="Auth0's mantra: No BAP = No BS, No A$$holes, No Politics." %}
+{% include tweet_quote.html quote_text="Auth0's mantra: No BAP = No BS, No A$$holes, No internal Politics." %}
 
 ### Culture is Much More Than Perks
 
@@ -109,7 +109,7 @@ There is a connection between _company culture_ and _diversity and inclusion_. T
 
 {% include tweet_quote.html quote_text="Auth0's values emphasize respect, trust, & collaboration, providing an inclusive environment for all employees." %}
 
-A collaborative and respectful culture fosters equal treatment for everyone, regardless of age, race, gender, seniority, or position level. We are dedicated to upholding these cultural values as we grow as a company.
+A collaborative and respectful culture fosters equal treatment for everyone, regardless of age, race, gender, sexual orientation, religion, disability, seniority, or position level. We are dedicated to upholding these cultural values as we grow as a company.
 
 ## Conclusion
 

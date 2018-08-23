@@ -33,7 +33,23 @@ The deal is very simple, if you meet the three conditions below:
 - less than $2M in raised funding
 - less than 2 years old
 
-you get unrestricted usage of Auth0 for 1 year for $99 per month.
+you get the following features of Auth0 for 1 year for $99 per month:
+
+- Unlimited Social Identity Providers
+- Role Management
+- Custom Domains
+- Database Migration
+- Account Linking
+- Email Customizations
+- Up To 30 Days Of Log Retention
+- Enhanced Password Protection
+- Third Party Multifactor Provider
+- Custom Database
+- Integrations
+- Single Sign On For Auth0 Dashboard
+- Delegated Admin
+- Consolidation Of User Stores
+- 1 Million Regular Active Users
 
 It's that simple.
 

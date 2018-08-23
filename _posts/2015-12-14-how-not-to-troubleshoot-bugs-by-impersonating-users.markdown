@@ -1,9 +1,9 @@
 ---
-layout: post
+layout: redirect
 title: "Troubleshooting? This is what you shouldn’t do"
 description: Impersonate users in the wrong way, and you’ll open up security holes in your app
 date: 2015-12-14 12:27
-alias: /2015/12/14/how-not-to-troubleshoot-bugs-by-impersonating-users/
+alias: [/2015/12/14/how-not-to-troubleshoot-bugs-by-impersonating-users]
 category: Growth, Identity, Impersonation
 author:
   name: Martin Gontovnikas
@@ -21,6 +21,11 @@ related:
 - 2016-02-10-getting-started-with-lock-episode-2-using-customization-options
 - 2016-02-03-getting-started-with-auth0-lock-series-implementing-lock
 - 2016-04-07-integrate-auth0-into-your-existing-saas-tools
+permalink: /how-not-to-troubleshoot-bugs-by-impersonating-users/
+redirect_to: "/blog/"
+meta-robots: "noindex, nofollow"
+sitemap:
+  exclude: 'yes'
 ---
 
 A customer reports a bug in your app, but you can’t reproduce it on your end. The app works exactly as it should after you login to the  app yourself and follow the same steps that the user took.

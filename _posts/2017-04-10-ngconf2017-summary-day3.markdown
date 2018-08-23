@@ -430,7 +430,7 @@ It's a great time to explore Angular for your single page JavaScript application
 
 * [JWT library for Angular](https://github.com/auth0/angular2-jwt)
 * [Angular 2+ Quick Start with Auth0](https://auth0.com/docs/quickstart/spa/angular2)
-* [Migrating an AngularJS App to Angular eBook](https://auth0.com/e-books/migrating-to-angular2)
+* [Migrating an AngularJS App to Angular eBook](https://auth0.com/resources/ebooks/migrating-to-angular2)
 * [Managing State in Angular with ngrx/store](https://auth0.com/blog/managing-state-in-angular-with-ngrx-store/)
 * [Angular 2 Authentication Tutorial](https://auth0.com/blog/angular-2-authentication/)
 

@@ -7,6 +7,7 @@ date: 2018-05-07 08:30
 category: Announcements, Press
 press_release: true
 is_non-tech: true
+alias: auth0-ceo-eugenio-pace-named-ey-entrepeneur-finalist
 author:
   name: Jeana Tahnk
   url: http://twitter.com/jeanatahnk

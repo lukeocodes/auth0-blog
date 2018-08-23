@@ -18,8 +18,13 @@
   {% include amp/entry_image.html %}
   <h1 class="post-title" itemprop="headline">{{current.title}}</h1>
   {% if current.description %}
-  <div class="entry-content" itemprop="description">
+  <div class="entry-content">
     {{ current.description | markdownify }}
+  </div>
+
+  {% elsif current.metadescription %}
+  <div class="entry-content" itemprop="description">
+    {{ current.metadescription | markdownify }}
   </div>
   {% endif %}
 
@@ -32,12 +37,12 @@
         <amp-social-share type="twitter" width="20" height="20"
         data-param-url={{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url|replace:'amp/',''}}
         data-param-attribution="Auth0"
-        data-param-text="{{current.title}} @auth0"
+        data-param-text="{% if page.metatitle %}{{ page.metatitle }}{% elsif page.title %}{{ page.title }}{% endif %} @auth0"
         ></amp-social-share>
         <amp-social-share type="linkedin" width="20" height="20"
         data-param-url={{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url|replace:'amp/',''}}
         data-param-attribution="Auth0"
-        data-param-text="{{current.title}} @auth0"
+        data-param-text="{% if page.metatitle %}{{ page.metatitle }}{% elsif page.title %}{{ page.title }}{% endif %} @auth0"
         ></amp-social-share>
         <amp-social-share type="facebook" width="20" height="20"
         data-param-url={{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url|replace:'amp/',''}}

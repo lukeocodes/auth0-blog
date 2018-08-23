@@ -68,9 +68,6 @@ But magic links are just the tip of the passwordless iceberg. There are several 
 
     ![Guardian](https://cdn.auth0.com/blog/passwordless/guardian.png)
 
-* **Touch ID: **Instead of a password, Touch ID uses a fingerprint to log you in. When you set up Touch ID, [your fingerprint is paired with a unique key](https://auth0.com/blog/how-fingerprint-auth-gives-you-security/) that is accessed every time you authenticate. In this way, it sets up an original login without sending your biometric data off of your device. Since fingerprints and other biometric data are becoming more integrated to our electronic devices, it's easier than ever to rely on it for authentication.
-
-![TouchID Flow](https://cdn.auth0.com/blog/passwordless/passwordless-touchid-flow.png)
 
 ## How does the safety of passwordless authentication compare to other logins?
 
@@ -78,7 +75,6 @@ The technical side of both passwordless and username + password authentication h
 
 Here's a brief rundown of how things stack up on the technical side of things:
 
-* **Touch ID**: Apple cites [1-in-50,000 chance](https://support.apple.com/en-us/HT204587) of a fingerprint being guessed or interpreted as a false positive. There have been [reports of fake fingerprints](http://www.cheatsheet.com/gear-style/smartphone-fingerprint-scanners-are-they-secure.html/?a=viewall) being printed and used to log into phones, although it is not likely that fingerprints are currently being stolen and printed en masse.
 * **Numerical Passcode:** Apple cites a [1-in-10,000 chance](https://support.apple.com/en-us/HT204587) of a numerical passcode being guessed (or generated).
 * **Passwords and passphrases:** If a password or passphrase is unique and complex, it can be a perfectly adequate form of security.
 * **Login codes and magic links: **Since each time a login code or link is used it is generated, there isn't the same type of risk for a security risk via brute force generation. When a login code or link is sent, an IAM should ensure that the channel is secure. If the code or link is not used within a certain time frame, login access will expire, to guard against malicious use.
