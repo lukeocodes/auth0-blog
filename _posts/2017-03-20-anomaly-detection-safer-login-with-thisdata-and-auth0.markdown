@@ -1,8 +1,9 @@
 ---
-layout: post
+layout: redirect
 title: "Anomaly Detection: Safer Login with ThisData and Auth0"
 description: "Learn how to detect authentication anomalies with ThisData to improve login security."
 date: 2017-03-20 8:30
+redirect_to: 
 category: Technical guide, Identity
 banner:
   text: "Auth0 makes it easy to add authentication to your application."
@@ -21,6 +22,11 @@ tags:
 related:
 - 2017-01-27-machine-learning-for-everyone-part-2-abnormal-behavior
 - 2016-12-02-modern-authentication-for-your-clients-made-easy
+permalink: /anomaly-detection-safer-login-with-thisdata-and-auth0/
+redirect_to: "/docs/anomaly-detection/"
+meta-robots: "noindex, nofollow"
+sitemap:
+  exclude: 'yes'
 ---
 
 _Guest post by [Nick Malcolm](https://twitter.com/nickmalcolm), CTO at [ThisData](https://thisdata.com)_

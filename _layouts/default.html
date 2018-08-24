@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="header-dark">
+<html class="header-dark" lang="{% if page.lang == null %}en{% elsif page.lang %}{{page.lang}}{% endif %}">
 
   {% include head.html %}
 

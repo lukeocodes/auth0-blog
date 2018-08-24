@@ -22,7 +22,7 @@ tags:
 related:
 - jp-reactjs-authentication
 - jp-vuejs2-authentication
-lang: jp
+lang: ja
 alternate_locale_en: securing-asp-dot-net-core-2-applications-with-jwts
 ---
 

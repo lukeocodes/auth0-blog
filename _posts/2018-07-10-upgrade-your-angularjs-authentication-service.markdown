@@ -24,7 +24,7 @@ related:
 - 2018-03-13-using-python-flask-and-angular-to-build-modern-apps-part-1
 ---
 
-**TL;DR:** In this article, we’re going to talk about two notoriously difficult subjects very near and dear to my heart: ngUpgrade and authentication. First, we’ll cover the foundations of upgrading a real application from AngularJS to Angular. Then, we’ll look at a practical example of upgrading AngularJS authentication strategies to Angular. We’ll look at a sample app that uses machine-to-machine authentication with Auth0.
+**TL;DR:** In this article, we’re going to talk about two notoriously difficult subjects very near and dear to my heart: ngUpgrade and authentication. First, we’ll cover the foundations of upgrading a real application from AngularJS to Angular. Then, we’ll look at a practical example of upgrading AngularJS authentication strategies to Angular. We’ll look at a sample app that uses [machine to machine (M2M) authentication with Auth0](https://auth0.com/machine-to-machine).
 
 {% include tweet_quote.html quote_text="Learn how to migrate from AngularJS to the new Angular framework." %}
 
@@ -104,11 +104,11 @@ This basic order system application starts off as a hybrid application with Angu
 
 ### Current Authentication Setup
 
-The Express server is set up with Auth0 with a machine-to-machine API and client relationship. I used machine-to-machine because a user login system is an extra layer of complexity that, for this purpose, doesn’t actually matter that much. All we really care about is the ability to go get a token and add it to our outgoing requests to be able to get our data. Whether that’s specific to a user or to an application doesn’t matter. (I should also say that, while I’m using Auth0, the approach we take in this article applies to any sort of token system.) 
+The Express server is set up with Auth0 with a machine to machine API and client relationship. I used machine to machine because a user login system is an extra layer of complexity that, for this purpose, doesn’t actually matter that much. All we really care about is the ability to go get a token and add it to our outgoing requests to be able to get our data. Whether that’s specific to a user or to an application doesn’t matter. (I should also say that, while I’m using Auth0, the approach we take in this article applies to any sort of token system.) 
 
 I’ve also got two routes using authentication: the customers' route and the products route. This is because the customers' route is using an Angular component and service, but the products route is still using AngularJS pieces. That’ll let us see both approaches and how to upgrade.
 
-If you want to follow along, you’ll need to use Auth0 to set up your own machine-to-machine API and application, since this server is just running locally. You can do that from the Auth0 dashboard. First [create the API](https://auth0.com/docs/quickstart/backend/nodejs), then create the application as a machine-to-machine application.
+If you want to follow along, you’ll need to [use Auth0 to set up your own machine to machine API and application](https://auth0.com/machine-to-machine), since this server is just running locally. You can do that from the Auth0 dashboard. First [create the API](https://auth0.com/docs/quickstart/backend/nodejs), then create the application as a machine to machine application.
 
 ![Machine to machine application.](https://cdn.auth0.com/blog/ngupgrade/machine-to-machine-auth0-api.png)
 

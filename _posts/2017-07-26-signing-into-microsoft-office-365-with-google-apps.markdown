@@ -282,6 +282,7 @@ function (user, context, callback) {
     }
 
     var options = {
+      method: 'POST',
       url: ' https://graph.windows.net/' + AAD_TENANT_NAME + '/users/' + userId + '/assignLicense?api-version=1.6',
       headers: {
         'Content-type': 'application/json',

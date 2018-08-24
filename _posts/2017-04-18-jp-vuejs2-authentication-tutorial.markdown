@@ -21,7 +21,7 @@ tags:
 related:
 - jp-angular-2-authentication
 - jp-reactjs-authentication
-lang: jp
+lang: ja
 alternate_locale_en: vuejs2-authentication-tutorial
 ---
 

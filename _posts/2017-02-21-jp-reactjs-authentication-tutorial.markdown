@@ -22,7 +22,7 @@ tags:
 related:
 - jp-vuejs2-authentication
 - jp-angular-2-authentication
-lang: jp
+lang: ja
 alternate_locale_en: reactjs-authentication-tutorial
 ---
 

@@ -46,9 +46,12 @@ task :new_post, :title do |t, args|
 ---
 layout: post
 title: #{title.gsub(/&/,'&amp;')}
-description: <A SHORT DESCRIPTION OF THE POST <= 200 CHARACTERS >
+metatitle: <Title displayed in search engines and social - less than 60 characters>
+description: <Shorter shown underneath the title on the post itself and on blog feed - must be less than 110 characters>
+metadescription: <Richer, longer description that shows in search engines - must be less than 160 characters>
 date: #{Time.now.strftime('%Y-%m-%d %H:%M')}
 category: <FROM HERE: https://docs.google.com/spreadsheets/d/1e_RKzi8kVwzqPG8si8kyDOWPiBk9tI-XNGh0KgRIF7Q>
+auth0_aside: <true|false (FOR FALSE YOU COULD ALSO REMOVE THIS LINE)>
 press_release: <true|false (FOR FALSE YOU COULD ALSO REMOVE THIS LINE)>
 is_non-tech: <true|false (FOR FALSE YOU COULD ALSO REMOVE THIS LINE)>
 author:

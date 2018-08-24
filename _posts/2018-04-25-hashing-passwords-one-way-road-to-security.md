@@ -11,7 +11,7 @@ design:
 author:
   name: Dan Arias
   url: http://twitter.com/getDanArias
-  mail: dan.arias@auth.com
+  mail: dan.arias@auth0.com
   avatar: https://pbs.twimg.com/profile_images/1002301567490449408/1-tPrAG__400x400.jpg
 tags:
   - hashing
@@ -28,36 +28,34 @@ related:
   - 2018-05-31-hashing-in-action-understanding-bcrypt
 ---
 
-The gist of authentication is to provide users with a set of credentials, such a username and a password, and to verify that they provide the correct credentials whenever they want access to the application. Hence, we need a way to store these credentials in our database for future comparisons. However, storing passwords on the server side for authentication is a difficult task. Let's explore one of the mechanisms that make password storage secure and easier: hashing.  
+The gist of authentication is to provide users with a set of credentials, such as username and password, and to verify that they provide the correct credentials whenever they want access to the application. Hence, we need a way to store these credentials in our database for future comparisons. However, storing passwords on the server side for authentication is a difficult task. Let's explore one of the mechanisms that make password storage secure and easier: hashing.
 
 ## Storing Passwords is Risky and Complex
 
 A simple approach to storing passwords is to create a table in our database that maps a username with a password. When a user logs in, the server gets a request for authentication with a payload that contains a username and a password. We look up the username in the table and compare the password provided with the password stored. A match gives the user access to the application.
 
-The security strength and resilience of this model depends on _how_ the password is stored. The most basic, but also the least secure, password storage format is ***cleartext***.
+The security strength and resilience of this model depends on _how_ the password is stored. The most basic, but also the least secure, password storage format is **_cleartext_**.
 
-As explained by [Dan Cornell from the Denim Group](https://denimgroup.com/resources/blog/2007/10/cleartext-vs-pl/), ***cleartext*** refers to "readable data transmitted or stored _in the clear_", for example, unencrypted. You may have also seen the terms ***plaintext*** and ***plain text***. What's the difference? According to Cornell, plaintext refers to data that will serve as the input to an encryption algorithm, while plain text refers to unformatted text, such as the content of a plain text file or `.txt`. It's important to know the distinction between these terms as we move forward.
+As explained by [Dan Cornell from the Denim Group](https://denimgroup.com/resources/blog/2007/10/cleartext-vs-pl/), **_cleartext_** refers to "readable data transmitted or stored _in the clear_", for example, unencrypted. You may have also seen the terms **_plaintext_** and **_plain text_**. What's the difference? According to Cornell, plaintext refers to data that will serve as the input to an encryption algorithm, while plain text refers to unformatted text, such as the content of a plain text file or `.txt`. It's important to know the distinction between these terms as we move forward.
 
 Storing passwords in cleartext is the equivalent of writing them down in a piece of digital paper. If an attacker was to break into the database and steal the passwords table, the attacker could then access each user account. This problem is compounded by the fact that many users re-use or use variations of a single password, potentially allowing the attacker to access other services different from the one being compromised. That all sounds like a security nightmare!
 
 The attack could come from within the organization. A rogue software engineer with access to the database could abuse that access power, retrieve the cleartext credentials, and access any account.
 
-A more secure way to store a password is to transform it into data that cannot be converted back to the original password. This mechanism is known as ***hashing***. Let's learn more about the theory behind hashing, its benefits, and its limitations.
+A more secure way to store a password is to transform it into data that cannot be converted back to the original password. This mechanism is known as **_hashing_**. Let's learn more about the theory behind hashing, its benefits, and its limitations.
 
 {% include tweet_quote.html quote_text="We must guard user accounts from both internal and external unauthorized access. Cleartext storage must never be an option for passwords. Hashing and salting should always be part of a password management strategy." %}
-
 
 ## What's Hashing About?
 
 By dictionary definition, [hashing](https://en.wiktionary.org/wiki/hash) refers to "chopping something into small pieces" to make it look like a "confused mess". That definition closely applies to what hashing represents in computing.
 
-In cryptography, a [hash function](https://en.wikipedia.org/wiki/Cryptographic_hash_function) is a mathematical algorithm that maps data of any size to a [bit string](http://www.gnu.org/software/mit-scheme/documentation/mit-scheme-ref/Bit-Strings.html) of a fixed size. We can refer to the function input as ***message*** or simply as input. The fixed-size string function output is known as the ***hash*** or the ***message digest***. As stated by [OWASP](https://www.owasp.org/index.php/Guide_to_Cryptography#Hashes), hash functions used in cryptography have the following key properties:
+In cryptography, a [hash function](https://en.wikipedia.org/wiki/Cryptographic_hash_function) is a mathematical algorithm that maps data of any size to a [bit string](http://www.gnu.org/software/mit-scheme/documentation/mit-scheme-ref/Bit-Strings.html) of a fixed size. We can refer to the function input as **_message_** or simply as input. The fixed-size string function output is known as the **_hash_** or the **_message digest_**. As stated by [OWASP](https://www.owasp.org/index.php/Guide_to_Cryptography#Hashes), hash functions used in cryptography have the following key properties:
 
-* It's easy and practical to compute the hash, but "difficult or impossible to re-generate the original input if only the hash value is known."
-* It's difficult to create an initial input that would match a specific desired output.
+- It's easy and practical to compute the hash, but "difficult or impossible to re-generate the original input if only the hash value is known."
+- It's difficult to create an initial input that would match a specific desired output.
 
 Thus, in contrast to encryption, hashing is a one-way mechanism. The data that is hashed cannot be practically "unhashed".
-
 
 <p style="text-align: center;">
   <img src="https://cdn.auth0.com/blog/hashing-one-way-road-to-security/encryption-flow.png" alt="The encryption flow can be reversed. It's two-way">
@@ -78,7 +76,6 @@ Hash (SHA-256): `3c9c93e0f8eb2161e5787f7cd3e4b67f8d98fbd80b7d237cc757583b06daa3e
 Input: `python`
 
 Hash (SHA-256): `98eadd540e6c0579a1bcbe375c8d1ae2863beacdfb9af803e5f4d6dd1f8926c2`
-
 
 {% include tweet_quote.html quote_text="Understanding blockchains and cryptocurrency, such as bitcoin, is easier when you understand how cryptographic hash functions work." %}
 
@@ -104,7 +101,7 @@ Knowing that the result of a modulo operation is `2` only tells us that `x` divi
 ...
 ```
 
-When using a cryptographic hash function, we must not be able to find a ***pre-image*** by looking at a ***hash***. A pre-image is what we call a value that produces a certain specific hash when used as input to a hash function. Hence, a cryptographic hash function is designed to be resistant to [pre-image attacks](https://en.wikipedia.org/wiki/Preimage_attack); it must be ***pre-image resistant***. So if an attacker knows a hash, it is computationally infeasible to find any input that hashes to that given output. This property is what makes hashing one of the [foundations of bitcoin and blockchains](https://auth0.com/blog/an-introduction-to-ethereum-and-smart-contracts/).
+When using a cryptographic hash function, we must not be able to find a **_pre-image_** by looking at a **_hash_**. A pre-image is what we call a value that produces a certain specific hash when used as input to a hash function. Hence, a cryptographic hash function is designed to be resistant to [pre-image attacks](https://en.wikipedia.org/wiki/Preimage_attack); it must be **_pre-image resistant_**. So if an attacker knows a hash, it is computationally infeasible to find any input that hashes to that given output. This property is what makes hashing one of the [foundations of bitcoin and blockchains](https://auth0.com/blog/an-introduction-to-ethereum-and-smart-contracts/).
 
 > If you are curious about how a hash function works, this [Wikipedia article](https://en.wikipedia.org/wiki/SHA-2) provides all the details about how the Secure Hash Algorithm 2 (SHA-2) works.
 
@@ -128,7 +125,7 @@ Consequentially, there is no feasible way for us to determine what the hash of `
 
 The irreversible mathematical properties of hashing make it a phenomenal mechanism to conceal password at rest and in motion. Another critical property that makes hash functions suitable for password storage is that they are deterministic.
 
-A ***deterministic*** function is a function that given the same input always produces the same output. This is vital for authentication since we need to have the guarantee that a given password will always produce the same hash; otherwise, it would be impossible to consistently verify user credentials with this technique.
+A **_deterministic_** function is a function that given the same input always produces the same output. This is vital for authentication since we need to have the guarantee that a given password will always produce the same hash; otherwise, it would be impossible to consistently verify user credentials with this technique.
 
 To integrate hashing in the password storage workflow, when the user is created, instead of storing the password in cleartext, we hash the password and store the username and hash pair in the database table. When the user logs in, we hash the password sent and compare it to the hash connected with the provided username. If the hashed password and the stored hash match, we have a valid login. It's important to note that we never store the cleartext password in the process, we hash it and then forget it.
 
@@ -138,13 +135,13 @@ Whereas the transmission of the password should be encrypted, the password hash 
 
 Hashing seems pretty robust. But, in one of many scenarios, if an attacker breaks into the server and steals the password hashes, all that the attacker can see is random data that can't be reversed to cleartext due to the architecture of hash functions. An attacker would need to provide an input to the hash function to create a hash that could then be used for authentication, which could be done offline without raising any red flags on the server.
 
-The attacker could then either steal the cleartext password from the user through [modern phishing and spoofing techniques](https://auth0.com/blog/the-new-trend-of-artisanal-spam/) or try a ***brute force attack*** where the attacker inputs random passwords into the hash function until a matching hash is found.
+The attacker could then either steal the cleartext password from the user through [modern phishing and spoofing techniques](https://auth0.com/blog/the-new-trend-of-artisanal-spam/) or try a **_brute force attack_** where the attacker inputs random passwords into the hash function until a matching hash is found.
 
 A brute-force attack is largely inefficient. Does the attacker have any other options?
 
 Since hash functions are deterministic (the same function input always results in the same hash), if a couple of users were to use the same password, their hash would be identical. If a significant amount of people are mapped to the same hash that could be an indicator that the hash represents a commonly used password and allow the attacker to significantly narrow down the number of passwords to use to break in by brute force.
 
-Additionally, through a ***rainbow table attack***, an attacker can use a large database of precomputed hashes to find the input of stolen password hashes. We can mitigate a rainbow table attack by boosting hashing with a procedure that adds unique random data to each input at the moment they are stored. This practice is known as [***adding salt to a hash***](https://auth0.com/blog/adding-salt-to-hashing-a-better-way-to-store-passwords/) and it produces ***salted password hashes***.
+Additionally, through a **_rainbow table attack_**, an attacker can use a large database of precomputed hashes to find the input of stolen password hashes. We can mitigate a rainbow table attack by boosting hashing with a procedure that adds unique random data to each input at the moment they are stored. This practice is known as [**_adding salt to a hash_**](https://auth0.com/blog/adding-salt-to-hashing-a-better-way-to-store-passwords/) and it produces **_salted password hashes_**.
 
 With a salt, the hash is not based on the value of the password alone. The input is made up of the password plus the salt. A rainbow table is built for a set of predicted passwords. If the hashing of those passwords doesn't include the salt, the rainbow table is useless. When the attacker gets a hold of the salt, the rainbow table now needs to be re-computed, which ideally would take a very long time, further mitigating this attack vector.
 
@@ -160,7 +157,7 @@ A slow cryptographic hash function hampers that process but doesn't bring it to 
 
 Since hash functions can take an input of any size but produce hashes that are fixed-size strings, the set of all possible inputs is infinite while the set of all possible outputs is finite. This makes it possible for multiple inputs to map to the same hash. Therefore, even if we were able to reverse a hash, we would not know for sure that the result was the selected input. This is known as a collision and it's not a desirable effect.
 
-A cryptographic collision occurs when two unique inputs produce the same hash. Consequently, a [***collision attack***](https://en.wikipedia.org/wiki/Collision_attack) is an attempt to find two pre-images that produce the same hash. The attacker could use this collision to fool systems that rely on hashed values by forging a valid hash using incorrect or malicious data. Therefore, cryptographic hash functions must also be resistant to a collision attack by making it very difficult for attackers to find these unique values.
+A cryptographic collision occurs when two unique inputs produce the same hash. Consequently, a [**_collision attack_**](https://en.wikipedia.org/wiki/Collision_attack) is an attempt to find two pre-images that produce the same hash. The attacker could use this collision to fool systems that rely on hashed values by forging a valid hash using incorrect or malicious data. Therefore, cryptographic hash functions must also be resistant to a collision attack by making it very difficult for attackers to find these unique values.
 
 {% include tweet_quote.html quote_text="Since inputs can be of infinite length but hashes are of a fixed length, collisions are possible. Despite a collision risk being statistically very low, collisions have been found in commonly used hash functions." %}
 
@@ -172,11 +169,11 @@ Google recommends using stronger hashing algorithms such as SHA-256 and SHA-3. O
 
 Let's recap what we've learned through this article:
 
-* The core purpose of hashing is to create a fingerprint of data to assess data integrity, not confidentiality. Confidentiality is gained through encryption.
-* A hashing function takes arbitrary inputs and transforms them into outputs of a fixed length.
-* To qualify as a cryptographic hash function, a hash function must be pre-image resistant and collision resistant.
-* Due to rainbow tables, hashing alone is not sufficient to protect passwords for mass exploitation. To mitigate this attack vector, hashing must integrate the use of cryptographic salts.
-* Not all cryptographic algorithms are suitable for the modern industry. At the time of this writing, MD5 and SHA-1 have been reported by Google as being vulnerable due to collisions. The SHA-2 family stands as a better option.
+- The core purpose of hashing is to create a fingerprint of data to assess data integrity, not confidentiality. Confidentiality is gained through encryption.
+- A hashing function takes arbitrary inputs and transforms them into outputs of a fixed length.
+- To qualify as a cryptographic hash function, a hash function must be pre-image resistant and collision resistant.
+- Due to rainbow tables, hashing alone is not sufficient to protect passwords for mass exploitation. To mitigate this attack vector, hashing must integrate the use of cryptographic salts.
+- Not all cryptographic algorithms are suitable for the modern industry. At the time of this writing, MD5 and SHA-1 have been reported by Google as being vulnerable due to collisions. The SHA-2 family stands as a better option.
 
 ## Simplifying Password Management with Auth0
 

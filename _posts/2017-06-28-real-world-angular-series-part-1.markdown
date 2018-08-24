@@ -402,10 +402,11 @@ You'll need an [Auth0](https://auth0.com) account to manage authentication. You 
 1. Go to your [**Auth0 Dashboard**](https://manage.auth0.com/#/) and click the "[create a new application](https://manage.auth0.com/#/applications/create)" button.
 2. Give your new app a name (for example: `RSVP MEAN App`) and select "Single Page Web Applications".
 3. In the **Settings** for your new Auth0 application, add `http://localhost:8083/callback` and `http://localhost:4200/callback` to the **Allowed Callback URLs**.
-4. In **Allowed Logout URLs**, add `http://localhost:4200`.
-5. Make sure the **Use Auth0 instead of the IdP to do Single Sign On** toggle is enabled.
-6. Scroll down to the bottom of the **Settings** section and click "Show Advanced Settings". Choose the **OAuth** tab and make sure the **JsonWebToken Signature Algorithm** is set to "RS256".
-7. If you'd like, you can [set up some social connections](https://manage.auth0.com/#/connections/social). You can then enable them for your app in the **Connections** settings tab for your `RSVP Mean App` application. The example shown in the screenshot above utilizes username/password database, Facebook, Google, and Twitter.
+4. In **Allowed Web Origins**, add `http://localhost:8083` and `http://localhost:4200`.
+5. In **Allowed Logout URLs**, add `http://localhost:4200`.
+6. Make sure the **Use Auth0 instead of the IdP to do Single Sign On** toggle is enabled.
+7. Scroll down to the bottom of the **Settings** section and click "Show Advanced Settings". Choose the **OAuth** tab and make sure the **JsonWebToken Signature Algorithm** is set to "RS256".
+8. If you'd like, you can [set up some social connections](https://manage.auth0.com/#/connections/social). You can then enable them for your app in the **Connections** settings tab for your `RSVP Mean App` application. The example shown in the screenshot above utilizes username/password database, Facebook, Google, and Twitter.
 
 We added two ports to the callback URLs and allowed web origins because we'll be running and testing the app from both during development. Port `4200` is the port the Angular CLI serves the Angular app from. Port `8083` is the port our Node API and server uses: this will be necessary in order to test the production build. When we launch to a production URL, we can either create a new production Auth0 Application or add our production URL to the app as well.
 

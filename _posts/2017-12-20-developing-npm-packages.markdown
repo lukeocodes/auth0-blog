@@ -1,8 +1,7 @@
 ---
 layout: post
-title: "Developing NPM Packages"
-description: "Let's learn, through a practical exercise, what tools we can leverage to create high quality NPM packages."
-longdescription: "Creating high quality NPM packages to share with the community is not hard. It's all about configuring the right tools to helps us develop trustworthy libraries. Let's learn, through a practical exercise, what tools we can leverage and how to configure them."
+title: "Developing and Publishing an NPM Package"
+description: "Learn, through a practical tutorial, what tools we can leverage to develop and publish high-quality NPM packages."
 date: "2017-12-20 08:30"
 design:
   bg_color: "#1D4E69"
@@ -32,13 +31,13 @@ related:
 - 2016-11-21-building-and-authenticating-nodejs-apps
 ---
 
-**TL;DR:** In this article, we are going to learn what tools we should take advantage of when developing NPM packages. We will start from scratch. We will create a GitHub Repository to host our package, then we will look into interesting and important topics. For example, we will talk about IDEs, we will configure ESLint in our project, we will publish the package on NPM, and we will even integrate a continuous integration tool. [The code that gave life to this article can be found in this GitHub repository](https://github.com/brunokrebs/masks-js).
+**TL;DR:** In this article, we are going to learn what tools we should take advantage of when developing NPM packages. We will start from scratch and create a GitHub Repository to host our package, then we will look into interesting and important topics. For example, we will talk about IDEs, we will configure ESLint in our project, we will publish the package on NPM and into the registry, and we will even integrate a continuous integration tool. The code that gave life to this article can be found in [this GitHub repository](https://github.com/brunokrebs/masks-js).
 
 ## <span id="what-we-will-build"></span>What NPM Package Will We Build
 
-After following all the steps shown in this article, we will have our own package published in [the NPM official repository](https://www.npmjs.com/). The features that this package will support (and how to build them) are not the focus of this article. There are plenty of great tutorials out there that can teach us how to develop in Node.js. The focus here are the processes and the tools that we can use to build great packages.
+After following all the steps shown in this article, we will have [our own package published in the NPM package registry](https://www.npmjs.com/package/masks-js). The features that this package will support (and how to build them) are not the focus of this article. There are plenty of great tutorials out there that can teach us [how to develop in Node.js](https://auth0.com/blog/building-and-authenticating-nodejs-apps/). The focus here are the processes and the tools that we can use to build great NPM packages.
 
-Nevertheless, to give a heads up, we are going to build and publish a NPM package that masks raw digits into US phones. For example, if we pass `1234567890` to the package, it will return `(543) 126-0987`.
+Nevertheless, to give a heads up, we are going to build and publish an NPM package that masks raw digits into US phones. For example, if we pass `1234567890` to the package, it will return `(543) 126-0987`.
 
 The following list gives an overview of the topics that we are going to cover in this article:
 
@@ -675,7 +674,7 @@ In this case, we will use [Travis CI](travis-ci.org), one of the most popular an
 
 First, we need to head to our [profile on Travis CI](https://travis-ci.org/profile/) and turn on the switch shown in the left of our project's name.
 
-![NPM Package Development: Integrating with Travis CI.](https://cdn.auth0.com/blog/npm-package-development/integrating-with-travis-ci.png)
+![NPM Package Development: Integrating NPM Package with Travis CI](https://cdn.auth0.com/blog/npm-package-development/integrating-with-travis-ci.png)
 
 Then, back into our project root, we need to create a file called `.travis.yml` with the following properties:
 

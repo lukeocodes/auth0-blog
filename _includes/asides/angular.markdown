@@ -97,8 +97,6 @@ import * as auth0 from 'auth0-js';
 import { AUTH_CONFIG } from './auth0-variables';
 import { UserProfile } from './profile.model';
 
-(window as any).global = window;
-
 @Injectable()
 export class AuthService {
   // Create Auth0 web auth instance
@@ -107,7 +105,7 @@ export class AuthService {
   private _Auth0 = new auth0.WebAuth({
     clientID: AUTH_CONFIG.CLIENT_ID,
     domain: AUTH_CONFIG.CLIENT_DOMAIN,
-    responseType: 'token',
+    responseType: 'id_token token',
     redirectUri: AUTH_CONFIG.REDIRECT,
     audience: AUTH_CONFIG.AUDIENCE,
     scope: AUTH_CONFIG.SCOPE
@@ -120,11 +118,11 @@ export class AuthService {
   loggedIn: boolean;
   loggedIn$ = new BehaviorSubject<boolean>(this.loggedIn);
 
-  constructor() {
-    // You can restore an unexpired authentication session on init
-    // by using the checkSession() endpoint from auth0.js:
-    // https://auth0.com/docs/libraries/auth0js/v9#using-checksession-to-acquire-new-tokens
-  }
+  // NOTE: You can restore an unexpired authentication session on init
+  // by using the checkSession() endpoint from auth0.js:
+  // https://auth0.com/docs/libraries/auth0js/v9#using-checksession-to-acquire-new-tokens
+
+  constructor() {}
 
   private _setLoggedIn(value: boolean) {
     // Update login status subject
@@ -142,25 +140,18 @@ export class AuthService {
     this._Auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken) {
         window.location.hash = '';
-        this.getUserInfo(authResult);
+        this._setSession(authResult);
       } else if (err) {
         console.error(`Error: ${err.error}`);
       }
     });
   }
 
-  getUserInfo(authResult) {
-    // Use access token to retrieve user's profile and set session
-    this._Auth0.client.userInfo(authResult.accessToken, (err, profile) => {
-      this._setSession(authResult, profile);
-    });
-  }
-
-  private _setSession(authResult, profile) {
+  private _setSession(authResult) {
     // Save session data and update login status subject
     this.expiresAt = authResult.expiresIn * 1000 + Date.now();
     this.accessToken = authResult.accessToken;
-    this.userProfile = profile;
+    this.userProfile = authResult.idTokenPayload;
     this._setLoggedIn(true);
   }
 
@@ -193,7 +184,7 @@ The `login()` method authorizes the authentication request with Auth0 using your
 
 > **Note:** If it's the user's first visit to our app _and_ our callback is on `localhost`, they'll also be presented with a consent screen where they can grant access to our API. A first party client on a non-localhost domain would be highly trusted, so the consent dialog would not be presented in this case. You can modify this by editing your [Auth0 Dashboard API](https://manage.auth0.com/#/apis) **Settings**. Look for the "Allow Skipping User Consent" toggle.
 
-We'll receive `accessToken` and `expiresIn` in the hash from Auth0 when returning to our app. The `handleLoginCallback()` method uses Auth0's `parseHash()` method callback to get the user's profile (`getUserInfo()`) and set the session (`_setSession()`) by saving the token, profile, and token expiration and updating the `loggedIn$` subject so that any subscribed components in the app are informed that the user is now authenticated.
+We'll receive `accessToken`, `expiresIn`, and `idTokenPayload` in the hash from Auth0 when returning to our app. The `handleLoginCallback()` method uses Auth0's `parseHash()` method callback to set the session (`_setSession()`) by saving the token, profile, and token expiration and updating the `loggedIn$` subject so that any subscribed components in the app are informed that the user is now authenticated.
 
 > **Note:** The profile takes the shape of [`profile.model.ts`](https://github.com/auth0-blog/angular-auth0-aside/blob/master/src/app/auth/profile.model.ts) from the [OpenID standard claims](https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims).
 
@@ -202,6 +193,8 @@ Finally, we have a `logout()` method that logs out of the authentication session
 We also have an `authenticated` accessor to return current authentication status based on presence of a token and the token's expiration.
 
 Once [`AuthService` is provided in `app.module.ts`](https://github.com/auth0-blog/angular-auth0-aside/blob/master/src/app/app.module.ts#L32), its methods and properties can be used anywhere in our app, such as the [home component](https://github.com/auth0-blog/angular-auth0-aside/tree/master/src/app/home).
+
+> **Note:** You may need to add `(window as any).global = window;` to your `src/polyfills.ts` file if you receive a `window` error.
 
 ### Callback Component
 

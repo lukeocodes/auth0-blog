@@ -1,74 +1,94 @@
-## Aside: Authenticate a React App with Auth0
+## Aside: Securing React Apps with Auth0
 
-We can protect our applications and APIs so that only authenticated users can access them. Let's explore how to do this with a React application using [Auth0](https://auth0.com).
+As you will learn in this section, you can easily secure your React applications with Auth0, a global leader in Identity-as-a-Service (IDaaS) that provides thousands of enterprise customers with modern identity solutions. Alongside with the classic [username and password authentication process](https://auth0.com/docs/connections/database), Auth0 allows you to add features like [Social Login](https://auth0.com/learn/social-login/), [Multifactor Authentication](https://auth0.com/docs/multifactor-authentication), [Passwordless Login](https://auth0.com/passwordless), and [much more](https://auth0.com/docs/getting-started/overview) with just a few clicks.
 
-![Auth0 login screen](https://cdn.auth0.com/blog/resources/auth0-centralized-login.jpg)
+To follow along the instruction describe here, you will need an Auth0 account. If you don't have one yet, now is a good time to <a href="https://auth0.com/signup" data-amp-replace="CLIENT_ID" data-amp-addparams="anonId=CLIENT_ID(cid-scope-cookie-fallback-name)">sign up for a free Auth0 account</a>.
 
-We'll need an [Auth0](https://auth0.com) account to manage authentication. [To sign up for a free account, we can follow this link](https://auth0.com/signup). Next, let's set up an Auth0 application and API so Auth0 can interface with a React App.
+Also, if you want to follow this section in a clean environment, you can easily create a new React application with just one command:
+
+```bash
+npx create-react-app react-auth0
+```
+
+Then, you can move into your new React app (which was created inside a new directory called `react-auth0` by the `create-react-app` tool), and start working as explained in the following subsections.
 
 ### Setting Up an Auth0 Application
 
-1. Let's go to our [**Auth0 Dashboard**](https://manage.auth0.com/#/) and click the "[create a new application](https://manage.auth0.com/#/applications/create)" button.
-2. Let's call our app as "React Demo" and select "Single Page Web Applications".
-3. In the **Settings** for our new Auth0 application, let's add `http://localhost:3000/callback` to the **Allowed Callback URLs**.
-4. If desired, we can [set up some social connections](https://manage.auth0.com/#/connections/social). We can then enable them for our app in the **Application** options under the **Connections** tab. The example shown in the screenshot above utilizes username/password database, Facebook, Google, and Twitter. For production, make sure to set up the correct social keys and do not leave social connections set to use Auth0 dev keys.
+To represent your React application in your Auth0 account, you will need to create an [Auth0 Application](https://auth0.com/docs/applications). So, head to [the Applications section on your Auth0 dashboard](https://manage.auth0.com/#/applications) and proceed as follows:
 
-### Set Up an API
+1. click on the [_Create Application_](https://manage.auth0.com/#/applications/create) button;
+2. then define a _Name_ to your new application (e.g., "React Demo");
+3. then select _Single Page Web Applications_ as its type.
+4. and hit the _Create_ button to end the process.
 
-1. Go to [**APIs**](https://manage.auth0.com/#/apis) in your Auth0 dashboard and click on the "Create API" button. Enter a name for the API. Set the **Identifier** to your API endpoint URL. In this example, this is `http://localhost:3001/api/`. The **Signing Algorithm** should be `RS256`.
-2. You can consult the Node.js example under the **Quick Start** tab in your new API's settings. We'll implement our Node API in this fashion, using [Express](https://expressjs.com/), [express-jwt](https://github.com/auth0/express-jwt), and [jwks-rsa](https://github.com/auth0/node-jwks-rsa).
+After creating your application, Auth0 will redirect you to its _Quick Start_ tab. From there, you will have to click on the _Settings_ tab to whitelist some URLs that Auth0 can call after the authentication process. This is a security measure implemented by Auth0 to avoid the leaking of sensitive data (like [ID Tokens](https://auth0.com/docs/tokens/id-token)).
 
-We're now ready to implement Auth0 authentication on both our React client and Node backend API.
+So, when you arrive at the _Settings_ tab, search for the _Allowed Callback URLs_ field and add `http://localhost:3000/callback` into it. For this tutorial, this single URL will suffice.
+
+That's it! From the Auth0 perspective, you are good to go and can start securing your React application.
 
 ### Dependencies and Setup
 
-There are only two dependencies that we really need to install: [`auth0.js`](https://github.com/auth0/auth0.js) and [`history`](https://github.com/ReactTraining/history). To do that, let's issue `npm install --save auth0-js history` in the project root.
+To secure your React application with Auth0, there are only three dependencies that you will need to install:
 
-> **Note:** As we want the best security available, we are going to rely on the [Auth0 login page](https://auth0.com/docs/hosted-pages/login). This method consists of redirecting users to a login page hosted by Auth0 that is easily customizable right from the [Dashboard](https://manage.auth0.com/).
+- [`auth0.js`](https://github.com/auth0/auth0.js): This is the default library to integrate web applications with Auth0.
+- [`react-router`](https://github.com/ReactTraining/react-router): This is the de-facto library when it comes to routing management in React.
+- [`react-router-dom`](https://github.com/ReactTraining/react-router/tree/master/packages/react-router-dom): This is the extension to the previous library to web applications.
 
-After installing it, we can create an authentication service to interface with the `auth0.js` script. Let's call this service `Auth` and create it in the `src/Auth/` directory with the following code:
+To install these dependencies, move into your project root and issue the following command:
+
+```bash
+npm install --save auth0-js react-router react-router-dom
+```
+
+> **Note:** As you want the best security available, you are going to rely on the [Auth0 login page](https://auth0.com/docs/hosted-pages/login). This method consists of redirecting users to a login page hosted by Auth0 that is easily customizable right from [your Auth0 dashboard](https://manage.auth0.com/). If you want to learn why this is the best approach, check [the _Universal vs. Embedded Login_ article](https://auth0.com/docs/guides/login/universal-vs-embedded).
+
+After installing all three libraries, you can create a service to handle the authentication process. You can call this service `Auth` and create it in the `src/Auth/` directory with the following code:
 
 ```js
-import history from '../history';
+// src/Auth/Auth.js
 import auth0 from 'auth0-js';
 
 export default class Auth {
-  auth0 = new auth0.WebAuth({
-    // the following three lines MUST be updated
-    domain: 'bkrebs.auth0.com',
-    audience: 'https://bkrebs.auth0.com/userinfo',
-    clientID: '3co4Cdt3h3x8En7Cj0s7Zg5FxhKOjeeK',
-    redirectUri: 'http://localhost:3000/callback',
-    responseType: 'token',
-    scope: 'openid'
-  });
-
   constructor() {
-    this.login = this.login.bind(this);
-    this.logout = this.logout.bind(this);
+    this.auth0 = new auth0.WebAuth({
+      // the following three lines MUST be updated
+      domain: '<AUTH0_DOMAIN>',
+      audience: 'https://<AUTH0_DOMAIN>/userinfo',
+      clientID: '<AUTH0_CLIENT_ID>',
+      redirectUri: 'http://localhost:3000/callback',
+      responseType: 'token id_token',
+      scope: 'openid profile'
+    });
+
+    this.getProfile = this.getProfile.bind(this);
     this.handleAuthentication = this.handleAuthentication.bind(this);
     this.isAuthenticated = this.isAuthenticated.bind(this);
+    this.login = this.login.bind(this);
+    this.logout = this.logout.bind(this);
+    this.setSession = this.setSession.bind(this);
+  }
+
+  getProfile() {
+    return this.profile;
   }
 
   handleAuthentication() {
-    this.auth0.parseHash((err, authResult) => {
-      if (authResult && authResult.accessToken) {
+    return new Promise((resolve, reject) => {
+      this.auth0.parseHash((err, authResult) => {
+        if (err) return reject(err);
+        console.log(authResult);
+        if (!authResult || !authResult.idToken) {
+          return reject(err);
+        }
         this.setSession(authResult);
-        history.replace('/home');
-      } else if (err) {
-        history.replace('/home');
-        console.log(err);
-      }
-    });
+        resolve();
+      });
+    })
   }
 
-  setSession(authResult) {
-    // Set the time that the access token will expire at
-    let expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
-    localStorage.setItem('access_token', authResult.accessToken);
-    localStorage.setItem('expires_at', expiresAt);
-    // navigate to the home route
-    history.replace('/home');
+  isAuthenticated() {
+    return new Date().getTime() < this.expiresAt;
   }
 
   login() {
@@ -76,98 +96,153 @@ export default class Auth {
   }
 
   logout() {
-    // Clear access token and expiration from local storage
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('expires_at');
-    // navigate to the home route
-    history.replace('/home');
+    // clear id token and expiration
+    this.idToken = null;
+    this.expiresAt = null;
   }
 
-  isAuthenticated() {
-    // Check whether the current time is past the
-    // access token's expiry time
-    let expiresAt = JSON.parse(localStorage.getItem('expires_at'));
-    return new Date().getTime() < expiresAt;
+  setSession(authResult) {
+    this.idToken = authResult.idToken;
+    this.profile = authResult.idTokenPayload;
+    // set the time that the id token will expire at
+    this.expiresAt = authResult.expiresIn * 1000 + new Date().getTime();
   }
 }
 ```
 
-The `Auth` service just created contains functions to deal with various steps of the sign in/sign up process. The following list briefly summarizes these functions and their descriptions:
+The `Auth` service that you just created contains functions to deal with different steps of the sign in/sign up process. The following list briefly summarizes these functions and what they do:
 
-- `handleAuthentication`: looks for the result of the authentication in the URL hash. Then, process the result with the `parseHash` method from `auth0-js`;
-- `setSession`: sets the user's access token and the access token's expiry time;
-- `login`: initiates the login process, redirecting users to the login page;
-- `logout`: removes the user's tokens and expiry time from browser storage;
-- `isAuthenticated`: checks whether the expiry time for the user's access token has passed;
+- `getProfile`: This function returns the profile of the logged-in user.
+- `handleAuthentication`: This function looks for the result of the authentication process in the URL hash. Then, the function processes the result with the `parseHash` method from `auth0-js`.
+- `isAuthenticated`: This function checks whether the expiry time for the user's ID token has passed.
+- `login`: This function initiates the login process, redirecting users to the login page.
+- `logout`: This function removes the user's tokens and expiry time.
+- `setSession`: This function sets the user's ID token, profile, and expiry time.
 
-Besides these functions, the class contains a field called `auth0` that is initialized with values extracted from the Auth0 application. Let's keep in mind that we need to update them accordingly before proceeding.
+Besides these functions, the class contains a field called `auth0` that is initialized with values extracted from your Auth0 application. It is important to keep in mind that you **have to** replace the `<AUTH0_DOMAIN>` and `<AUTH0_CLIENT_ID>` placeholders that you are passing to the `auth0` field.
 
-Attentive readers probably noticed that the `Auth` service also imports a module called `history` that we haven't talked about. We can define this module in only two lines, but let's define it in a file to provide reusability. Let's call this file `./src/history/history.js` and add the following code:
+> **Note:** For the `<AUTH0_DOMAIN>` placeholders, you will have to replace them with something similar to `your-subdomain.auth0.com`, where `your-subdomain` is the subdomain you chose while creating your Auth0 account (or your Auth0 tenant). For the `<AUTH0_CLIENT_ID>`, you will have to replace it with the random string copied from the _Client ID_ field of the Auth0 Application you created previously.
 
-```js
-import createHistory from 'history/createBrowserHistory'
+Since you are using the Auth0 login page, your users are taken away from the application. However, after they authenticate, users automatically return to the callback URL that you set up previously (i.e., `http://localhost:3000/callback`). This means that you need to create a component responsible for this route.
 
-export default createHistory()
-```
-
-After creating both elements, we can refactor our `App` component to make use of the `Auth` service.
+So, create a new file called `Callback.js` inside `src/Callback` (i.e., you will need to create the `Callback` directory) and insert the following code into it:
 
 ```jsx
-import React, { Component } from 'react';
-import { Navbar, Button } from 'react-bootstrap';
+// src/Callback/Callback.js
+import React from 'react';
+import { withRouter } from 'react-router';
+
+function Callback(props) {
+  props.auth.handleAuthentication().then(() => {
+    props.history.push('/');
+  });
+
+  return (
+    <div>
+      Loading user profile.
+    </div>
+  );
+}
+
+export default withRouter(Callback);
+```
+
+This component, as you can see, is responsible for triggering the `handleAuthentication` process and, when the process ends, for pushing users to your home page. While this component processes the authentication result, it simply shows a message saying that it is _loading the user profile_.
+
+After creating the `Auth` service and the `Callback` component, you can refactor your `App` component to integrate everything together:
+
+```jsx
+// src/App.js
+
+import React from 'react';
+import {withRouter} from 'react-router';
+import {Route} from 'react-router-dom';
+import Callback from './Callback/Callback';
 import './App.css';
 
-class App extends Component {
-  goTo(route) {
-    this.props.history.replace(`/${route}`)
-  }
+function HomePage(props) {
+  const {authenticated} = props;
 
-  login() {
-    this.props.auth.login();
-  }
+  const logout = () => {
+    props.auth.logout();
+    props.history.push('/');
+  };
 
-  logout() {
-    this.props.auth.logout();
-  }
-
-  render() {
-    const { isAuthenticated } = this.props.auth;
-
-    // ... render the view
-  }
-}
-
-export default App;
-```
-
-Note that we are passing this service through `props`. Therefore, when including the `App` component, we need to inject `Auth` into it: `<App auth={auth} />`.
-
-Considering that we are using the Auth0 login page, our users are taken away from the application. However, after they authenticate, users automatically return to the callback URL that we set up previously (`http://localhost:3000/callback`). This means that we need to create a component responsible for this URL:
-
-```jsx
-import React, { Component } from 'react';
-import loading from './loading.svg';
-
-class Callback extends Component {
-  render() {
-    const style = //...
-
+  if (authenticated) {
+    const {name} = props.auth.getProfile();
     return (
-      <div style={style}>
-        <img src={loading} alt="loading"/>
+      <div>
+        <h1>Howdy! Glad to see you back, {name}.</h1>
+        <button onClick={logout}>Log out</button>
       </div>
     );
   }
+
+  return (
+    <div>
+      <h1>I don't know you. Please, log in.</h1>
+      <button onClick={props.auth.login}>Log in</button>
+    </div>
+  );
 }
 
-export default Callback;
+function App(props) {
+  const authenticated = props.auth.isAuthenticated();
+
+  return (
+    <div className="App">
+      <Route exact path='/callback' render={() => (
+        <Callback auth={props.auth}/>
+      )}/>
+      <Route exact path='/' render={() => (
+        <HomePage
+          authenticated={authenticated}
+          auth={props.auth}
+          history={props.history}
+        />)
+      }/>
+    </div>
+  );
+}
+
+export default withRouter(App);
 ```
 
-This component can just contain a loading indicator that keeps spinning while the application sets up a client-side session for the users. After the session is set up, we can redirect users to another route.
+In this case, you are actually defining two components inside the same file (just for the sake of simplicity). You are defining a `HomePage` component that shows a message with the name of the logged-in user (that is, when the user is logged in, of course), and a message telling unauthenticated users to log in.
 
-Please refer to [the official Quick Start Guide to see, step by step, how to properly secure a React application](https://auth0.com/docs/quickstart/spa/react/01-login). Besides the steps shown in this section, the guide also shows:
+Also, this file is making the `App` component responsible for deciding what component it must render. If the user is requesting the home page (i.e., the `/` route), the `HomePage` component is shown. If the user is requesting the callback page (i.e., `/callback`), then the `Callback` component is shown.
 
-- [How to manage profile information of authenticated users](https://auth0.com/docs/quickstart/spa/react/02-user-profile)
-- [How to properly call an API](https://auth0.com/docs/quickstart/spa/react/03-calling-an-api)
-- [How to control which routes users can see/interact with](https://auth0.com/docs/quickstart/spa/react/04-authorization)
-- [How to deal with expiry time of users' access token](https://auth0.com/docs/quickstart/spa/react/05-token-renewal)
+Note that you are using the `Auth` service in all your components (`App`, `HomePage`, and `Callback`) and also inside the `Auth` service. As such, you need to have a global instance for this service, and you have to include it in your `App` component.
+
+So, to create this global `Auth` instance and to wrap things up, you will need to update your `index.js` file as shown here:
+
+```js
+// src/index.js
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
+import Auth from './Auth/Auth';
+import './index.css';
+import App from './App';
+import registerServiceWorker from './registerServiceWorker';
+
+const auth = new Auth();
+
+ReactDOM.render(
+  <BrowserRouter>
+    <App auth={auth} />
+  </BrowserRouter>,
+  document.getElementById('root')
+);
+registerServiceWorker();
+```
+
+After that, you are done! You just finished securing your React application with Auth0. If you take your app for a spin now (`npm start`), you will be able to authenticate yourself with the help of Auth0, and you will be able to see your React app show your name (that is, if your identity provider does provide a name).
+
+If you are interested in learning more, please, refer to [the official React Quick Start guide](https://auth0.com/docs/quickstart/spa/react/01-login) to see, step by step, how to properly secure a React application. Besides the steps shown in this section, the guide also shows:
+
+- [How to manage profile information of authenticated users](https://auth0.com/docs/quickstart/spa/react/02-user-profile).
+- [How to properly call an API](https://auth0.com/docs/quickstart/spa/react/03-calling-an-api).
+- [How to control which routes users can see/interact with](https://auth0.com/docs/quickstart/spa/react/04-authorization).
+- [How to deal with the expiry time of users' tokens](https://auth0.com/docs/quickstart/spa/react/05-token-renewal).

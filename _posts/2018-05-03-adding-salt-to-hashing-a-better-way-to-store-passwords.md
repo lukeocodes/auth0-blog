@@ -11,7 +11,7 @@ design:
 author:
   name: Dan Arias
   url: http://twitter.com/getDanArias
-  mail: dan.arias@auth.com
+  mail: dan.arias@auth0.com
   avatar: https://pbs.twimg.com/profile_images/1002301567490449408/1-tPrAG__400x400.jpg
 tags:
   - hashing
@@ -27,23 +27,20 @@ related:
   - 2018-04-25-hashing-passwords-one-way-road-to-security
 ---
 
-
 Salting hashes sounds like one of the steps of a hash browns recipe, but in cryptography, the expression refers to adding random data to the input of a hash function to guarantee a unique output, the **hash**, even when the inputs are the same. Consequently, the unique hash produced by adding the salt can protect us against different attack vectors, such as rainbow table attacks, while slowing down dictionary and brute-force attacks.
 
 > **Note**: Never tell anyone using your registration forms that their selected password is not unique. A system like that in place will allow hackers to crack passwords in record time!
 
 Hashed passwords are not unique to themselves due to the deterministic nature of hash function: when given the same input, the same output is always produced. If Alice and Bob both choose `dontpwnme4` as a password, their hash would be the same:
 
-
-| **username**  | **hash**  |
-|---|---|
-| alice   | 4420d1918bbcf7686defdf9560bb5087d20076de5f77b7cb4c3b40bf46ec428b  |
-| jason  | 695ddccd984217fe8d79858dc485b67d66489145afa78e8b27c1451b27cc7a2b  |
-| mario  |cd5cb49b8b62fb8dca38ff2503798eae71bfb87b0ce3210cf0acac43a3f2883c   |
-| teresa  |73fb51a0c9be7d988355706b18374e775b18707a8a03f7a61198eefc64b409e8   |
-| bob  |4420d1918bbcf7686defdf9560bb5087d20076de5f77b7cb4c3b40bf46ec428b   |
-| mike  | 77b177de23f81d37b5b4495046b227befa4546db63cfe6fe541fc4c3cd216eb9  |
-
+| **username** | **hash**                                                         |
+| ------------ | ---------------------------------------------------------------- |
+| alice        | 4420d1918bbcf7686defdf9560bb5087d20076de5f77b7cb4c3b40bf46ec428b |
+| jason        | 695ddccd984217fe8d79858dc485b67d66489145afa78e8b27c1451b27cc7a2b |
+| mario        | cd5cb49b8b62fb8dca38ff2503798eae71bfb87b0ce3210cf0acac43a3f2883c |
+| teresa       | 73fb51a0c9be7d988355706b18374e775b18707a8a03f7a61198eefc64b409e8 |
+| bob          | 4420d1918bbcf7686defdf9560bb5087d20076de5f77b7cb4c3b40bf46ec428b |
+| mike         | 77b177de23f81d37b5b4495046b227befa4546db63cfe6fe541fc4c3cd216eb9 |
 
 As we can see, `alice` and `bob` have the same password as we can see that both share the same hash: `4420d1918bbcf7686defdf9560bb5087d20076de5f77b7cb4c3b40bf46ec428b`.
 
@@ -61,7 +58,7 @@ Fortunately, despite choosing the same password, `alice` and `bob` chose a passw
 
 Both dictionary attacks and brute-force attacks require the real-time computation of the hash. Since a good password hash function is _slow_, this would take a lot of time. To circumvent this problem, the attacker may rely on a rainbow table.
 
-A *rainbow table* can make the exploitation of unsalted passwords easier. A [rainbow table](https://en.wikipedia.org/wiki/Rainbow_table) is essentially a _pre-computed_ database of hashes. Dictionaries and random strings are run through a selected hash function and the input/hash mapping is stored in a table. The attacker can then simply do a password reverse lookup by using the hashes from a stolen password database.
+A _rainbow table_ can make the exploitation of unsalted passwords easier. A [rainbow table](https://en.wikipedia.org/wiki/Rainbow_table) is essentially a _pre-computed_ database of hashes. Dictionaries and random strings are run through a selected hash function and the input/hash mapping is stored in a table. The attacker can then simply do a password reverse lookup by using the hashes from a stolen password database.
 
 The main difference between a rainbow table attack and a dictionary and brute-force attack is _pre-computation_. Rainbow table attacks are fast because the attacker doesn't have to spend any time computing any hashes. The trade-off for the speed gained is the immense amount of space required to host a rainbow table. We could say that a rainbow table attack is a pre-computed dictionary and/or brute-force attack.
 
@@ -81,7 +78,6 @@ Let's say that we have password `farm1990M0O` and the salt `f1nd1ngn3m0`, we wou
 
 When another user chooses the same password, if we use the same salt, `f1nd1ngn3m0`, we just create a longer password. The hashes would be identical:
 
-
 Password: `farm1990M0O`
 
 Salt: `f1nd1ngn3m0`
@@ -89,7 +85,6 @@ Salt: `f1nd1ngn3m0`
 Salted input: `farm1990M0Of1nd1ngn3m0`
 
 Hash (SHA-256): `b7d5f95f03261f201b78f7a133f50848f2389f032b4fec9be07f80b34ae89e09`
-
 
 But, if we choose another salt for the same password, we get a different hash:
 
@@ -139,7 +134,7 @@ A longer salt effectively increases the computational complexity of attacking pa
 
 > Scheme security does not depend on hiding, splitting, or otherwise obscuring the salt.
 
-Simply put, *do not mess with the salt*. The salt doesn't need to be encrypted, for example. Salts are in place to prevent someone from cracking passwords at large and can be stored in cleartext in our database next to the hashes. However, we **do not want to make the salts readily accessible to the public**. For that reason, usernames are bad candidates to use as salts.
+Simply put, _do not mess with the salt_. The salt doesn't need to be encrypted, for example. Salts are in place to prevent someone from cracking passwords at large and can be stored in cleartext in our database next to the hashes. However, we **do not want to make the salts readily accessible to the public**. For that reason, usernames are bad candidates to use as salts.
 
 {% include tweet_quote.html quote_text="Hashing salts are speed bumps in an attacker's road to breaching your data. It does not matter if they are visible and unencrypted, what matters is that they are in place." %}
 
@@ -157,10 +152,10 @@ You'd want to rely on algorithms such as `bcrypt` that hash and salt the passwor
 
 # Recap
 
-* A cryptographic salt is made up of random bits added to each password instance before its hashing.
-* Salts create unique passwords even in the instance of two users choosing the same passwords.
-* Salts help us mitigate rainbow table attacks by forcing attackers to re-compute them using the salts.
-* Creating cryptographically strong random data to use as salts is very complex and it's a job better left to leading security solutions and providers.
+- A cryptographic salt is made up of random bits added to each password instance before its hashing.
+- Salts create unique passwords even in the instance of two users choosing the same passwords.
+- Salts help us mitigate rainbow table attacks by forcing attackers to re-compute them using the salts.
+- Creating cryptographically strong random data to use as salts is very complex and it's a job better left to leading security solutions and providers.
 
 ## Simplifying Password Management with Auth0
 

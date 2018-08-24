@@ -50,7 +50,9 @@ create-react-app react-pusher
 Once that’s completed, you can `cd` in to the react-pusher directory and run `yarn start` to start the app and see it on `localhost:3000` but before we do that, let’s install some dependencies. We’ll be using these dependencies later as we build our chat app:
 
 ```bash
-yarn add auth0-js bootstrap events history react-bootstrap react-router react-router-dom
+yarn add auth0-js bootstrap events \
+  history react-bootstrap react-router \
+  react-router-dom axios pusher-js
 ```
 
 So, why do we need these dependencies?

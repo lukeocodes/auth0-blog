@@ -10,8 +10,8 @@ author:
   mail: "bruno.krebs@auth0.com"
   avatar: "https://www.gravatar.com/avatar/76ea40cbf67675babe924eecf167b9b8?s=60"
 design:
-  bg_color: "#003A60"
-  image: "https://cdn.auth0.com/blog/typescript-intro/typescript-logo.png"
+  bg_color: "#182D4A"
+  image: "https://cdn.auth0.com/blog/logos/Full_TypeScript_Logo.png"
 tags:
 - typescript
 - javascript
