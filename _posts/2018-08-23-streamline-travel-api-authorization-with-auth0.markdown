@@ -7,7 +7,6 @@ metadescription: "Travel is one of the world’s fastest-growing sectors and dem
 date: 2018-08-23 11:26
 category: Growth, Industries, Travel
 is_non-tech: true
-auth0_aside: true
 author:
   name: Luke Oliff
   url: https://twitter.com/mroliff
@@ -31,18 +30,18 @@ tags:
   - machine-2-machine
   - api
 related:
-- 2018-06-22-the-best-and-worst-travel-sites-at-keeping-your-info-safe
-- 2018-07-23-3-tools-for-digital-transformation-in-airline-industry
-- 2018-07-11-using-m2m-authorization
+  - 2018-06-22-the-best-and-worst-travel-sites-at-keeping-your-info-safe
+  - 2018-07-23-3-tools-for-digital-transformation-in-airline-industry
+  - 2018-07-11-using-m2m-authorization
 ---
 
-Travel is one of the world’s fastest-growing sectors and demand for the [travel sector has reached an all-time high](https://www2.deloitte.com/content/dam/Deloitte/us/Documents/consumer-business/us-cb-2018-travel-hospitality-industry-outlook.pdf).<a href="#endnotes" target="_self" style="border-bottom: none;"><sup>1</sup></a> Directly or indirectly, economic contributions in [travel and tourism now account for a staggering 10.4 percent of global GDP](https://www.wttc.org/-/media/files/reports/economic-impact-research/regions-2018/world2018.pdf).<a href="#endnotes" target="_self" style="border-bottom: none;"><sup>2</sup></a> Travel investment is set to reach $925bn in 2018, and rise by an average of 4.3% over the next ten years to [$1,408.3bn by 2028](https://www.wttc.org/-/media/files/reports/economic-impact-research/regions-2018/world2018.pdf).<a href="#endnotes" target="_self" style="border-bottom: none;"><sup>3</sup></a>
+Travel is one of the world’s fastest-growing sectors and demand for the [travel sector has reached an all-time high](https://www2.deloitte.com/content/dam/Deloitte/us/Documents/consumer-business/us-cb-2018-travel-hospitality-industry-outlook.pdf). Directly or indirectly, economic contributions in [travel and tourism now account for a staggering 10.4 percent of global GDP](https://www.wttc.org/-/media/files/reports/economic-impact-research/regions-2018/world2018.pdf). Travel investment is set to reach $925bn in 2018, and rise by an average of 4.3% over the next ten years to [$1,408.3bn by 2028](https://www.wttc.org/-/media/files/reports/economic-impact-research/regions-2018/world2018.pdf).
 
-In this fiercely contested market, digital transformation is key to staying agile. Application programming interfaces (APIs) play a large role in digital transformation and are key tools that allow travel businesses to provide unique value to customers and, ultimately, compete better. From hotels and flights to cars and buses, there is an API for every area of travel.<a href="#endnotes" target="_self" style="border-bottom: none;"><sup>4</sup></a>
+In this fiercely contested market, digital transformation is key to staying agile. Application programming interfaces (APIs) play a large role in digital transformation and are key tools that allow travel businesses to provide unique value to customers and, ultimately, compete better. From hotels and flights to cars and buses, there is an API for every area of travel.
 
 > _"Digitisation represents an exciting opportunity for the aviation, travel and tourism ecosystem, with the potential to unlock $1 trillion of value to the industry and wider society over the next decade (2016 – 2025)"_ —World Economic Forum
 
-Even mega-giants like [Amadeus](https://amadeus.com), [SABRE](https://www.sabretravelnetwork.com) and [Travelport](https://www.travelport.com), who are the dominant players in the area of one-stop shop travel solutions, have their own APIs for comprehensive booking and reservations services.<a href="#endnotes" target="_self" style="border-bottom: none;"><sup>5</sup></a> But they didn’t start with APIs - they’ve been dominating this sector for much longer than APIs have been popular.
+Even mega-giants like [Amadeus](https://amadeus.com), [SABRE](https://www.sabretravelnetwork.com) and [Travelport](https://www.travelport.com), who are the dominant players in the area of one-stop shop travel solutions, have their own APIs for comprehensive booking and reservations services. But they didn’t start with APIs - they’ve been dominating this sector for much longer than APIs have been popular.
 
 {% include tweet_quote.html quote_text="In the fiercely contested travel industry, digital transformation is key to staying agile. Auth0 streamlines API development." %}
 
@@ -50,7 +49,7 @@ Even mega-giants like [Amadeus](https://amadeus.com), [SABRE](https://www.sabret
 
 With the boom of general aviation in the 1950s, the travel industry was forced to scale quickly. Digital tools were developed to automate how airlines track and sell their inventory. This was the first digital transformation in Travel, even before the beginning of the internet. From there, SABRE—or Semi Automated Business Research Environment—was born. The first global distribution system (GDS), SABRE was started in the 1960s with a collaborative effort by American Airlines and IBM. Travelport was developed by United Airlines in the 1970s and Amadeus soon followed, developed by a group of European airlines in the 1980s.
 
-These three major players still make up more than [90% of the global market in airline bookings](http://www.businesstravel-iq.com/article/2018/08/08/gds-market-share-second-quarter-2018) – and their dominance is down to digital transformation.<a href="#endnotes" target="_self" style="border-bottom: none;"><sup>6</sup></a> This gave them the ability to streamline business processes and reach into more areas of the travel industry with relatively little friction.
+These three major players still make up more than [90% of the global market in airline bookings](http://www.businesstravel-iq.com/article/2018/08/08/gds-market-share-second-quarter-2018) – and their dominance is down to digital transformation. This gave them the ability to streamline business processes and reach into more areas of the travel industry with relatively little friction.
 
 ![Dominance in travel is driven by the web of apis](https://cdn.auth0.com/blog/streamline-travel-api-authorization-with-auth0/the-web-of-apis-behind-travels-apps.png)
 
@@ -98,18 +97,7 @@ Apart from expertise in identity which ensures security, Auth0 provides the nece
 
 Think of the tens, hundreds, or even thousands of API calls that could be triggered behind the scenes by a search for flights. Each one of those calls is made across the internet, secured each time by a layer of security and access management. Building this type of access management is time consuming, and can difficult to secure.
 
-## Conclusion
-
-Auth0 can help keep APIs secure, more secure than trying to develop your own API authorization and access management. [APIs are broadly responsible for digital transformation right now](https://deloitte.wsj.com/cio/2016/06/27/apis-help-drive-digital-transformation/).<a href="#endnotes" target="_self" style="border-bottom: none;"><sup>7</sup></a> Auth0 provides Machine-to-Machine Authorization that helps keep APIs secure, while being easy to use and implement. Don’t reinvent the wheel and never compromise on security.
+Auth0 can help keep APIs secure, more secure than trying to develop your own API authorization and access management. [APIs are broadly responsible for digital transformation right now](https://deloitte.wsj.com/cio/2016/06/27/apis-help-drive-digital-transformation/). Auth0 provides Machine-to-Machine Authorization that helps keep APIs secure, while being easy to use and implement. Don’t reinvent the wheel and never compromise on security.
 
 {% include asides/about-auth0.markdown %}
 
-<h2 id="endnotes">Endnotes</h2>
-
-<sup>1. <a href="https://www2.deloitte.com/content/dam/Deloitte/us/Documents/consumer-business/us-cb-2018-travel-hospitality-industry-outlook.pdf">Guy Langford, Vice Chairman and Adam Weissenberg, National managing audit partner—Clients & Industries, Deloitte & Touche LLP: 2018 travel and hospitality industry outlook</a></sup>  
-<sup>2. <a href="https://www.wttc.org/-/media/files/reports/economic-impact-research/regions-2018/world2018.pdf">Rochelle Turner, Research Director, World Travel & Tourism Council: Travel & Tourism Economic Impact 2018 World; Travel & Tourism GDP as a percentage of global GDP</a></sup>  
-<sup>3. <a href="https://www.wttc.org/-/media/files/reports/economic-impact-research/regions-2018/world2018.pdf">Rochelle Turner, Research Director, World Travel & Tourism Council: Travel & Tourism Economic Impact 2018 World; Visitor Exports and Investment</a></sup>  
-<sup>4. <a href="https://www.programmableweb.com/news/top-10-travel-apis-uber-tripadvisor-and-expedia/analysis/2015/04/24">Janet Wagner, Technical Writer, ProgrammableWeb: Top 10 Travel APIs: Uber, TripAdvisor and Expedia</a></sup>  
-<sup>5. <a href="https://www.altexsoft.com/blog/engineering/travel-and-booking-apis-for-online-travel-and-tourism-service-providers/">Altexsoft, Bespoke Travel Software: Travel and Booking APIs for Online Travel and Tourism Service Providers; Global distribution system (GDS) APIs from Amadeus, Sabre, and Travelport for comprehensive booking and reservations coverage</a></sup>  
-<sup>6. <a href="http://www.businesstravel-iq.com/article/2018/08/08/gds-market-share-second-quarter-2018">Business Travel iQ: GDS market share second quarter 2018</a></sup>  
-<sup>7. <a href="https://deloitte.wsj.com/cio/2016/06/27/apis-help-drive-digital-transformation/">The Wall Street Journal - CIO Journal: CIO Insights and Analysis from Deloitte; APIs help drive digital transformation</a></sup>  
